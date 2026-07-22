@@ -10,6 +10,512 @@
 
     <!-- custom css file link  -->
     <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* Added styling for menu sub-sections and hover card effect */
+        .menu-category {
+            padding: 2rem 9%;
+        }
+        .menu-category h2 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+            text-transform: capitalize;
+            text-align: center;
+        }
+        .menu-category h2 span {
+            color: #ff3838;
+        }
+        .menu-category h2 span.green-text {
+            color: #1e8449; /* Darker green for better visibility */
+        }
+        .menu-card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .menu-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: .5rem;
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+            background: #fff;
+            text-align: center;
+            padding: 2rem;
+        }
+        .menu-card img {
+            height: 150px;
+            width: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+        }
+        .menu-card h3 {
+            font-size: 1.8rem;
+            color: #333;
+        }
+        .menu-card .price {
+            font-size: 1.5rem;
+            color: #ff3838;
+            font-weight: bolder;
+            margin-top: .5rem;
+            display: block;
+        }
+        .menu-card .price.green-price {
+            color: #1e8449; /* Darker green for better visibility */
+        }
+        .menu-card .hover-info {
+            position: absolute;
+            top: -100%;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: rgba(255, 56, 56, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            transition: .3s linear;
+        }
+        /* Green hover curtain for vegetarian items */
+        .menu-card.veg-card .hover-info {
+            background: rgba(30, 132, 73, 0.9);
+        }
+        .menu-card:hover .hover-info {
+            top: 0;
+        }
+        .menu-card .hover-info p {
+            color: #fff;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+        .hover-add-btn {
+            background: #fff;
+            color: #333;
+            border: none;
+            padding: .6rem 1.5rem;
+            font-size: 1.4rem;
+            border-radius: .5rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background .2s, color .2s;
+        }
+        .hover-add-btn:hover {
+            background: #333;
+            color: #fff;
+        }
+
+        /* Cart Badge with Subtle Bounce Animation */
+        .cart-badge {
+            background: #ff3838;
+            color: #fff;
+            font-size: 1.2rem;
+            padding: 0.1rem 0.6rem;
+            border-radius: 50%;
+            margin-left: 0.5rem;
+            display: inline-block;
+            font-weight: bold;
+        }
+        @keyframes bounceBadge {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        .bounce {
+            animation: bounceBadge 0.4s ease;
+        }
+
+        /* Custom adjustment to match why choose section step image size, grid alignment, and slightly increased text font */
+        .step-container .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem 9%;
+            align-items: stretch;
+        }
+        .step-container .steps .box {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: .5rem;
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+            text-align: center;
+        }
+        .step-container .steps .box img {
+            height: 110px;
+            width: 110px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin: 0 auto 1rem auto;
+        }
+        .step-container .steps .box h3 {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        /* Redesigned Aesthetically Beautiful Order Section */
+        .order .row {
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 1rem 2rem rgba(0,0,0,.1);
+            padding: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: center;
+        }
+        .order .row .image {
+            flex: 1 1 40rem;
+        }
+        .order .row .image img {
+            width: 100%;
+            object-fit: cover;
+            border-radius: .5rem;
+        }
+        .order .row form {
+            flex: 1 1 50rem;
+            background: #f9f9f9;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: inset 0 0 1rem rgba(0,0,0,.03);
+        }
+        .order form .inputBox {
+            display: flex;
+            justify-content: space-between;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .order form .inputBox input,
+        .order form textarea {
+            width: 100%;
+            padding: 1.2rem 1.4rem;
+            font-size: 1.6rem;
+            color: #333;
+            background: #fff;
+            border-radius: .5rem;
+            border: .1rem solid #ddd;
+            text-transform: none;
+            transition: all .3s ease;
+        }
+        .order form .inputBox input:focus,
+        .order form textarea:focus,
+        .order form .item-row select:focus {
+            border-color: #ff3838;
+            box-shadow: 0 0 5px rgba(255, 56, 56, 0.3);
+        }
+        .order form textarea {
+            height: 60px;
+            resize: none;
+            margin-bottom: 1.5rem;
+        }
+        .order-items-wrapper {
+            background: #fff;
+            border: .1rem solid #eee;
+            border-radius: .8rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.02);
+        }
+        .order-items-title {
+            font-size: 1.6rem;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: .8rem;
+        }
+        .order-items-title i {
+            color: #ff3838;
+        }
+        .order form .item-row {
+            display: flex;
+            gap: 1rem;
+            width: 100%;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+        .order form .item-row select {
+            padding: 1rem;
+            font-size: 1.5rem;
+            color: #333;
+            text-transform: none;
+            border: .1rem solid #ddd;
+            border-radius: .5rem;
+            background: #fff;
+            width: 100%;
+        }
+        .qty-box {
+            display: flex;
+            align-items: center;
+            border: .1rem solid #ddd;
+            border-radius: .5rem;
+            background: #fff;
+            overflow: hidden;
+            width: 130px;
+            flex-shrink: 0;
+            height: 45px;
+        }
+        .qty-box button {
+            background: #ff3838;
+            color: #fff;
+            border: none;
+            padding: 0 1rem;
+            font-size: 1.6rem;
+            cursor: pointer;
+            height: 100%;
+            transition: background .2s;
+        }
+        .qty-box button:hover {
+            background: #e02f2f;
+        }
+        .qty-box input {
+            width: 50px;
+            text-align: center;
+            border: none;
+            background: transparent;
+            font-size: 1.6rem;
+            color: #333;
+            margin: 0 auto;
+            display: block;
+        }
+        .add-item-btn {
+            background: #333;
+            color: #fff;
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            border-radius: .5rem;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            transition: background .2s;
+            margin-bottom: 1.5rem;
+        }
+        .add-item-btn:hover {
+            background: #ff3838;
+        }
+
+        /* Success Dialog Overlay Styling */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 3rem;
+            border-radius: 1rem;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 1rem 2rem rgba(0,0,0,0.2);
+            animation: fadeIn .3s ease-in-out;
+        }
+        .modal-content i {
+            font-size: 5rem;
+            color: #1e8449; /* Darker green for better visibility */
+            margin-bottom: 1.5rem;
+        }
+        .modal-content h3 {
+            font-size: 2.2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .modal-content p {
+            font-size: 1.4rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        .modal-content button {
+            background: #ff3838;
+            color: #fff;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.5rem;
+            border-radius: .5rem;
+            cursor: pointer;
+            transition: background .2s;
+        }
+        .modal-content button:hover {
+            background: #333;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Beautiful Footer Styling with specific hover colors */
+        .footer-container {
+            background: #111;
+            color: #fff;
+            padding: 4rem 9% 2rem 9%;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        .footer-box h3 {
+            font-size: 2.2rem;
+            color: #ff3838;
+            margin-bottom: 1.5rem;
+        }
+        .footer-box p {
+            font-size: 1.4rem;
+            color: #aaa;
+            line-height: 1.8;
+            margin-bottom: .5rem;
+        }
+        .footer-box p i {
+            color: #ff3838;
+            margin-right: 1rem;
+        }
+        .footer-socials {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .footer-socials a {
+            height: 40px;
+            width: 40px;
+            line-height: 40px;
+            text-align: center;
+            border-radius: 50%;
+            background: #222;
+            color: #fff;
+            font-size: 1.6rem;
+            transition: .2s linear;
+        }
+        .footer-socials a.facebook-btn:hover {
+            background: #3b5998;
+        }
+        .footer-socials a.instagram-btn:hover {
+            background: #e1306c;
+        }
+        .footer-socials a.whatsapp-btn:hover {
+            background: #25d366;
+        }
+        .footer-bottom {
+            border-top: .1rem solid rgba(255,255,255,.1);
+            padding-top: 2rem;
+            text-align: center;
+            font-size: 1.4rem;
+            color: #888;
+        }
+    </style>
+    <script>
+        function updateCartCount() {
+            const rows = document.getElementsByClassName('item-row');
+            let totalQty = 0;
+            for (let row of rows) {
+                const select = row.querySelector('select');
+                const qtyInput = row.querySelector('.qty-box input');
+                if (select.value && parseInt(qtyInput.value) > 0) {
+                    totalQty += parseInt(qtyInput.value);
+                }
+            }
+            const badge = document.getElementById('cart-count');
+            badge.innerText = totalQty;
+            
+            // Trigger bounce animation
+            badge.classList.remove('bounce');
+            void badge.offsetWidth; // trigger reflow
+            badge.classList.add('bounce');
+        }
+
+        function addMoreItem(selectedItemVal = "") {
+            const container = document.getElementById('items-container');
+            const newRow = container.children[0].cloneNode(true);
+            const selectElem = newRow.querySelector('select');
+            
+            if (selectedItemVal) {
+                selectElem.value = selectedItemVal;
+            } else {
+                selectElem.selectedIndex = 0;
+            }
+            newRow.querySelector('.qty-box input').value = '1';
+            container.appendChild(newRow);
+            updateCartCount();
+        }
+
+        function addToCart(itemName) {
+            const container = document.getElementById('items-container');
+            const rows = container.getElementsByClassName('item-row');
+            
+            let found = false;
+            for (let row of rows) {
+                const select = row.querySelector('select');
+                if (select.value === itemName) {
+                    const qtyInput = row.querySelector('.qty-box input');
+                    qtyInput.value = parseInt(qtyInput.value) + 1;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                for (let row of rows) {
+                    const select = row.querySelector('select');
+                    if (!select.value) {
+                        select.value = itemName;
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!found) {
+                addMoreItem(itemName);
+            } else {
+                updateCartCount();
+            }
+        }
+
+        function changeQty(btn, delta) {
+            const input = btn.parentElement.querySelector('input');
+            let val = parseInt(input.value) + delta;
+            
+            if (val < 0) val = 0;
+            
+            input.value = val;
+
+            if (val === 0) {
+                const container = document.getElementById('items-container');
+                const row = btn.closest('.item-row');
+                if (container.children.length > 1) {
+                    row.remove();
+                } else {
+                    input.value = 1;
+                    row.querySelector('select').selectedIndex = 0;
+                }
+            }
+            updateCartCount();
+        }
+
+        function handleOrderSubmit(event) {
+            event.preventDefault();
+            document.getElementById('successModal').style.display = 'flex';
+        }
+        
+        function closeModal() {
+            document.getElementById('successModal').style.display = 'none';
+            document.getElementById('orderForm').reset();
+            updateCartCount();
+        }
+
+        window.onload = function() {
+            updateCartCount();
+        }
+    </script>
 
 </head>
 <body>
@@ -18,17 +524,16 @@
 
 <header>
 
-    <a href="#" class="logo"><i class="fas fa-utensils"></i>food</a>
+    <a href="#" class="logo"><i class="fas fa-book-open"></i>Cooking 4 Foodies</a>
 
     <div id="menu-bar" class="fas fa-bars"></div>
 
     <nav class="navbar">
         <a href="#home">home</a>
         <a href="#speciality">speciality</a>
-        <a href="#popular">popular</a>
-        <a href="#gallery">gallery</a>
+        <a href="#popular">menu</a>
         <a href="#review">review</a>
-        <a href="#order">order</a>
+        <a href="#order">my cart <span id="cart-count" class="cart-badge">0</span></a>
     </nav>
 
 </header>
@@ -41,8 +546,8 @@
 
     <div class="content">
         <h3>food made with love</h3>
-        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptas accusamus tempore temporibus rem amet laudantium animi optio voluptatum. Natus obcaecati unde porro nostrum ipsam itaque impedit incidunt rem quisquam eos!</p>
-        <a href="#" class="btn">order now</a>
+        <p>Craving the true taste of Bengal? Cooking 4 Foodies is your go-to delivery kitchen for authentic Bengali delicacies. Cooked in pure mustard oil with aromatic panch phoron and a whole lot of love, we deliver heritage flavors right to your door. Real spices. Traditional recipes. Zero compromises.</p>
+        <a href="#popular" class="btn">Explore Menu</a>
     </div>
 
     <div class="image">
@@ -65,7 +570,7 @@
             <img class="image" src="images/s-img-1.jpg" alt="">
             <div class="content">
                 <img src="images/s-1.png" alt="">
-                <h3>tasty burger</h3>
+                <h3>Machher Kalia</h3>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda inventore neque amet ipsa tenetur voluptates aperiam tempore libero labore aut.</p>
             </div>
         </div>
@@ -101,14 +606,6 @@
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda inventore neque amet ipsa tenetur voluptates aperiam tempore libero labore aut.</p>
             </div>
         </div>
-        <div class="box">
-            <img class="image" src="images/s-img-6.jpg" alt="">
-            <div class="content">
-                <img src="images/s-6.png" alt="">
-                <h3>healty breakfast</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda inventore neque amet ipsa tenetur voluptates aperiam tempore libero labore aut.</p>
-            </div>
-        </div>
 
     </div>
 
@@ -116,122 +613,233 @@
 
 <!-- speciality section ends -->
 
-<!-- popular section starts  -->
+<!-- menu section starts (replaced popular section) -->
 
 <section class="popular" id="popular">
 
-    <h1 class="heading"> most <span>popular</span> foods </h1>
+    <h1 class="heading"> our <span>menu</span> </h1>
 
-    <div class="box-container">
+    <!-- 1. Starters -->
+    <div class="menu-category">
+        <h2><span>Starters</span></h2>
+        <div class="menu-card-container">
+            <div class="menu-card">
+                <img src="images/p-1.jpg" alt="">
+                <h3>Chicken Pakoda</h3>
+                <span class="price">₹249</span>
+                <div class="hover-info">
+                    <p>Crispy chicken pakodas served with fresh green chutney.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Chicken Pakoda')">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menu-card">
+                <img src="images/p-2.jpg" alt="">
+                <h3>Machh Bhaja</h3>
+                <span class="price">₹199</span>
+                <div class="hover-info">
+                    <p>Traditional crispy Rohu fish fry spiced to perfection.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Machh Bhaja')">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <div class="box">
-            <span class="price"> $5 - $20 </span>
-            <img src="images/p-1.jpg" alt="">
-            <h3>tasty burger</h3>
-            <div class="stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
+    <!-- 2. Main Course - Non Veg Items -->
+    <div class="menu-category">
+        <h2><span>Main Course - Non Veg Items</span></h2>
+        <div class="menu-card-container">
+            <div class="menu-card">
+                <img src="images/p-3.jpg" alt="">
+                <h3>Machher Jhol</h3>
+                <span class="price">₹249</span>
+                <div class="hover-info">
+                    <p>Traditional Bengali fish curry with cumin paste and potatoes.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Machher Jhol')">Add to Cart</button>
+                </div>
             </div>
-            <a href="#" class="btn">order now</a>
-        </div>
-        <div class="box">
-            <span class="price"> $5 - $20 </span>
-            <img src="images/p-2.jpg" alt="">
-            <h3>tasty cakes</h3>
-            <div class="stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
+            <div class="menu-card">
+                <img src="images/p-4.jpg" alt="">
+                <h3>Machher Kalia</h3>
+                <span class="price">₹249</span>
+                <div class="hover-info">
+                    <p>Traditional Bengali fish delicacy cooked in a rich gravy.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Machher Kalia')">Add to Cart</button>
+                </div>
             </div>
-            <a href="#" class="btn">order now</a>
-        </div>
-        <div class="box">
-            <span class="price"> $5 - $20 </span>
-            <img src="images/p-3.jpg" alt="">
-            <h3>tasty sweets</h3>
-            <div class="stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
+            <div class="menu-card">
+                <img src="images/p-5.jpg" alt="">
+                <h3>Doi Machh</h3>
+                <span class="price">₹299</span>
+                <div class="hover-info">
+                    <p>Tender fish pieces simmered in a creamy yogurt and cashew paste.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Doi Machh')">Add to Cart</button>
+                </div>
             </div>
-            <a href="#" class="btn">order now</a>
-        </div>
-        <div class="box">
-            <span class="price"> $5 - $20 </span>
-            <img src="images/p-4.jpg" alt="">
-            <h3>tasty cupcakes</h3>
-            <div class="stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
+            <div class="menu-card">
+                <img src="images/p-6.jpg" alt="">
+                <h3>Chicken Kosha</h3>
+                <span class="price">₹249</span>
+                <div class="hover-info">
+                    <p>Thick, spicy, and deeply flavorful traditional chicken kosha.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Chicken Kosha')">Add to Cart</button>
+                </div>
             </div>
-            <a href="#" class="btn">order now</a>
-        </div>
-        <div class="box">
-            <span class="price"> $5 - $20 </span>
-            <img src="images/p-5.jpg" alt="">
-            <h3>cold drinks</h3>
-            <div class="stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
+            <div class="menu-card">
+                <img src="images/g-1.jpg" alt="">
+                <h3>Chicken Jhol</h3>
+                <span class="price">₹249</span>
+                <div class="hover-info">
+                    <p>Light and comforting authentic Bengali style chicken curry.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Chicken Jhol')">Add to Cart</button>
+                </div>
             </div>
-            <a href="#" class="btn">order now</a>
-        </div>
-        <div class="box">
-            <span class="price"> $5 - $20 </span>
-            <img src="images/p-6.jpg" alt="">
-            <h3>cold ice-cream</h3>
-            <div class="stars">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
+            <div class="menu-card">
+                <img src="images/g-2.jpg" alt="">
+                <h3>Chilli Chicken</h3>
+                <span class="price">₹299</span>
+                <div class="hover-info">
+                    <p>Popular Kolkata style spicy and tangy chilli chicken.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Chilli Chicken')">Add to Cart</button>
+                </div>
             </div>
-            <a href="#" class="btn">order now</a>
+            <div class="menu-card">
+                <img src="images/g-3.jpg" alt="">
+                <h3>Dim Kosha</h3>
+                <span class="price">₹149</span>
+                <div class="hover-info">
+                    <p>Boiled eggs cooked in a rich, spicy Bengali-style gravy.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Dim Kosha')">Add to Cart</button>
+                </div>
+            </div>
         </div>
+    </div>
 
+    <!-- 3. Sides & Vegetables - Veg Items -->
+    <div class="menu-category">
+        <h2><span class="green-text">Sides & Vegetables - Veg Items</span></h2>
+        <div class="menu-card-container">
+            <div class="menu-card veg-card">
+                <img src="images/g-4.jpg" alt="">
+                <h3>Dhokar Dalna</h3>
+                <span class="price green-price">₹249</span>
+                <div class="hover-info">
+                    <p>Bengali lentil cake curry prepared in a rich, aromatic gravy.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Dhokar Dalna')">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menu-card veg-card">
+                <img src="images/g-5.jpg" alt="">
+                <h3>Alu Posto</h3>
+                <span class="price green-price">₹249</span>
+                <div class="hover-info">
+                    <p>Potatoes or pointed gourd cooked in a delicious poppy seed paste.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Alu Posto')">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menu-card veg-card">
+                <img src="images/g-6.jpg" alt="">
+                <h3>Alu Potoler Torkari</h3>
+                <span class="price green-price">₹249</span>
+                <div class="hover-info">
+                    <p>Homestyle seasonal vegetable curry.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Alu Potoler Torkari')">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menu-card veg-card">
+                <img src="images/g-7.jpg" alt="">
+                <h3>Mooger Dal</h3>
+                <span class="price green-price">₹199</span>
+                <div class="hover-info">
+                    <p>Roasted yellow moong dal prepared with traditional spices.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Mooger Dal')">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menu-card veg-card">
+                <img src="images/g-8.jpg" alt="">
+                <h3>Alur Dom</h3>
+                <span class="price green-price">₹149</span>
+                <div class="hover-info">
+                    <p>Spiced baby potato curry cooked Bengali style.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Alur Dom')">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menu-card veg-card">
+                <img src="images/g-9.jpg" alt="">
+                <h3>Alu Bhaja</h3>
+                <span class="price green-price">₹99</span>
+                <div class="hover-info">
+                    <p>Crispy shallow-fried vegetable slices.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Alu Bhaja')">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Rice & Breads -->
+    <div class="menu-category">
+        <h2><span class="green-text">Rice & Breads</span></h2>
+        <div class="menu-card-container">
+            <div class="menu-card veg-card">
+                <img src="images/p-1.jpg" alt="">
+                <h3>Steamed Basmati Rice</h3>
+                <span class="price green-price">₹79</span>
+                <div class="hover-info">
+                    <p>Fluffy long-grain steamed basmati rice.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Steamed Basmati Rice')">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menu-card veg-card">
+                <img src="images/p-2.jpg" alt="">
+                <h3>Parotta</h3>
+                <span class="price green-price">₹29</span>
+                <div class="hover-info">
+                    <p>Soft layered plain parotta.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Parotta')">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menu-card veg-card">
+                <img src="images/p-3.jpg" alt="">
+                <h3>Roti</h3>
+                <span class="price green-price">₹15</span>
+                <div class="hover-info">
+                    <p>Freshly made whole wheat flatbread.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Roti')">Add to Cart</button>
+                </div>
+            </div>
+        </div>
     </div>
 
 </section>
 
-<!-- popular section ends -->
+<!-- menu section ends -->
 
-<!-- steps section starts  -->
+<!-- steps section starts (Why Choose Cooking 4 Foodies) -->
 
 <div class="step-container">
 
-    <h1 class="heading">how it <span>works</span></h1>
+    <h1 class="heading">Why Choose <span>Cooking 4 Foodies</span></h1>
 
     <section class="steps">
 
         <div class="box">
-            <img src="images/step-1.jpg" alt="">
-            <h3>choose your favorite food</h3>
+            <img src="images/p-1.jpg" alt="">
+            <h3>Honest Pricing</h3>
         </div>
         <div class="box">
-            <img src="images/step-2.jpg" alt="">
-            <h3>free and fast delivery</h3>
+            <img src="images/p-2.jpg" alt="">
+            <h3>All raw items procured same day</h3>
         </div>
         <div class="box">
-            <img src="images/step-3.jpg" alt="">
-            <h3>easy payments methods</h3>
+            <img src="images/p-3.jpg" alt="">
+            <h3>Cooked in rice bran oil / mustard oil</h3>
         </div>
         <div class="box">
-            <img src="images/step-4.jpg" alt="">
-            <h3>and finally, enjoy your food</h3>
+            <img src="images/p-4.jpg" alt="">
+            <h3>Home grinded bengali spices</h3>
+        </div>
+        <div class="box">
+            <img src="images/p-5.jpg" alt="">
+            <h3>Free home delivery* across Nagpur</h3>
         </div>
     
     </section>
@@ -239,93 +847,6 @@
 </div>
 
 <!-- steps section ends -->
-
-<!-- gallery section starts  -->
-
-<section class="gallery" id="gallery">
-
-    <h1 class="heading"> our food <span> gallery </span> </h1>
-
-    <div class="box-container">
-
-        <div class="box">
-            <img src="images/g-1.jpg" alt="">
-            <div class="content">
-                <h3>tasty food</h3>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, ipsum.</p>
-                <a href="#" class="btn">ordern now</a>
-            </div>
-        </div>
-        <div class="box">
-            <img src="images/g-2.jpg" alt="">
-            <div class="content">
-                <h3>tasty food</h3>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, ipsum.</p>
-                <a href="#" class="btn">ordern now</a>
-            </div>
-        </div>
-        <div class="box">
-            <img src="images/g-3.jpg" alt="">
-            <div class="content">
-                <h3>tasty food</h3>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, ipsum.</p>
-                <a href="#" class="btn">ordern now</a>
-            </div>
-        </div>
-        <div class="box">
-            <img src="images/g-4.jpg" alt="">
-            <div class="content">
-                <h3>tasty food</h3>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, ipsum.</p>
-                <a href="#" class="btn">ordern now</a>
-            </div>
-        </div>
-        <div class="box">
-            <img src="images/g-5.jpg" alt="">
-            <div class="content">
-                <h3>tasty food</h3>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, ipsum.</p>
-                <a href="#" class="btn">ordern now</a>
-            </div>
-        </div>
-        <div class="box">
-            <img src="images/g-6.jpg" alt="">
-            <div class="content">
-                <h3>tasty food</h3>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, ipsum.</p>
-                <a href="#" class="btn">ordern now</a>
-            </div>
-        </div>
-        <div class="box">
-            <img src="images/g-7.jpg" alt="">
-            <div class="content">
-                <h3>tasty food</h3>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, ipsum.</p>
-                <a href="#" class="btn">ordern now</a>
-            </div>
-        </div>
-        <div class="box">
-            <img src="images/g-8.jpg" alt="">
-            <div class="content">
-                <h3>tasty food</h3>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, ipsum.</p>
-                <a href="#" class="btn">ordern now</a>
-            </div>
-        </div>
-        <div class="box">
-            <img src="images/g-9.jpg" alt="">
-            <div class="content">
-                <h3>tasty food</h3>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, ipsum.</p>
-                <a href="#" class="btn">ordern now</a>
-            </div>
-        </div>
-
-    </div>
-
-</section>
-
-<!-- gallery section ends -->
 
 <!-- review section starts  -->
 
@@ -337,39 +858,39 @@
 
         <div class="box">
             <img src="images/pic1.png" alt="">
-            <h3>john deo</h3>
+            <h3>Ananya Banerjee</h3>
             <div class="stars">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
+                <i class="fas fa-star"></i>
             </div>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti delectus, ducimus facere quod ratione vel laboriosam? Est, maxime rem. Itaque.</p>
+            <p>Today We ordered chiken kosha and dhokar dalna from Sonali debnath didi(Cooking 4 foodies page) and the food was awesome. She actually made authentic Bengali style chiken kosha and dhokar dalna. She used only homemade masala to prepare the food. Total 10/10 for food quality, quantity and service. Thank you for her new venture 🫰</p>
         </div>
         <div class="box">
             <img src="images/pic2.png" alt="">
-            <h3>john deo</h3>
+            <h3>Pradeep J. Chowdhury</h3>
             <div class="stars">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
+                <i class="fas fa-star"></i>
             </div>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti delectus, ducimus facere quod ratione vel laboriosam? Est, maxime rem. Itaque.</p>
+            <p>Today I requested Ms.Sonali Debnath, for Koshano Mutton and Dhokar Dalna. Both the items were cooked beautifully and very tasty. We enjoyed while eating so tasty food. Thanks for providing এমন a tasty food.</p>
         </div>
         <div class="box">
             <img src="images/pic3.png" alt="">
-            <h3>john deo</h3>
+            <h3>Anik Debnath</h3>
             <div class="stars">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
+                <i class="fas fa-star"></i>
             </div>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti delectus, ducimus facere quod ratione vel laboriosam? Est, maxime rem. Itaque.</p>
+            <p>The Macher Jhol was a revelation—the broth was light yet incredibly flavorful, with that perfect ginger-cumin undertone and tender pieces of fish that tasted like they were caught this morning. Then came the Chicken Kosha. It was rich, dark, and intensely spiced, with the meat falling off the bone in a thick, velvety gravy that demanded an extra helping of rice. Every bite felt like a tribute to traditional Bengali craftsmanship. If you’re looking for the real deal, stop scrolling and order now. Highly recommended!</p>
         </div>
 
     </div>
@@ -390,19 +911,136 @@
             <img src="images/order-img.jpg" alt="">
         </div>
 
-        <form action="">
+        <form id="orderForm" onsubmit="handleOrderSubmit(event)">
 
             <div class="inputBox">
-                <input type="text" placeholder="name">
+                <input type="text" placeholder="name" required>
                 <input type="email" placeholder="email">
             </div>
 
             <div class="inputBox">
-                <input type="number" placeholder="number">
-                <input type="text" placeholder="food name">
+                <input type="number" placeholder="contact no" required>
             </div>
 
-            <textarea placeholder="address" name="" id="" cols="30" rows="10"></textarea>
+            <textarea placeholder="address" name="" id="" cols="30" rows="2" required></textarea>
+
+            <div class="order-items-wrapper">
+                <div class="order-items-title"><i class="fas fa-utensils"></i> Select Items & Quantities</div>
+                <div id="items-container">
+                    <!-- Row 1 -->
+                    <div class="item-row">
+                        <select name="food-item[]" onchange="updateCartCount()" required>
+                            <option value="" disabled selected>Select Item from Menu</option>
+                            <optgroup label="Starters">
+                                <option value="Chicken Pakoda">Chicken Pakoda - ₹249</option>
+                                <option value="Machh Bhaja">Machh Bhaja - ₹199</option>
+                            </optgroup>
+                            <optgroup label="Main Course - Non Veg Items">
+                                <option value="Machher Jhol">Machher Jhol - ₹249</option>
+                                <option value="Machher Kalia">Machher Kalia - ₹249</option>
+                                <option value="Doi Machh">Doi Machh - ₹299</option>
+                                <option value="Chicken Kosha">Chicken Kosha - ₹249</option>
+                                <option value="Chicken Jhol">Chicken Jhol - ₹249</option>
+                                <option value="Chilli Chicken">Chilli Chicken - ₹299</option>
+                                <option value="Dim Kosha">Dim Kosha - ₹149</option>
+                            </optgroup>
+                            <optgroup label="Sides & Vegetables - Veg Items">
+                                <option value="Dhokar Dalna">Dhokar Dalna - ₹249</option>
+                                <option value="Alu Posto">Alu Posto - ₹249</option>
+                                <option value="Alu Potoler Torkari">Alu Potoler Torkari - ₹249</option>
+                                <option value="Mooger Dal">Mooger Dal - ₹199</option>
+                                <option value="Alur Dom">Alur Dom - ₹149</option>
+                                <option value="Alu Bhaja">Alu Bhaja - ₹99</option>
+                            </optgroup>
+                            <optgroup label="Rice & Breads">
+                                <option value="Steamed Basmati Rice">Steamed Basmati Rice - ₹79</option>
+                                <option value="Parotta">Parotta - ₹29</option>
+                                <option value="Roti">Roti - ₹15</option>
+                            </optgroup>
+                        </select>
+                        <div class="qty-box">
+                            <button type="button" onclick="changeQty(this, -1)">-</button>
+                            <input type="number" name="quantity[]" value="1" min="0" onchange="updateCartCount()" readonly>
+                            <button type="button" onclick="changeQty(this, 1)">+</button>
+                        </div>
+                    </div>
+                    <!-- Row 2 -->
+                    <div class="item-row">
+                        <select name="food-item[]" onchange="updateCartCount()">
+                            <option value="" disabled selected>Select Item from Menu</option>
+                            <optgroup label="Starters">
+                                <option value="Chicken Pakoda">Chicken Pakoda - ₹249</option>
+                                <option value="Machh Bhaja">Machh Bhaja - ₹199</option>
+                            </optgroup>
+                            <optgroup label="Main Course - Non Veg Items">
+                                <option value="Machher Jhol">Machher Jhol - ₹249</option>
+                                <option value="Machher Kalia">Machher Kalia - ₹249</option>
+                                <option value="Doi Machh">Doi Machh - ₹299</option>
+                                <option value="Chicken Kosha">Chicken Kosha - ₹249</option>
+                                <option value="Chicken Jhol">Chicken Jhol - ₹249</option>
+                                <option value="Chilli Chicken">Chilli Chicken - ₹299</option>
+                                <option value="Dim Kosha">Dim Kosha - ₹149</option>
+                            </optgroup>
+                            <optgroup label="Sides & Vegetables - Veg Items">
+                                <option value="Dhokar Dalna">Dhokar Dalna - ₹249</option>
+                                <option value="Alu Posto">Alu Posto - ₹249</option>
+                                <option value="Alu Potoler Torkari">Alu Potoler Torkari - ₹249</option>
+                                <option value="Mooger Dal">Mooger Dal - ₹199</option>
+                                <option value="Alur Dom">Alur Dom - ₹149</option>
+                                <option value="Alu Bhaja">Alu Bhaja - ₹99</option>
+                            </optgroup>
+                            <optgroup label="Rice & Breads">
+                                <option value="Steamed Basmati Rice">Steamed Basmati Rice - ₹79</option>
+                                <option value="Parotta">Parotta - ₹29</option>
+                                <option value="Roti">Roti - ₹15</option>
+                            </optgroup>
+                        </select>
+                        <div class="qty-box">
+                            <button type="button" onclick="changeQty(this, -1)">-</button>
+                            <input type="number" name="quantity[]" value="1" min="0" onchange="updateCartCount()" readonly>
+                            <button type="button" onclick="changeQty(this, 1)">+</button>
+                        </div>
+                    </div>
+                    <!-- Row 3 -->
+                    <div class="item-row">
+                        <select name="food-item[]" onchange="updateCartCount()">
+                            <option value="" disabled selected>Select Item from Menu</option>
+                            <optgroup label="Starters">
+                                <option value="Chicken Pakoda">Chicken Pakoda - ₹249</option>
+                                <option value="Machh Bhaja">Machh Bhaja - ₹199</option>
+                            </optgroup>
+                            <optgroup label="Main Course - Non Veg Items">
+                                <option value="Machher Jhol">Machher Jhol - ₹249</option>
+                                <option value="Machher Kalia">Machher Kalia - ₹249</option>
+                                <option value="Doi Machh">Doi Machh - ₹299</option>
+                                <option value="Chicken Kosha">Chicken Kosha - ₹249</option>
+                                <option value="Chicken Jhol">Chicken Jhol - ₹249</option>
+                                <option value="Chilli Chicken">Chilli Chicken - ₹299</option>
+                                <option value="Dim Kosha">Dim Kosha - ₹149</option>
+                            </optgroup>
+                            <optgroup label="Sides & Vegetables - Veg Items">
+                                <option value="Dhokar Dalna">Dhokar Dalna - ₹249</option>
+                                <option value="Alu Posto">Alu Posto - ₹249</option>
+                                <option value="Alu Potoler Torkari">Alu Potoler Torkari - ₹249</option>
+                                <option value="Mooger Dal">Mooger Dal - ₹199</option>
+                                <option value="Alur Dom">Alur Dom - ₹149</option>
+                                <option value="Alu Bhaja">Alu Bhaja - ₹99</option>
+                            </optgroup>
+                            <optgroup label="Rice & Breads">
+                                <option value="Steamed Basmati Rice">Steamed Basmati Rice - ₹79</option>
+                                <option value="Parotta">Parotta - ₹29</option>
+                                <option value="Roti">Roti - ₹15</option>
+                            </optgroup>
+                        </select>
+                        <div class="qty-box">
+                            <button type="button" onclick="changeQty(this, -1)">-</button>
+                            <input type="number" name="quantity[]" value="1" min="0" onchange="updateCartCount()" readonly>
+                            <button type="button" onclick="changeQty(this, 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="add-item-btn" onclick="addMoreItem()"><i class="fas fa-plus"></i> Add Another Item</button>
+            </div>
 
             <input type="submit" value="order now" class="btn">
 
@@ -414,49 +1052,54 @@
 
 <!-- order section ends -->
 
-<!-- footer section  -->
-
-<section class="footer">
-
-    <div class="share">
-        <a href="#" class="btn">facebook</a>
-        <a href="#" class="btn">twitter</a>
-        <a href="#" class="btn">instagram</a>
-        <a href="#" class="btn">pinterest</a>
-        <a href="#" class="btn">linkedin</a>
+<!-- Success Dialog Modal -->
+<div id="successModal" class="modal-overlay">
+    <div class="modal-content">
+        <i class="fas fa-check-circle"></i>
+        <h3>Order Placed Successfully!</h3>
+        <p>Thank you for ordering with Cooking 4 Foodies. Your delicious food is on its way!</p>
+        <button onclick="closeModal()">OK</button>
     </div>
+</div>
 
-    <h1 class="credit"> created by <span>souravashree kanungo </span> | all rights reserved! </h1>
+<!-- footer section starts -->
 
+<section class="footer-container">
+    <div class="footer-grid">
+        <div class="footer-box">
+            <h3>Cooking 4 Foodies</h3>
+            <p>Authentic Bengali Home Food Cloud Kitchen, bringing traditional recipes straight to your table with love.</p>
+        </div>
+        <div class="footer-box">
+            <h3>Contact Info</h3>
+            <p><i class="fas fa-phone"></i> <a href="tel:+918976180617" style="color: inherit;">+91-8976180617</a></p>
+            <p><i class="fas fa-envelope"></i> <a href="mailto:sonali.debnath4u@gmail.com" style="color: inherit;">sonali.debnath4u@gmail.com</a></p>
+        </div>
+        <div class="footer-box">
+            <h3>Our Address</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Cooking 4 Foodies, C/o. Mrs. Sonali Debnath, Jetwan Society, Khamla, Nagpur, Maharashtra - 440025</p>
+        </div>
+        <div class="footer-box">
+            <h3>Connect With Us</h3>
+            <div class="footer-socials">
+                <a href="https://www.facebook.com/cooking4foodies" target="_blank" class="facebook-btn"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/cooking_4_foodies" target="_blank" class="instagram-btn"><i class="fab fa-instagram"></i></a>
+                <a href="https://wa.me/918976180617" target="_blank" class="whatsapp-btn"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 Cooking 4 Foodies. All rights reserved.</p>
+    </div>
 </section>
+
+<!-- footer section ends -->
 
 <!-- scroll top button  -->
 <a href="#home" class="fas fa-angle-up" id="scroll-top"></a>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- custom js file link  -->
 <script src="js/script.js"></script>
-
 
 </body>
 </html>

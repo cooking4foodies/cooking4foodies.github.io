@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* Added styling for menu sub-sections and hover card effect */
+        /* Added styling for menu sub-sections, uniform grid, and left alignment */
         .menu-category {
             padding: 2rem 9%;
         }
@@ -31,8 +31,20 @@
         }
         .menu-card-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 1.5rem;
+            justify-content: start;
+            justify-items: start;
+        }
+        @media (max-width: 991px) {
+            .menu-card-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 650px) {
+            .menu-card-container {
+                grid-template-columns: 1fr;
+            }
         }
         .menu-card {
             position: relative;
@@ -41,24 +53,27 @@
             box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
             background: #fff;
             text-align: center;
-            padding: 2rem;
+            padding: 0; /* Full box photo styling */
+            width: 100%;
         }
         .menu-card img {
-            height: 150px;
-            width: 150px;
+            height: 200px;
+            width: 100%;
             object-fit: cover;
-            border-radius: 50%;
+            border-radius: .5rem .5rem 0 0;
             margin-bottom: 1rem;
         }
         .menu-card h3 {
             font-size: 1.8rem;
             color: #333;
+            padding: 0 1rem;
         }
         .menu-card .price {
             font-size: 1.5rem;
             color: #ff3838;
             font-weight: bolder;
             margin-top: .5rem;
+            margin-bottom: 1.5rem;
             display: block;
         }
         .menu-card .price.green-price {
@@ -100,11 +115,20 @@
             border-radius: .5rem;
             cursor: pointer;
             font-weight: bold;
-            transition: background .2s, color .2s;
+            transition: background .2s, color .2s, transform 0.1s ease;
         }
         .hover-add-btn:hover {
             background: #333;
             color: #fff;
+        }
+        /* Click feedback pulse/shrink animation */
+        @keyframes btnClickPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.92); }
+            100% { transform: scale(1); }
+        }
+        .btn-clicked {
+            animation: btnClickPulse 0.25s ease;
         }
 
         /* Cart Badge with Subtle Bounce Animation */
@@ -290,10 +314,23 @@
             border: none;
             width: 100%;
             transition: background .2s;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
         .add-item-btn:hover {
             background: #ff3838;
+        }
+        .cart-total-container {
+            display: flex;
+            justify-content: flex-end;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-top: 1rem;
+            padding-right: 0.5rem;
+        }
+        .cart-total-container span {
+            color: #ff3838;
+            margin-left: 0.8rem;
         }
 
         /* Success Dialog Overlay Styling */
@@ -413,23 +450,60 @@
         }
     </style>
     <script>
-        function updateCartCount() {
+        // Item prices mapping lookup
+        const itemPrices = {
+            "Chicken Pakoda (8 Pcs)": 249,
+            "Machh Bhaja (2 Pcs)": 199,
+            "Machher Jhol (2 Pcs)": 249,
+            "Machher Kalia (2 Pcs)": 249,
+            "Doi Machh (2 Pcs)": 299,
+            "Chicken Kosha (4 Pcs)": 249,
+            "Chicken Jhol (4 Pcs)": 249,
+            "Chilli Chicken (8 Pcs)": 299,
+            "Dim Kosha (2 Pcs)": 149,
+            "Dhokar Dalna (4 Pcs)": 249,
+            "Alu Posto - Serves 2": 249,
+            "Potol Posto - Serves 2": 249,
+            "Alu Potoler Torkari - Serves 2": 249,
+            "Alu Phulkopir Torkari - Serves 2": 249,
+            "Mooger Dal - Serves 2": 199,
+            "Alur Dom (6 Pcs)": 149,
+            "Alu Bhaja - Serves 2": 99,
+            "Potol Bhaja - Serves 2": 99,
+            "Begun Bhaja - Serves 2": 99,
+            "Steamed Basmati Rice - Serves 1": 79,
+            "Parotta - Plain (1 Pcs)": 29,
+            "Roti (1 Pcs)": 15
+        };
+
+        function updateCartSummary() {
             const rows = document.getElementsByClassName('item-row');
             let totalQty = 0;
+            let totalPrice = 0;
+
             for (let row of rows) {
                 const select = row.querySelector('select');
                 const qtyInput = row.querySelector('.qty-box input');
-                if (select.value && parseInt(qtyInput.value) > 0) {
-                    totalQty += parseInt(qtyInput.value);
+                const selectedItem = select.value;
+                const qty = parseInt(qtyInput.value) || 0;
+
+                if (selectedItem && qty > 0) {
+                    totalQty += qty;
+                    if (itemPrices[selectedItem]) {
+                        totalPrice += itemPrices[selectedItem] * qty;
+                    }
                 }
             }
+
+            // Update Header Cart Badge
             const badge = document.getElementById('cart-count');
             badge.innerText = totalQty;
-            
-            // Trigger bounce animation
             badge.classList.remove('bounce');
             void badge.offsetWidth; // trigger reflow
             badge.classList.add('bounce');
+
+            // Update Total Amount Display
+            document.getElementById('total-amount').innerText = '₹' + totalPrice;
         }
 
         function addMoreItem(selectedItemVal = "") {
@@ -444,10 +518,15 @@
             }
             newRow.querySelector('.qty-box input').value = '1';
             container.appendChild(newRow);
-            updateCartCount();
+            updateCartSummary();
         }
 
-        function addToCart(itemName) {
+        function addToCart(itemName, btnElement) {
+            // Trigger button click animation
+            btnElement.classList.remove('btn-clicked');
+            void btnElement.offsetWidth; // trigger reflow
+            btnElement.classList.add('btn-clicked');
+
             const container = document.getElementById('items-container');
             const rows = container.getElementsByClassName('item-row');
             
@@ -476,7 +555,7 @@
             if (!found) {
                 addMoreItem(itemName);
             } else {
-                updateCartCount();
+                updateCartSummary();
             }
         }
 
@@ -498,7 +577,7 @@
                     row.querySelector('select').selectedIndex = 0;
                 }
             }
-            updateCartCount();
+            updateCartSummary();
         }
 
         function handleOrderSubmit(event) {
@@ -509,11 +588,11 @@
         function closeModal() {
             document.getElementById('successModal').style.display = 'none';
             document.getElementById('orderForm').reset();
-            updateCartCount();
+            updateCartSummary();
         }
 
         window.onload = function() {
-            updateCartCount();
+            updateCartSummary();
         }
     </script>
 
@@ -578,7 +657,7 @@
             <img class="image" src="images/s-img-2.jpg" alt="">
             <div class="content">
                 <img src="images/s-2.png" alt="">
-                <h3>tasty pizza</h3>
+                <h3>Doi Machh</h3>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda inventore neque amet ipsa tenetur voluptates aperiam tempore libero labore aut.</p>
             </div>
         </div>
@@ -586,7 +665,7 @@
             <img class="image" src="images/s-img-3.jpg" alt="">
             <div class="content">
                 <img src="images/s-3.png" alt="">
-                <h3>cold ice-cream</h3>
+                <h3>Chicken Kosha</h3>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda inventore neque amet ipsa tenetur voluptates aperiam tempore libero labore aut.</p>
             </div>
         </div>
@@ -594,7 +673,7 @@
             <img class="image" src="images/s-img-4.jpg" alt="">
             <div class="content">
                 <img src="images/s-4.png" alt="">
-                <h3>cold drinks</h3>
+                <h3>Dhokar Dalna</h3>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda inventore neque amet ipsa tenetur voluptates aperiam tempore libero labore aut.</p>
             </div>
         </div>
@@ -602,7 +681,7 @@
             <img class="image" src="images/s-img-5.jpg" alt="">
             <div class="content">
                 <img src="images/s-5.png" alt="">
-                <h3>tasty sweets</h3>
+                <h3>Alu Posto</h3>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda inventore neque amet ipsa tenetur voluptates aperiam tempore libero labore aut.</p>
             </div>
         </div>
@@ -625,20 +704,20 @@
         <div class="menu-card-container">
             <div class="menu-card">
                 <img src="images/p-1.jpg" alt="">
-                <h3>Chicken Pakoda</h3>
+                <h3>Chicken Pakoda (8 Pcs)</h3>
                 <span class="price">₹249</span>
                 <div class="hover-info">
                     <p>Crispy chicken pakodas served with fresh green chutney.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Chicken Pakoda')">Add to Cart</button>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Chicken Pakoda (8 Pcs)', this)">Add to Cart</button>
                 </div>
             </div>
             <div class="menu-card">
                 <img src="images/p-2.jpg" alt="">
-                <h3>Machh Bhaja</h3>
+                <h3>Machh Bhaja (2 Pcs)</h3>
                 <span class="price">₹199</span>
                 <div class="hover-info">
                     <p>Traditional crispy Rohu fish fry spiced to perfection.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Machh Bhaja')">Add to Cart</button>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Machh Bhaja (2 Pcs)', this)">Add to Cart</button>
                 </div>
             </div>
         </div>
@@ -650,65 +729,65 @@
         <div class="menu-card-container">
             <div class="menu-card">
                 <img src="images/p-3.jpg" alt="">
-                <h3>Machher Jhol</h3>
+                <h3>Machher Jhol (2 Pcs)</h3>
                 <span class="price">₹249</span>
                 <div class="hover-info">
                     <p>Traditional Bengali fish curry with cumin paste and potatoes.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Machher Jhol')">Add to Cart</button>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Machher Jhol (2 Pcs)', this)">Add to Cart</button>
                 </div>
             </div>
             <div class="menu-card">
                 <img src="images/p-4.jpg" alt="">
-                <h3>Machher Kalia</h3>
+                <h3>Machher Kalia (2 Pcs)</h3>
                 <span class="price">₹249</span>
                 <div class="hover-info">
                     <p>Traditional Bengali fish delicacy cooked in a rich gravy.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Machher Kalia')">Add to Cart</button>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Machher Kalia (2 Pcs)', this)">Add to Cart</button>
                 </div>
             </div>
             <div class="menu-card">
                 <img src="images/p-5.jpg" alt="">
-                <h3>Doi Machh</h3>
+                <h3>Doi Machh (2 Pcs)</h3>
                 <span class="price">₹299</span>
                 <div class="hover-info">
                     <p>Tender fish pieces simmered in a creamy yogurt and cashew paste.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Doi Machh')">Add to Cart</button>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Doi Machh (2 Pcs)', this)">Add to Cart</button>
                 </div>
             </div>
             <div class="menu-card">
                 <img src="images/p-6.jpg" alt="">
-                <h3>Chicken Kosha</h3>
+                <h3>Chicken Kosha (4 Pcs)</h3>
                 <span class="price">₹249</span>
                 <div class="hover-info">
                     <p>Thick, spicy, and deeply flavorful traditional chicken kosha.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Chicken Kosha')">Add to Cart</button>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Chicken Kosha (4 Pcs)', this)">Add to Cart</button>
                 </div>
             </div>
             <div class="menu-card">
                 <img src="images/g-1.jpg" alt="">
-                <h3>Chicken Jhol</h3>
+                <h3>Chicken Jhol (4 Pcs)</h3>
                 <span class="price">₹249</span>
                 <div class="hover-info">
                     <p>Light and comforting authentic Bengali style chicken curry.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Chicken Jhol')">Add to Cart</button>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Chicken Jhol (4 Pcs)', this)">Add to Cart</button>
                 </div>
             </div>
             <div class="menu-card">
                 <img src="images/g-2.jpg" alt="">
-                <h3>Chilli Chicken</h3>
+                <h3>Chilli Chicken (8 Pcs)</h3>
                 <span class="price">₹299</span>
                 <div class="hover-info">
                     <p>Popular Kolkata style spicy and tangy chilli chicken.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Chilli Chicken')">Add to Cart</button>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Chilli Chicken (8 Pcs)', this)">Add to Cart</button>
                 </div>
             </div>
             <div class="menu-card">
                 <img src="images/g-3.jpg" alt="">
-                <h3>Dim Kosha</h3>
+                <h3>Dim Kosha (2 Pcs)</h3>
                 <span class="price">₹149</span>
                 <div class="hover-info">
                     <p>Boiled eggs cooked in a rich, spicy Bengali-style gravy.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Dim Kosha')">Add to Cart</button>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Dim Kosha (2 Pcs)', this)">Add to Cart</button>
                 </div>
             </div>
         </div>
@@ -720,56 +799,92 @@
         <div class="menu-card-container">
             <div class="menu-card veg-card">
                 <img src="images/g-4.jpg" alt="">
-                <h3>Dhokar Dalna</h3>
+                <h3>Dhokar Dalna (4 Pcs)</h3>
                 <span class="price green-price">₹249</span>
                 <div class="hover-info">
                     <p>Bengali lentil cake curry prepared in a rich, aromatic gravy.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Dhokar Dalna')">Add to Cart</button>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Dhokar Dalna (4 Pcs)', this)">Add to Cart</button>
                 </div>
             </div>
             <div class="menu-card veg-card">
                 <img src="images/g-5.jpg" alt="">
-                <h3>Alu Posto</h3>
+                <h3>Alu Posto - Serves 2</h3>
                 <span class="price green-price">₹249</span>
                 <div class="hover-info">
-                    <p>Potatoes or pointed gourd cooked in a delicious poppy seed paste.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Alu Posto')">Add to Cart</button>
+                    <p>Potatoes cooked in a delicious poppy seed paste.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Alu Posto - Serves 2', this)">Add to Cart</button>
                 </div>
             </div>
             <div class="menu-card veg-card">
                 <img src="images/g-6.jpg" alt="">
-                <h3>Alu Potoler Torkari</h3>
+                <h3>Potol Posto - Serves 2</h3>
                 <span class="price green-price">₹249</span>
                 <div class="hover-info">
-                    <p>Homestyle seasonal vegetable curry.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Alu Potoler Torkari')">Add to Cart</button>
+                    <p>Pointed gourd cooked in a rich, spiced poppy seed paste.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Potol Posto - Serves 2', this)">Add to Cart</button>
                 </div>
             </div>
             <div class="menu-card veg-card">
                 <img src="images/g-7.jpg" alt="">
-                <h3>Mooger Dal</h3>
-                <span class="price green-price">₹199</span>
+                <h3>Alu Potoler Torkari - Serves 2</h3>
+                <span class="price green-price">₹249</span>
                 <div class="hover-info">
-                    <p>Roasted yellow moong dal prepared with traditional spices.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Mooger Dal')">Add to Cart</button>
+                    <p>Homestyle seasonal vegetable curry.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Alu Potoler Torkari - Serves 2', this)">Add to Cart</button>
                 </div>
             </div>
             <div class="menu-card veg-card">
                 <img src="images/g-8.jpg" alt="">
-                <h3>Alur Dom</h3>
-                <span class="price green-price">₹149</span>
+                <h3>Alu Phulkopir Torkari - Serves 2</h3>
+                <span class="price green-price">₹249</span>
                 <div class="hover-info">
-                    <p>Spiced baby potato curry cooked Bengali style.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Alur Dom')">Add to Cart</button>
+                    <p>Traditional Bengali potato and cauliflower curry.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Alu Phulkopir Torkari - Serves 2', this)">Add to Cart</button>
                 </div>
             </div>
             <div class="menu-card veg-card">
                 <img src="images/g-9.jpg" alt="">
-                <h3>Alu Bhaja</h3>
+                <h3>Mooger Dal - Serves 2</h3>
+                <span class="price green-price">₹199</span>
+                <div class="hover-info">
+                    <p>Roasted yellow moong dal prepared with traditional spices.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Mooger Dal - Serves 2', this)">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menu-card veg-card">
+                <img src="images/s-img-1.jpg" alt="">
+                <h3>Alur Dom (6 Pcs)</h3>
+                <span class="price green-price">₹149</span>
+                <div class="hover-info">
+                    <p>Spiced baby potato curry cooked Bengali style.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Alur Dom (6 Pcs)', this)">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menu-card veg-card">
+                <img src="images/s-img-2.jpg" alt="">
+                <h3>Alu Bhaja - Serves 2</h3>
                 <span class="price green-price">₹99</span>
                 <div class="hover-info">
                     <p>Crispy shallow-fried vegetable slices.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Alu Bhaja')">Add to Cart</button>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Alu Bhaja - Serves 2', this)">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menu-card veg-card">
+                <img src="images/s-img-3.jpg" alt="">
+                <h3>Potol Bhaja - Serves 2</h3>
+                <span class="price green-price">₹99</span>
+                <div class="hover-info">
+                    <p>Crispy fried pointed gourd slices.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Potol Bhaja - Serves 2', this)">Add to Cart</button>
+                </div>
+            </div>
+            <div class="menu-card veg-card">
+                <img src="images/s-img-4.jpg" alt="">
+                <h3>Begun Bhaja - Serves 2</h3>
+                <span class="price green-price">₹99</span>
+                <div class="hover-info">
+                    <p>Traditional Bengali style crispy shallow-fried eggplant slices.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Begun Bhaja - Serves 2', this)">Add to Cart</button>
                 </div>
             </div>
         </div>
@@ -780,30 +895,30 @@
         <h2><span class="green-text">Rice & Breads</span></h2>
         <div class="menu-card-container">
             <div class="menu-card veg-card">
-                <img src="images/p-1.jpg" alt="">
-                <h3>Steamed Basmati Rice</h3>
+                <img src="images/s-img-5.jpg" alt="">
+                <h3>Steamed Basmati Rice - Serves 1</h3>
                 <span class="price green-price">₹79</span>
                 <div class="hover-info">
                     <p>Fluffy long-grain steamed basmati rice.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Steamed Basmati Rice')">Add to Cart</button>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Steamed Basmati Rice - Serves 1', this)">Add to Cart</button>
                 </div>
             </div>
             <div class="menu-card veg-card">
-                <img src="images/p-2.jpg" alt="">
-                <h3>Parotta</h3>
+                <img src="images/p-4.jpg" alt="">
+                <h3>Parotta - Plain (1 Pcs)</h3>
                 <span class="price green-price">₹29</span>
                 <div class="hover-info">
                     <p>Soft layered plain parotta.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Parotta')">Add to Cart</button>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Parotta - Plain (1 Pcs)', this)">Add to Cart</button>
                 </div>
             </div>
             <div class="menu-card veg-card">
-                <img src="images/p-3.jpg" alt="">
-                <h3>Roti</h3>
+                <img src="images/p-6.jpg" alt="">
+                <h3>Roti (1 Pcs)</h3>
                 <span class="price green-price">₹15</span>
                 <div class="hover-info">
                     <p>Freshly made whole wheat flatbread.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Roti')">Add to Cart</button>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Roti (1 Pcs)', this)">Add to Cart</button>
                 </div>
             </div>
         </div>
@@ -822,23 +937,23 @@
     <section class="steps">
 
         <div class="box">
-            <img src="images/p-1.jpg" alt="">
+            <img src="images/step-1.jpg" alt="">
             <h3>Honest Pricing</h3>
         </div>
         <div class="box">
-            <img src="images/p-2.jpg" alt="">
+            <img src="images/step-2.jpg" alt="">
             <h3>All raw items procured same day</h3>
         </div>
         <div class="box">
-            <img src="images/p-3.jpg" alt="">
+            <img src="images/step-3.jpg" alt="">
             <h3>Cooked in rice bran oil / mustard oil</h3>
         </div>
         <div class="box">
-            <img src="images/p-4.jpg" alt="">
+            <img src="images/step-4.jpg" alt="">
             <h3>Home grinded bengali spices</h3>
         </div>
         <div class="box">
-            <img src="images/p-5.jpg" alt="">
+            <img src="images/step-5.jpg" alt="">
             <h3>Free home delivery* across Nagpur</h3>
         </div>
     
@@ -929,117 +1044,132 @@
                 <div id="items-container">
                     <!-- Row 1 -->
                     <div class="item-row">
-                        <select name="food-item[]" onchange="updateCartCount()" required>
+                        <select name="food-item[]" onchange="updateCartSummary()" required>
                             <option value="" disabled selected>Select Item from Menu</option>
                             <optgroup label="Starters">
-                                <option value="Chicken Pakoda">Chicken Pakoda - ₹249</option>
-                                <option value="Machh Bhaja">Machh Bhaja - ₹199</option>
+                                <option value="Chicken Pakoda (8 Pcs)">Chicken Pakoda (8 Pcs) - ₹249</option>
+                                <option value="Machh Bhaja (2 Pcs)">Machh Bhaja (2 Pcs) - ₹199</option>
                             </optgroup>
                             <optgroup label="Main Course - Non Veg Items">
-                                <option value="Machher Jhol">Machher Jhol - ₹249</option>
-                                <option value="Machher Kalia">Machher Kalia - ₹249</option>
-                                <option value="Doi Machh">Doi Machh - ₹299</option>
-                                <option value="Chicken Kosha">Chicken Kosha - ₹249</option>
-                                <option value="Chicken Jhol">Chicken Jhol - ₹249</option>
-                                <option value="Chilli Chicken">Chilli Chicken - ₹299</option>
-                                <option value="Dim Kosha">Dim Kosha - ₹149</option>
+                                <option value="Machher Jhol (2 Pcs)">Machher Jhol (2 Pcs) - ₹249</option>
+                                <option value="Machher Kalia (2 Pcs)">Machher Kalia (2 Pcs) - ₹249</option>
+                                <option value="Doi Machh (2 Pcs)">Doi Machh (2 Pcs) - ₹299</option>
+                                <option value="Chicken Kosha (4 Pcs)">Chicken Kosha (4 Pcs) - ₹249</option>
+                                <option value="Chicken Jhol (4 Pcs)">Chicken Jhol (4 Pcs) - ₹249</option>
+                                <option value="Chilli Chicken (8 Pcs)">Chilli Chicken (8 Pcs) - ₹299</option>
+                                <option value="Dim Kosha (2 Pcs)">Dim Kosha (2 Pcs) - ₹149</option>
                             </optgroup>
                             <optgroup label="Sides & Vegetables - Veg Items">
-                                <option value="Dhokar Dalna">Dhokar Dalna - ₹249</option>
-                                <option value="Alu Posto">Alu Posto - ₹249</option>
-                                <option value="Alu Potoler Torkari">Alu Potoler Torkari - ₹249</option>
-                                <option value="Mooger Dal">Mooger Dal - ₹199</option>
-                                <option value="Alur Dom">Alur Dom - ₹149</option>
-                                <option value="Alu Bhaja">Alu Bhaja - ₹99</option>
+                                <option value="Dhokar Dalna (4 Pcs)">Dhokar Dalna (4 Pcs) - ₹249</option>
+                                <option value="Alu Posto - Serves 2">Alu Posto - Serves 2 - ₹249</option>
+                                <option value="Potol Posto - Serves 2">Potol Posto - Serves 2 - ₹249</option>
+                                <option value="Alu Potoler Torkari - Serves 2">Alu Potoler Torkari - Serves 2 - ₹249</option>
+                                <option value="Alu Phulkopir Torkari - Serves 2">Alu Phulkopir Torkari - Serves 2 - ₹249</option>
+                                <option value="Mooger Dal - Serves 2">Mooger Dal - Serves 2 - ₹199</option>
+                                <option value="Alur Dom (6 Pcs)">Alur Dom (6 Pcs) - ₹149</option>
+                                <option value="Alu Bhaja - Serves 2">Alu Bhaja - Serves 2 - ₹99</option>
+                                <option value="Potol Bhaja - Serves 2">Potol Bhaja - Serves 2 - ₹99</option>
+                                <option value="Begun Bhaja - Serves 2">Begun Bhaja - Serves 2 - ₹99</option>
                             </optgroup>
                             <optgroup label="Rice & Breads">
-                                <option value="Steamed Basmati Rice">Steamed Basmati Rice - ₹79</option>
-                                <option value="Parotta">Parotta - ₹29</option>
-                                <option value="Roti">Roti - ₹15</option>
+                                <option value="Steamed Basmati Rice - Serves 1">Steamed Basmati Rice - Serves 1 - ₹79</option>
+                                <option value="Parotta - Plain (1 Pcs)">Parotta - Plain (1 Pcs) - ₹29</option>
+                                <option value="Roti (1 Pcs)">Roti (1 Pcs) - ₹15</option>
                             </optgroup>
                         </select>
                         <div class="qty-box">
                             <button type="button" onclick="changeQty(this, -1)">-</button>
-                            <input type="number" name="quantity[]" value="1" min="0" onchange="updateCartCount()" readonly>
+                            <input type="number" name="quantity[]" value="1" min="0" onchange="updateCartSummary()" readonly>
                             <button type="button" onclick="changeQty(this, 1)">+</button>
                         </div>
                     </div>
                     <!-- Row 2 -->
                     <div class="item-row">
-                        <select name="food-item[]" onchange="updateCartCount()">
+                        <select name="food-item[]" onchange="updateCartSummary()">
                             <option value="" disabled selected>Select Item from Menu</option>
                             <optgroup label="Starters">
-                                <option value="Chicken Pakoda">Chicken Pakoda - ₹249</option>
-                                <option value="Machh Bhaja">Machh Bhaja - ₹199</option>
+                                <option value="Chicken Pakoda (8 Pcs)">Chicken Pakoda (8 Pcs) - ₹249</option>
+                                <option value="Machh Bhaja (2 Pcs)">Machh Bhaja (2 Pcs) - ₹199</option>
                             </optgroup>
                             <optgroup label="Main Course - Non Veg Items">
-                                <option value="Machher Jhol">Machher Jhol - ₹249</option>
-                                <option value="Machher Kalia">Machher Kalia - ₹249</option>
-                                <option value="Doi Machh">Doi Machh - ₹299</option>
-                                <option value="Chicken Kosha">Chicken Kosha - ₹249</option>
-                                <option value="Chicken Jhol">Chicken Jhol - ₹249</option>
-                                <option value="Chilli Chicken">Chilli Chicken - ₹299</option>
-                                <option value="Dim Kosha">Dim Kosha - ₹149</option>
+                                <option value="Machher Jhol (2 Pcs)">Machher Jhol (2 Pcs) - ₹249</option>
+                                <option value="Machher Kalia (2 Pcs)">Machher Kalia (2 Pcs) - ₹249</option>
+                                <option value="Doi Machh (2 Pcs)">Doi Machh (2 Pcs) - ₹299</option>
+                                <option value="Chicken Kosha (4 Pcs)">Chicken Kosha (4 Pcs) - ₹249</option>
+                                <option value="Chicken Jhol (4 Pcs)">Chicken Jhol (4 Pcs) - ₹249</option>
+                                <option value="Chilli Chicken (8 Pcs)">Chilli Chicken (8 Pcs) - ₹299</option>
+                                <option value="Dim Kosha (2 Pcs)">Dim Kosha (2 Pcs) - ₹149</option>
                             </optgroup>
                             <optgroup label="Sides & Vegetables - Veg Items">
-                                <option value="Dhokar Dalna">Dhokar Dalna - ₹249</option>
-                                <option value="Alu Posto">Alu Posto - ₹249</option>
-                                <option value="Alu Potoler Torkari">Alu Potoler Torkari - ₹249</option>
-                                <option value="Mooger Dal">Mooger Dal - ₹199</option>
-                                <option value="Alur Dom">Alur Dom - ₹149</option>
-                                <option value="Alu Bhaja">Alu Bhaja - ₹99</option>
+                                <option value="Dhokar Dalna (4 Pcs)">Dhokar Dalna (4 Pcs) - ₹249</option>
+                                <option value="Alu Posto - Serves 2">Alu Posto - Serves 2 - ₹249</option>
+                                <option value="Potol Posto - Serves 2">Potol Posto - Serves 2 - ₹249</option>
+                                <option value="Alu Potoler Torkari - Serves 2">Alu Potoler Torkari - Serves 2 - ₹249</option>
+                                <option value="Alu Phulkopir Torkari - Serves 2">Alu Phulkopir Torkari - Serves 2 - ₹249</option>
+                                <option value="Mooger Dal - Serves 2">Mooger Dal - Serves 2 - ₹199</option>
+                                <option value="Alur Dom (6 Pcs)">Alur Dom (6 Pcs) - ₹149</option>
+                                <option value="Alu Bhaja - Serves 2">Alu Bhaja - Serves 2 - ₹99</option>
+                                <option value="Potol Bhaja - Serves 2">Potol Bhaja - Serves 2 - ₹99</option>
+                                <option value="Begun Bhaja - Serves 2">Begun Bhaja - Serves 2 - ₹99</option>
                             </optgroup>
                             <optgroup label="Rice & Breads">
-                                <option value="Steamed Basmati Rice">Steamed Basmati Rice - ₹79</option>
-                                <option value="Parotta">Parotta - ₹29</option>
-                                <option value="Roti">Roti - ₹15</option>
+                                <option value="Steamed Basmati Rice - Serves 1">Steamed Basmati Rice - Serves 1 - ₹79</option>
+                                <option value="Parotta - Plain (1 Pcs)">Parotta - Plain (1 Pcs) - ₹29</option>
+                                <option value="Roti (1 Pcs)">Roti (1 Pcs) - ₹15</option>
                             </optgroup>
                         </select>
                         <div class="qty-box">
                             <button type="button" onclick="changeQty(this, -1)">-</button>
-                            <input type="number" name="quantity[]" value="1" min="0" onchange="updateCartCount()" readonly>
+                            <input type="number" name="quantity[]" value="1" min="0" onchange="updateCartSummary()" readonly>
                             <button type="button" onclick="changeQty(this, 1)">+</button>
                         </div>
                     </div>
                     <!-- Row 3 -->
                     <div class="item-row">
-                        <select name="food-item[]" onchange="updateCartCount()">
+                        <select name="food-item[]" onchange="updateCartSummary()">
                             <option value="" disabled selected>Select Item from Menu</option>
                             <optgroup label="Starters">
-                                <option value="Chicken Pakoda">Chicken Pakoda - ₹249</option>
-                                <option value="Machh Bhaja">Machh Bhaja - ₹199</option>
+                                <option value="Chicken Pakoda (8 Pcs)">Chicken Pakoda (8 Pcs) - ₹249</option>
+                                <option value="Machh Bhaja (2 Pcs)">Machh Bhaja (2 Pcs) - ₹199</option>
                             </optgroup>
                             <optgroup label="Main Course - Non Veg Items">
-                                <option value="Machher Jhol">Machher Jhol - ₹249</option>
-                                <option value="Machher Kalia">Machher Kalia - ₹249</option>
-                                <option value="Doi Machh">Doi Machh - ₹299</option>
-                                <option value="Chicken Kosha">Chicken Kosha - ₹249</option>
-                                <option value="Chicken Jhol">Chicken Jhol - ₹249</option>
-                                <option value="Chilli Chicken">Chilli Chicken - ₹299</option>
-                                <option value="Dim Kosha">Dim Kosha - ₹149</option>
+                                <option value="Machher Jhol (2 Pcs)">Machher Jhol (2 Pcs) - ₹249</option>
+                                <option value="Machher Kalia (2 Pcs)">Machher Kalia (2 Pcs) - ₹249</option>
+                                <option value="Doi Machh (2 Pcs)">Doi Machh (2 Pcs) - ₹299</option>
+                                <option value="Chicken Kosha (4 Pcs)">Chicken Kosha (4 Pcs) - ₹249</option>
+                                <option value="Chicken Jhol (4 Pcs)">Chicken Jhol (4 Pcs) - ₹249</option>
+                                <option value="Chilli Chicken (8 Pcs)">Chilli Chicken (8 Pcs) - ₹299</option>
+                                <option value="Dim Kosha (2 Pcs)">Dim Kosha (2 Pcs) - ₹149</option>
                             </optgroup>
                             <optgroup label="Sides & Vegetables - Veg Items">
-                                <option value="Dhokar Dalna">Dhokar Dalna - ₹249</option>
-                                <option value="Alu Posto">Alu Posto - ₹249</option>
-                                <option value="Alu Potoler Torkari">Alu Potoler Torkari - ₹249</option>
-                                <option value="Mooger Dal">Mooger Dal - ₹199</option>
-                                <option value="Alur Dom">Alur Dom - ₹149</option>
-                                <option value="Alu Bhaja">Alu Bhaja - ₹99</option>
+                                <option value="Dhokar Dalna (4 Pcs)">Dhokar Dalna (4 Pcs) - ₹249</option>
+                                <option value="Alu Posto - Serves 2">Alu Posto - Serves 2 - ₹249</option>
+                                <option value="Potol Posto - Serves 2">Potol Posto - Serves 2 - ₹249</option>
+                                <option value="Alu Potoler Torkari - Serves 2">Alu Potoler Torkari - Serves 2 - ₹249</option>
+                                <option value="Alu Phulkopir Torkari - Serves 2">Alu Phulkopir Torkari - Serves 2 - ₹249</option>
+                                <option value="Mooger Dal - Serves 2">Mooger Dal - Serves 2 - ₹199</option>
+                                <option value="Alur Dom (6 Pcs)">Alur Dom (6 Pcs) - ₹149</option>
+                                <option value="Alu Bhaja - Serves 2">Alu Bhaja - Serves 2 - ₹99</option>
+                                <option value="Potol Bhaja - Serves 2">Potol Bhaja - Serves 2 - ₹99</option>
+                                <option value="Begun Bhaja - Serves 2">Begun Bhaja - Serves 2 - ₹99</option>
                             </optgroup>
                             <optgroup label="Rice & Breads">
-                                <option value="Steamed Basmati Rice">Steamed Basmati Rice - ₹79</option>
-                                <option value="Parotta">Parotta - ₹29</option>
-                                <option value="Roti">Roti - ₹15</option>
+                                <option value="Steamed Basmati Rice - Serves 1">Steamed Basmati Rice - Serves 1 - ₹79</option>
+                                <option value="Parotta - Plain (1 Pcs)">Parotta - Plain (1 Pcs) - ₹29</option>
+                                <option value="Roti (1 Pcs)">Roti (1 Pcs) - ₹15</option>
                             </optgroup>
                         </select>
                         <div class="qty-box">
                             <button type="button" onclick="changeQty(this, -1)">-</button>
-                            <input type="number" name="quantity[]" value="1" min="0" onchange="updateCartCount()" readonly>
+                            <input type="number" name="quantity[]" value="1" min="0" onchange="updateCartSummary()" readonly>
                             <button type="button" onclick="changeQty(this, 1)">+</button>
                         </div>
                     </div>
                 </div>
                 <button type="button" class="add-item-btn" onclick="addMoreItem()"><i class="fas fa-plus"></i> Add Another Item</button>
+                <div class="cart-total-container">
+                    Total Amount: <span id="total-amount">₹0</span>
+                </div>
             </div>
 
             <input type="submit" value="order now" class="btn">

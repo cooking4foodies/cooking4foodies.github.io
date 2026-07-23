@@ -582,7 +582,51 @@
 
         function handleOrderSubmit(event) {
             event.preventDefault();
-            document.getElementById('successModal').style.display = 'flex';
+
+            // Gather customer details
+            const formInputs = document.querySelectorAll('#orderForm input, #orderForm textarea');
+            const name = formInputs[0].value;
+            const email = formInputs[1].value;
+            const contact = formInputs[2].value;
+            const address = formInputs[3].value;
+
+            // Gather selected items and quantities
+            const rows = document.getElementsByClassName('item-row');
+            let orderedItemsList = [];
+            for (let row of rows) {
+                const select = row.querySelector('select');
+                const qtyInput = row.querySelector('.qty-box input');
+                if (select.value && parseInt(qtyInput.value) > 0) {
+                    orderedItemsList.push(select.value + " (Qty: " + qtyInput.value + ")");
+                }
+            }
+
+            const totalAmount = document.getElementById('total-amount').innerText;
+
+            const orderData = {
+                name: name,
+                email: email,
+                contact: contact,
+                address: address,
+                items: orderedItemsList.join(', '),
+                totalAmount: totalAmount
+            };
+
+            const scriptURL = 'https://script.google.com/macros/s/AKfycby1pOgDOYrL_GqkHe24cJWnjMf_9eWlvGo-ROYJhI55jupQjH96M90KGl_HWqrOkddzeA/exec';
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            })
+            .then(() => {
+                document.getElementById('successModal').style.display = 'flex';
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                alert('There was an error submitting your order. Please try again.');
+            });
         }
         
         function closeModal() {

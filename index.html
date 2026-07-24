@@ -12,7 +12,55 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* Added styling for menu sub-sections, uniform grid, and left alignment */
+        /* Added styling for menu sub-sections, uniform grid, left alignment, and increased custom image logo sizing */
+        .logo img {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+        }
+
+        /* Mobile Navbar & Toggle Fixes */
+        #menu-bar {
+            font-size: 3rem;
+            color: #333;
+            border-radius: .5rem;
+            padding: .5rem 1.5rem;
+            cursor: pointer;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            #menu-bar {
+                display: block;
+            }
+            header .navbar {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: #fff;
+                border-top: .1rem solid rgba(0,0,0,.1);
+                box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+                clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+                transition: .2s linear;
+                display: flex;
+                flex-direction: column;
+            }
+            header .navbar.active {
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            }
+            header .navbar a {
+                margin: 1.5rem;
+                padding: 1.5rem;
+                background: #f9f9f9;
+                border: .1rem solid rgba(0,0,0,.1);
+                display: block;
+                font-size: 2rem;
+            }
+        }
+
         .menu-category {
             padding: 2rem 9%;
         }
@@ -637,6 +685,31 @@
 
         window.onload = function() {
             updateCartSummary();
+
+            // Mobile Navbar toggle functionality
+            let menu = document.querySelector('#menu-bar');
+            let navbar = document.querySelector('.navbar');
+
+            if (menu && navbar) {
+                menu.onclick = () => {
+                    menu.classList.toggle('fa-times');
+                    navbar.classList.toggle('active');
+                };
+
+                window.onscroll = () => {
+                    menu.classList.remove('fa-times');
+                    navbar.classList.remove('active');
+                };
+
+                // Close menu when clicking any nav link on mobile
+                let navLinks = document.querySelectorAll('.navbar a');
+                navLinks.forEach(link => {
+                    link.onclick = () => {
+                        menu.classList.remove('fa-times');
+                        navbar.classList.remove('active');
+                    };
+                });
+            }
         }
     </script>
 
@@ -647,7 +720,7 @@
 
 <header>
 
-    <a href="#" class="logo"><i class="fas fa-book-open"></i>Cooking 4 Foodies</a>
+    <a href="#" class="logo"><img src="images/pic4.png" alt="logo">cooking 4 foodies</a>
 
     <div id="menu-bar" class="fas fa-bars"></div>
 
@@ -669,8 +742,10 @@
 
     <div class="content">
         <h3>food made with love</h3>
-        <p>Craving the true taste of Bengal? Cooking 4 Foodies is your go-to delivery kitchen for authentic Bengali delicacies. Cooked in pure mustard oil with aromatic panch phoron and a whole lot of love, we deliver heritage flavors right to your door. Real spices. Traditional recipes. Zero compromises.</p>
-        <a href="#popular" class="btn">Explore Menu</a>
+        <p>craving the true taste of bengal? cooking 4 foodies delivers traditional heritage flavors right to your door, cooked in pure mustard oil with zero compromises on quality.
+
+loved by our 250k+ strong social media family, we bring you real spices and the true taste of bengal!</p>
+        <a href="#popular" class="btn">explore menu</a>
     </div>
 
     <div class="image">
@@ -693,40 +768,40 @@
             <img class="image" src="images/p-8.jpg" alt="">
             <div class="content">
                 <img src="images/s-1.png" alt="">
-                <h3>Machher Kalia</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda inventore neque amet ipsa tenetur voluptates aperiam tempore libero labore aut.</p>
+                <h3>machher kalia</h3>
+                <p>an exquisite crown jewel of bengali celebrations featuring tender fish bathed in a rich, onion-tomato gravy infused with warm whole spices.</p>
             </div>
         </div>
         <div class="box">
             <img class="image" src="images/p-5.jpg" alt="">
             <div class="content">
                 <img src="images/s-2.png" alt="">
-                <h3>Doi Machh</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda inventore neque amet ipsa tenetur voluptates aperiam tempore libero labore aut.</p>
+                <h3>doi machh</h3>
+                <p>delicately fried fish simmered to perfection in a silky, yogurt-based gravy scented with cardamom, ginger, and subtle royal spices.</p>
             </div>
         </div>
         <div class="box">
             <img class="image" src="images/p-6.jpg" alt="">
             <div class="content">
                 <img src="images/s-3.png" alt="">
-                <h3>Chicken Kosha</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda inventore neque amet ipsa tenetur voluptates aperiam tempore libero labore aut.</p>
+                <h3>chicken kosha</h3>
+                <p>a rustic masterpiece of slow-roasted chicken coated in a thick, dark, and intensely caramelized onion-garlic masala that melts on your tongue.</p>
             </div>
         </div>
         <div class="box">
             <img class="image" src="images/g-4.jpg" alt="">
             <div class="content">
                 <img src="images/s-4.png" alt="">
-                <h3>Dhokar Dalna</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda inventore neque amet ipsa tenetur voluptates aperiam tempore libero labore aut.</p>
+                <h3>dhokar dalna</h3>
+                <p>a vegetarian triumph of artisanal chana dal cakes, lightly fried and drenched in an aromatic, ginger-infused cumin gravy fit for royalty.</p>
             </div>
         </div>
         <div class="box">
             <img class="image" src="images/p-9.jpg" alt="">
             <div class="content">
                 <img src="images/s-5.png" alt="">
-                <h3>Alu Posto</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda inventore neque amet ipsa tenetur voluptates aperiam tempore libero labore aut.</p>
+                <h3>alu posto</h3>
+                <p>the timeless ultimate comfort food of bengal—tender potatoes blanketed in a velvety, deeply soothing white poppy seed paste.</p>
             </div>
         </div>
 
@@ -744,24 +819,24 @@
 
     <!-- 1. Starters -->
     <div class="menu-category">
-        <h2><span>Starters</span></h2>
+        <h2><span>starters</span></h2>
         <div class="menu-card-container">
             <div class="menu-card">
                 <img src="images/p-1.jpg" alt="">
-                <h3>Chicken Pakoda (8 Pcs)</h3>
+                <h3>chicken pakoda (8 pcs)</h3>
                 <span class="price">₹249</span>
                 <div class="hover-info">
-                    <p>Crispy chicken pakodas served with fresh green chutney.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Chicken Pakoda (8 Pcs)', this)">Add to Cart</button>
+                    <p>crispy chicken pakodas served with fresh green chutney.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Chicken Pakoda (8 Pcs)', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card">
                 <img src="images/p-2.jpg" alt="">
-                <h3>Machh Bhaja (2 Pcs)</h3>
+                <h3>machh bhaja (2 pcs)</h3>
                 <span class="price">₹199</span>
                 <div class="hover-info">
-                    <p>Traditional crispy Rohu fish fry spiced to perfection.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Machh Bhaja (2 Pcs)', this)">Add to Cart</button>
+                    <p>traditional crispy rohu fish fry spiced to perfection.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Machh Bhaja (2 Pcs)', this)">add to cart</button>
                 </div>
             </div>
         </div>
@@ -769,69 +844,69 @@
 
     <!-- 2. Main Course - Non Veg Items -->
     <div class="menu-category">
-        <h2><span>Main Course - Non Veg Items</span></h2>
+        <h2><span>main course - non veg items</span></h2>
         <div class="menu-card-container">
             <div class="menu-card">
                 <img src="images/p-3.jpg" alt="">
-                <h3>Machher Jhol (2 Pcs)</h3>
+                <h3>machher jhol (2 pcs)</h3>
                 <span class="price">₹249</span>
                 <div class="hover-info">
-                    <p>Traditional Bengali fish curry with cumin paste and potatoes.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Machher Jhol (2 Pcs)', this)">Add to Cart</button>
+                    <p>traditional bengali fish curry with cumin paste and potatoes.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Machher Jhol (2 Pcs)', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card">
                 <img src="images/p-8.jpg" alt="">
-                <h3>Machher Kalia (2 Pcs)</h3>
+                <h3>machher kalia (2 pcs)</h3>
                 <span class="price">₹249</span>
                 <div class="hover-info">
-                    <p>Traditional Bengali fish delicacy cooked in a rich gravy.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Machher Kalia (2 Pcs)', this)">Add to Cart</button>
+                    <p>traditional bengali fish delicacy cooked in a rich gravy.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Machher Kalia (2 Pcs)', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card">
                 <img src="images/p-5.jpg" alt="">
-                <h3>Doi Machh (2 Pcs)</h3>
+                <h3>doi machh (2 pcs)</h3>
                 <span class="price">₹299</span>
                 <div class="hover-info">
-                    <p>Tender fish pieces simmered in a creamy yogurt and cashew paste.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Doi Machh (2 Pcs)', this)">Add to Cart</button>
+                    <p>tender fish pieces simmered in a creamy yogurt and cashew paste.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Doi Machh (2 Pcs)', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card">
                 <img src="images/p-6.jpg" alt="">
-                <h3>Chicken Kosha (4 Pcs)</h3>
+                <h3>chicken kosha (4 pcs)</h3>
                 <span class="price">₹249</span>
                 <div class="hover-info">
-                    <p>Thick, spicy, and deeply flavorful traditional chicken kosha.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Chicken Kosha (4 Pcs)', this)">Add to Cart</button>
+                    <p>thick, spicy, and deeply flavorful traditional chicken kosha.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Chicken Kosha (4 Pcs)', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card">
                 <img src="images/g-1.jpg" alt="">
-                <h3>Chicken Jhol (4 Pcs)</h3>
+                <h3>chicken jhol (4 pcs)</h3>
                 <span class="price">₹249</span>
                 <div class="hover-info">
-                    <p>Light and comforting authentic Bengali style chicken curry.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Chicken Jhol (4 Pcs)', this)">Add to Cart</button>
+                    <p>light and comforting authentic bengali style chicken curry.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Chicken Jhol (4 Pcs)', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card">
                 <img src="images/g-2.jpg" alt="">
-                <h3>Chilli Chicken (8 Pcs)</h3>
+                <h3>chilli chicken (8 pcs)</h3>
                 <span class="price">₹299</span>
                 <div class="hover-info">
-                    <p>Popular Kolkata style spicy and tangy chilli chicken.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Chilli Chicken (8 Pcs)', this)">Add to Cart</button>
+                    <p>popular kolkata style spicy and tangy chilli chicken.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Chilli Chicken (8 Pcs)', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card">
                 <img src="images/g-3.jpg" alt="">
-                <h3>Dim Kosha (2 Pcs)</h3>
+                <h3>dim kosha (2 pcs)</h3>
                 <span class="price">₹149</span>
                 <div class="hover-info">
-                    <p>Boiled eggs cooked in a rich, spicy Bengali-style gravy.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Dim Kosha (2 Pcs)', this)">Add to Cart</button>
+                    <p>boiled eggs cooked in a rich, spicy bengali-style gravy.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Dim Kosha (2 Pcs)', this)">add to cart</button>
                 </div>
             </div>
         </div>
@@ -839,96 +914,96 @@
 
     <!-- 3. Sides & Vegetables - Veg Items -->
     <div class="menu-category">
-        <h2><span class="green-text">Sides & Vegetables - Veg Items</span></h2>
+        <h2><span class="green-text">sides & vegetables - veg items</span></h2>
         <div class="menu-card-container">
             <div class="menu-card veg-card">
                 <img src="images/g-4.jpg" alt="">
-                <h3>Dhokar Dalna (4 Pcs)</h3>
+                <h3>dhokar dalna (4 pcs)</h3>
                 <span class="price green-price">₹249</span>
                 <div class="hover-info">
-                    <p>Bengali lentil cake curry prepared in a rich, aromatic gravy.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Dhokar Dalna (4 Pcs)', this)">Add to Cart</button>
+                    <p>bengali lentil cake curry prepared in a rich, aromatic gravy.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Dhokar Dalna (4 Pcs)', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card veg-card">
                 <img src="images/p-9.jpg" alt="">
-                <h3>Alu Posto - Serves 2</h3>
+                <h3>alu posto - serves 2</h3>
                 <span class="price green-price">₹249</span>
                 <div class="hover-info">
-                    <p>Potatoes cooked in a delicious poppy seed paste.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Alu Posto - Serves 2', this)">Add to Cart</button>
+                    <p>potatoes cooked in a delicious poppy seed paste.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Alu Posto - Serves 2', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card veg-card">
                 <img src="images/g-6.jpg" alt="">
-                <h3>Potol Posto - Serves 2</h3>
+                <h3>potol posto - serves 2</h3>
                 <span class="price green-price">₹249</span>
                 <div class="hover-info">
-                    <p>Pointed gourd cooked in a rich, spiced poppy seed paste.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Potol Posto - Serves 2', this)">Add to Cart</button>
+                    <p>pointed gourd cooked in a rich, spiced poppy seed paste.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Potol Posto - Serves 2', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card veg-card">
                 <img src="images/g-7.jpg" alt="">
-                <h3>Alu Potoler Torkari - Serves 2</h3>
+                <h3>alu potoler torkari - serves 2</h3>
                 <span class="price green-price">₹249</span>
                 <div class="hover-info">
-                    <p>Homestyle seasonal vegetable curry.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Alu Potoler Torkari - Serves 2', this)">Add to Cart</button>
+                    <p>homestyle seasonal vegetable curry.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Alu Potoler Torkari - Serves 2', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card veg-card">
                 <img src="images/g-8.jpg" alt="">
-                <h3>Alu Phulkopir Torkari - Serves 2</h3>
+                <h3>alu phulkopir torkari - serves 2</h3>
                 <span class="price green-price">₹249</span>
                 <div class="hover-info">
-                    <p>Traditional Bengali potato and cauliflower curry.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Alu Phulkopir Torkari - Serves 2', this)">Add to Cart</button>
+                    <p>traditional bengali potato and cauliflower curry.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Alu Phulkopir Torkari - Serves 2', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card veg-card">
                 <img src="images/g-9.jpg" alt="">
-                <h3>Mooger Dal - Serves 2</h3>
+                <h3>mooger dal - serves 2</h3>
                 <span class="price green-price">₹199</span>
                 <div class="hover-info">
-                    <p>Roasted yellow moong dal prepared with traditional spices.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Mooger Dal - Serves 2', this)">Add to Cart</button>
+                    <p>roasted yellow moong dal prepared with traditional spices.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Mooger Dal - Serves 2', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card veg-card">
                 <img src="images/s-img-1.jpg" alt="">
-                <h3>Alur Dom (6 Pcs)</h3>
+                <h3>alur dom (6 pcs)</h3>
                 <span class="price green-price">₹149</span>
                 <div class="hover-info">
-                    <p>Spiced baby potato curry cooked Bengali style.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Alur Dom (6 Pcs)', this)">Add to Cart</button>
+                    <p>spiced baby potato curry cooked bengali style.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Alur Dom (6 Pcs)', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card veg-card">
                 <img src="images/s-img-2.jpg" alt="">
-                <h3>Alu Bhaja - Serves 2</h3>
+                <h3>alu bhaja - serves 2</h3>
                 <span class="price green-price">₹99</span>
                 <div class="hover-info">
-                    <p>Crispy shallow-fried vegetable slices.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Alu Bhaja - Serves 2', this)">Add to Cart</button>
+                    <p>crispy shallow-fried vegetable slices.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Alu Bhaja - Serves 2', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card veg-card">
                 <img src="images/s-img-3.jpg" alt="">
-                <h3>Potol Bhaja - Serves 2</h3>
+                <h3>potol bhaja - serves 2</h3>
                 <span class="price green-price">₹99</span>
                 <div class="hover-info">
-                    <p>Crispy fried pointed gourd slices.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Potol Bhaja - Serves 2', this)">Add to Cart</button>
+                    <p>crispy fried pointed gourd slices.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Potol Bhaja - Serves 2', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card veg-card">
                 <img src="images/s-img-4.jpg" alt="">
-                <h3>Begun Bhaja - Serves 2</h3>
+                <h3>begun bhaja - serves 2</h3>
                 <span class="price green-price">₹99</span>
                 <div class="hover-info">
-                    <p>Traditional Bengali style crispy shallow-fried eggplant slices.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Begun Bhaja - Serves 2', this)">Add to Cart</button>
+                    <p>traditional bengali style crispy shallow-fried eggplant slices.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Begun Bhaja - Serves 2', this)">add to cart</button>
                 </div>
             </div>
         </div>
@@ -936,33 +1011,33 @@
 
     <!-- 4. Rice & Breads -->
     <div class="menu-category">
-        <h2><span class="green-text">Rice & Breads</span></h2>
+        <h2><span class="green-text">rice & breads</span></h2>
         <div class="menu-card-container">
             <div class="menu-card veg-card">
                 <img src="images/s-img-5.jpg" alt="">
-                <h3>Steamed Basmati Rice - Serves 1</h3>
+                <h3>steamed basmati rice - serves 1</h3>
                 <span class="price green-price">₹79</span>
                 <div class="hover-info">
-                    <p>Fluffy long-grain steamed basmati rice.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Steamed Basmati Rice - Serves 1', this)">Add to Cart</button>
+                    <p>fluffy long-grain steamed basmati rice.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Steamed Basmati Rice - Serves 1', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card veg-card">
                 <img src="images/p-4.jpg" alt="">
-                <h3>Parotta - Plain (1 Pcs)</h3>
+                <h3>parotta - plain (1 pcs)</h3>
                 <span class="price green-price">₹29</span>
                 <div class="hover-info">
-                    <p>Soft layered plain parotta.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Parotta - Plain (1 Pcs)', this)">Add to Cart</button>
+                    <p>soft layered plain parotta.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Parotta - Plain (1 Pcs)', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card veg-card">
                 <img src="images/p-7.jpg" alt="">
-                <h3>Roti (1 Pcs)</h3>
+                <h3>roti (1 pcs)</h3>
                 <span class="price green-price">₹15</span>
                 <div class="hover-info">
-                    <p>Freshly made whole wheat flatbread.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Roti (1 Pcs)', this)">Add to Cart</button>
+                    <p>freshly made whole wheat flatbread.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Roti (1 Pcs)', this)">add to cart</button>
                 </div>
             </div>
         </div>
@@ -976,29 +1051,29 @@
 
 <div class="step-container">
 
-    <h1 class="heading">Why Choose <span>Cooking 4 Foodies</span></h1>
+    <h1 class="heading">why choose <span>cooking 4 foodies</span></h1>
 
     <section class="steps">
 
         <div class="box">
             <img src="images/step-1.jpg" alt="">
-            <h3>Honest Pricing</h3>
+            <h3>honest pricing</h3>
         </div>
         <div class="box">
             <img src="images/step-2.jpg" alt="">
-            <h3>All raw items procured same day</h3>
+            <h3>all raw items procured same day</h3>
         </div>
         <div class="box">
             <img src="images/step-3.jpg" alt="">
-            <h3>Cooked in rice bran oil / mustard oil</h3>
+            <h3>cooked in rice bran oil / mustard oil</h3>
         </div>
         <div class="box">
             <img src="images/step-4.jpg" alt="">
-            <h3>Home grinded bengali spices</h3>
+            <h3>home grinded bengali spices</h3>
         </div>
         <div class="box">
             <img src="images/step-5.jpg" alt="">
-            <h3>Free home delivery* across Nagpur</h3>
+            <h3>free home delivery* across nagpur</h3>
         </div>
     
     </section>
@@ -1017,7 +1092,7 @@
 
         <div class="box">
             <img src="images/pic1.png" alt="">
-            <h3>Ananya Banerjee</h3>
+            <h3>ananya banerjee</h3>
             <div class="stars">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
@@ -1025,11 +1100,11 @@
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
             </div>
-            <p>Today We ordered chiken kosha and dhokar dalna from Sonali debnath didi(Cooking 4 foodies page) and the food was awesome. She actually made authentic Bengali style chiken kosha and dhokar dalna. She used only homemade masala to prepare the food. Total 10/10 for food quality, quantity and service. Thank you for her new venture 🫰</p>
+            <p>today we ordered chiken kosha and dhokar dalna from sonali debnath didi(cooking 4 foodies page) and the food was awesome. she actually made authentic bengali style chiken kosha and dhokar dalna. she used only homemade masala to prepare the food. total 10/10 for food quality, quantity and service. thank you for her new venture 🫰</p>
         </div>
         <div class="box">
             <img src="images/pic2.png" alt="">
-            <h3>Pradeep J. Chowdhury</h3>
+            <h3>pradeep j. chowdhury</h3>
             <div class="stars">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
@@ -1037,11 +1112,11 @@
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
             </div>
-            <p>Today I requested Ms.Sonali Debnath, for Koshano Mutton and Dhokar Dalna. Both the items were cooked beautifully and very tasty. We enjoyed while eating so tasty food. Thanks for providing এমন a tasty food.</p>
+            <p>today i requested ms.sonali debnath, for koshano mutton and dhokar dalna. both the items were cooked beautifully and very tasty. we enjoyed while eating so tasty food. thanks for providing এমন a tasty food.</p>
         </div>
         <div class="box">
             <img src="images/pic3.png" alt="">
-            <h3>Anik Debnath</h3>
+            <h3>anik debnath</h3>
             <div class="stars">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
@@ -1049,7 +1124,7 @@
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
             </div>
-            <p>The Macher Jhol was a revelation—the broth was light yet incredibly flavorful, with that perfect ginger-cumin undertone and tender pieces of fish that tasted like they were caught this morning. Then came the Chicken Kosha. It was rich, dark, and intensely spiced, with the meat falling off the bone in a thick, velvety gravy that demanded an extra helping of rice. Every bite felt like a tribute to traditional Bengali craftsmanship. If you’re looking for the real deal, stop scrolling and order now. Highly recommended!</p>
+            <p>the macher jhol was a revelation—the broth was light yet incredibly flavorful, with that perfect ginger-cumin undertone and tender pieces of fish that tasted like they were caught this morning. then came the chicken kosha. it was rich, dark, and intensely spiced, with the meat falling off the bone in a thick, velvety gravy that demanded an extra helping of rice. every bite felt like a tribute to traditional bengali craftsmanship. if you’re looking for the real deal, stop scrolling and order now. highly recommended!</p>
         </div>
 
     </div>
@@ -1084,12 +1159,12 @@
             <textarea placeholder="address" name="" id="" cols="30" rows="2" required></textarea>
 
             <div class="order-items-wrapper">
-                <div class="order-items-title"><i class="fas fa-utensils"></i> Select Items & Quantities</div>
+                <div class="order-items-title"><i class="fas fa-utensils"></i> select items & quantities</div>
                 <div id="items-container">
                     <!-- Row 1 -->
                     <div class="item-row">
                         <select name="food-item[]" onchange="updateCartSummary()" required>
-                            <option value="" disabled selected>Select Item from Menu</option>
+                            <option value="" disabled selected>select item from menu</option>
                             <optgroup label="Starters">
                                 <option value="Chicken Pakoda (8 Pcs)">Chicken Pakoda (8 Pcs) - ₹249</option>
                                 <option value="Machh Bhaja (2 Pcs)">Machh Bhaja (2 Pcs) - ₹199</option>
@@ -1130,7 +1205,7 @@
                     <!-- Row 2 -->
                     <div class="item-row">
                         <select name="food-item[]" onchange="updateCartSummary()">
-                            <option value="" disabled selected>Select Item from Menu</option>
+                            <option value="" disabled selected>select item from menu</option>
                             <optgroup label="Starters">
                                 <option value="Chicken Pakoda (8 Pcs)">Chicken Pakoda (8 Pcs) - ₹249</option>
                                 <option value="Machh Bhaja (2 Pcs)">Machh Bhaja (2 Pcs) - ₹199</option>
@@ -1171,7 +1246,7 @@
                     <!-- Row 3 -->
                     <div class="item-row">
                         <select name="food-item[]" onchange="updateCartSummary()">
-                            <option value="" disabled selected>Select Item from Menu</option>
+                            <option value="" disabled selected>select item from menu</option>
                             <optgroup label="Starters">
                                 <option value="Chicken Pakoda (8 Pcs)">Chicken Pakoda (8 Pcs) - ₹249</option>
                                 <option value="Machh Bhaja (2 Pcs)">Machh Bhaja (2 Pcs) - ₹199</option>
@@ -1210,9 +1285,9 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" class="add-item-btn" onclick="addMoreItem()"><i class="fas fa-plus"></i> Add Another Item</button>
+                <button type="button" class="add-item-btn" onclick="addMoreItem()"><i class="fas fa-plus"></i> add another item</button>
                 <div class="cart-total-container">
-                    Total Amount: <span id="total-amount">₹0</span>
+                    total amount: <span id="total-amount">₹0</span>
                 </div>
             </div>
 
@@ -1230,9 +1305,9 @@
 <div id="successModal" class="modal-overlay">
     <div class="modal-content">
         <i class="fas fa-check-circle"></i>
-        <h3>Order Placed Successfully!</h3>
-        <p>Thank you for ordering with Cooking 4 Foodies. Your delicious food is on its way!</p>
-        <button onclick="closeModal()">OK</button>
+        <h3>order placed successfully!</h3>
+        <p>thank you for ordering with cooking 4 foodies. your delicious food is on its way!</p>
+        <button onclick="closeModal()">ok</button>
     </div>
 </div>
 
@@ -1241,20 +1316,20 @@
 <section class="footer-container">
     <div class="footer-grid">
         <div class="footer-box">
-            <h3>Cooking 4 Foodies</h3>
-            <p>Authentic Bengali Home Food Cloud Kitchen, bringing traditional recipes straight to your table with love.</p>
+            <h3>cooking 4 foodies</h3>
+            <p>authentic bengali home food cloud kitchen, bringing traditional recipes straight to your table with love.</p>
         </div>
         <div class="footer-box">
-            <h3>Contact Info</h3>
+            <h3>contact info</h3>
             <p><i class="fas fa-phone"></i> <a href="tel:+918976180617" style="color: inherit;">+91-8976180617</a></p>
             <p><i class="fas fa-envelope"></i> <a href="mailto:sonali.debnath4u@gmail.com" style="color: inherit;">sonali.debnath4u@gmail.com</a></p>
         </div>
         <div class="footer-box">
-            <h3>Our Address</h3>
-            <p><i class="fas fa-map-marker-alt"></i> Cooking 4 Foodies, C/o. Mrs. Sonali Debnath, Jetwan Society, Khamla, Nagpur, Maharashtra - 440025</p>
+            <h3>our address</h3>
+            <p><i class="fas fa-map-marker-alt"></i> cooking 4 foodies, c/o. mrs. sonali debnath, jetwan society, khamla, nagpur, maharashtra - 440025</p>
         </div>
         <div class="footer-box">
-            <h3>Connect With Us</h3>
+            <h3>connect with us</h3>
             <div class="footer-socials">
                 <a href="https://www.facebook.com/cooking4foodies" target="_blank" class="facebook-btn"><i class="fab fa-facebook-f"></i></a>
                 <a href="https://www.instagram.com/cooking_4_foodies" target="_blank" class="instagram-btn"><i class="fab fa-instagram"></i></a>
@@ -1263,7 +1338,7 @@
         </div>
     </div>
     <div class="footer-bottom">
-        <p>&copy; 2026 Cooking 4 Foodies. All rights reserved.</p>
+        <p>&copy; 2026 cooking 4 foodies. all rights reserved.</p>
     </div>
 </section>
 

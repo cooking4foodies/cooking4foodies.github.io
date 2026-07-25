@@ -13,10 +13,16 @@
     
     <style>
         /* Logo & Subtitle Styling */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
         .logo {
             display: flex;
             align-items: center;
             gap: 1rem;
+            flex: 1;
         }
         .logo img {
             height: 50px;
@@ -30,14 +36,14 @@
             align-items: flex-end;
         }
         .logo-subtitle {
-            font-size: 1.45rem;
+            font-size: 1.6rem; /* Increased font size for 'by sonali' */
             color: #666;
             font-weight: normal;
             margin-top: -0.4rem;
             text-transform: lowercase;
         }
 
-        /* Location Info Container in Header (Visible across desktop and mobile) */
+        /* Location Info Container in Header (Visible outside hamburger menu) */
         .header-location {
             display: flex;
             align-items: center;
@@ -46,12 +52,13 @@
             gap: 0.5rem;
             margin-left: auto;
             margin-right: 1.5rem;
+            font-weight: bold;
         }
         .header-location i {
             color: #ff3838;
         }
 
-        /* Mobile Navbar & Toggle Fixes (Removed border and background box) */
+        /* Mobile Navbar & Toggle Fixes */
         #menu-bar {
             font-size: 3rem;
             color: #333;
@@ -66,6 +73,16 @@
         @media (max-width: 768px) {
             #menu-bar {
                 display: block;
+            }
+            .header-location {
+                font-size: 1.3rem; /* Scale down slightly on mobile so it fits well */
+                margin-right: 1rem;
+            }
+            .logo img {
+                height: 40px; 
+            }
+            .logo-subtitle {
+                font-size: 1.3rem; 
             }
             header .navbar {
                 position: absolute;
@@ -179,15 +196,38 @@
         .menu-card.veg-card .hover-info {
             background: rgba(30, 132, 73, 0.9);
         }
-        .menu-card:hover .hover-info,
-        .menu-card.active-touch .hover-info {
-            top: 0;
-        }
         .menu-card .hover-info p {
             color: #fff;
             font-size: 1.4rem;
             margin-bottom: 1rem;
         }
+
+        /* Hover Mechanics including active-touch logic for anti-sticky hovers */
+        @media (hover: hover) {
+            .menu-card:hover .hover-info {
+                top: 0;
+            }
+        }
+        @media (hover: none), (pointer: coarse) {
+            /* On touch devices, disable native hover to prevent multiple sticky curtains */
+            .menu-card:hover .hover-info {
+                top: -100% !important; 
+            }
+            .speciality .box-container .box:hover .content {
+                top: -100% !important; /* overrides external style.css sticky hover */
+            }
+        }
+        /* JS Controlled states for tap toggling */
+        .menu-card.active-touch .hover-info {
+            top: 0 !important;
+        }
+        .speciality .box-container .box.active-touch .content {
+            top: 0 !important; /* Force reveal on tap */
+        }
+        .speciality .box-container .box {
+            cursor: pointer;
+        }
+
         .hover-add-btn {
             background: #fff;
             color: #333;
@@ -203,12 +243,6 @@
             background: #333;
             color: #fff;
         }
-
-        /* Support for touch active state on Speciality section's original styling */
-        .speciality .box-container .box.active-touch .content {
-            top: 0 !important; /* Force reveal on tap for mobile */
-        }
-
         /* Click feedback pulse/shrink animation */
         @keyframes btnClickPulse {
             0% { transform: scale(1); }
@@ -774,20 +808,29 @@
                     if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
                         return;
                     }
-                    
-                    // Remove active class from all other cards to ensure only one is open at a time
+
+                    // Check if this card is currently active
+                    const wasActive = this.classList.contains('active-touch');
+
+                    // Remove active class from all other cards first
                     interactiveCards.forEach(otherCard => {
-                        if (otherCard !== this) {
-                            otherCard.classList.remove('active-touch');
-                        }
+                        otherCard.classList.remove('active-touch');
                     });
-                    
-                    // Toggle active class on the currently clicked card
-                    this.classList.toggle('active-touch');
+
+                    // If it wasn't active before we cleared them, make it active now
+                    // (This effectively toggles it on/off on tap, while maintaining exclusivity)
+                    if (!wasActive) {
+                        this.classList.add('active-touch');
+                    }
+                });
+
+                // Ensure the curtain doesn't stay open when a desktop user moves the cursor away
+                card.addEventListener('mouseleave', function() {
+                    this.classList.remove('active-touch');
                 });
             });
             
-            // Close curtain if user clicks anywhere outside of a card
+            // Close all curtains if tapping outside any interactive card
             document.addEventListener('click', function(e) {
                 if (!e.target.closest('.menu-card') && !e.target.closest('.speciality .box-container .box')) {
                     interactiveCards.forEach(card => {

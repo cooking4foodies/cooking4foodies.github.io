@@ -153,6 +153,7 @@
             padding: 0; 
             width: 100%;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
         .menu-card img {
             height: 200px;
@@ -223,8 +224,11 @@
         .speciality .box-container .box.active-touch .content {
             top: 0 !important;
         }
+
+        /* Base speciality styling overrides (if needed to restore original) */
         .speciality .box-container .box {
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .hover-add-btn {
@@ -767,18 +771,18 @@
                         return;
                     }
 
-                    // If clicking on a card that is already active (i.e. clicking the curtain), have no impact
-                    if (this.classList.contains('active-touch')) {
-                        return;
-                    }
-                    
+                    // Check if this specific card was active before we clear everything
+                    const wasActive = this.classList.contains('active-touch');
+
                     // Remove active class from all other cards to ensure only one is open at a time
                     interactiveCards.forEach(otherCard => {
                         otherCard.classList.remove('active-touch');
                     });
                     
-                    // Toggle active class on the currently clicked card
-                    this.classList.add('active-touch');
+                    // If it wasn't active, make it active. If it was active, it remains closed (toggles off).
+                    if (!wasActive) {
+                        this.classList.add('active-touch');
+                    }
                 });
 
                 // Ensure the curtain doesn't stay open when the cursor is taken away
@@ -870,7 +874,7 @@
             <div class="content">
                 <img src="images/s-2.png" alt="">
                 <h3>doi machh</h3>
-                <p>A traditional Bengali fish curry featuring lightly fried fish steaks simmered in a rich, yogurt and cashew nut paste gravy.</p>
+                <p>a traditional bengali fish curry featuring lightly fried fish steaks simmered in a rich, yogurt and cashew nut paste gravy.</p>
             </div>
         </div>
         <div class="box">

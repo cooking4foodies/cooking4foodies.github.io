@@ -76,7 +76,7 @@
             }
             .header-location {
                 font-size: 1.3rem; /* Scale down slightly on mobile so it fits well */
-                margin-right: 1rem;
+                margin-right: 2.5rem; /* Increased space between location and hamburger */
             }
             .logo img {
                 height: 40px; 
@@ -271,48 +271,6 @@
         }
         .bounce {
             animation: bounceBadge 0.4s ease;
-        }
-
-        /* Redesigned Aesthetically Beautiful Why Choose Section */
-        .step-container {
-            background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
-            padding: 3rem 0;
-        }
-        .step-container .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 2rem;
-            padding: 2rem 9%;
-            align-items: stretch;
-        }
-        .step-container .steps .box {
-            background: #fff;
-            padding: 2.5rem 1.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 1rem 2rem rgba(0,0,0,.08);
-            text-align: center;
-            border-top: .4rem solid #ff3838;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .step-container .steps .box:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 1.5rem 2.5rem rgba(255, 56, 56, 0.15);
-        }
-        .step-container .steps .box img {
-            height: 110px;
-            width: 110px;
-            object-fit: cover;
-            border-radius: 50%;
-            margin: 0 auto 1.5rem auto;
-            border: .3rem solid #ff3838;
-            padding: .3rem;
-            background: #fff;
-        }
-        .step-container .steps .box h3 {
-            font-size: 1.6rem;
-            color: #333;
-            font-weight: 600;
-            line-height: 1.4;
         }
 
         /* Redesigned Aesthetically Beautiful Order Section */
@@ -645,6 +603,7 @@
 
         function addMoreItem(selectedItemVal = "") {
             const container = document.getElementById('items-container');
+            if (container.children.length === 0) return; // safety
             const newRow = container.children[0].cloneNode(true);
             const selectElem = newRow.querySelector('select');
             
@@ -809,19 +768,18 @@
                         return;
                     }
 
-                    // Check if this card is currently active
-                    const wasActive = this.classList.contains('active-touch');
-
-                    // Remove active class from all other cards first
+                    // If clicking on a card that is already active (i.e. clicking the curtain), have no impact
+                    if (this.classList.contains('active-touch')) {
+                        return;
+                    }
+                    
+                    // Remove active class from all other cards to ensure only one is open at a time
                     interactiveCards.forEach(otherCard => {
                         otherCard.classList.remove('active-touch');
                     });
-
-                    // If it wasn't active before we cleared them, make it active now
-                    // (This effectively toggles it on/off on tap, while maintaining exclusivity)
-                    if (!wasActive) {
-                        this.classList.add('active-touch');
-                    }
+                    
+                    // Toggle active class on the currently clicked card
+                    this.classList.add('active-touch');
                 });
 
                 // Ensure the curtain doesn't stay open when a desktop user moves the cursor away
@@ -880,9 +838,7 @@
 
     <div class="content">
         <h3>food made with love</h3>
-        <p>craving the true taste of bengal? cooking 4 foodies delivers traditional heritage flavors right to your door, cooked in pure mustard oil with zero compromises on quality.
-
-loved by our 250k+ strong social media family, we bring you real spices and the true taste of bengal!</p>
+        <p>Craving the true taste of bengal? cooking 4 foodies delivers traditional heritage flavors right to your door, cooked in pure mustard oil and with home grinded bengali spices. Loved by our 250k+ strong social media family.<br><br>Oh! did we forgot to mention about <span style="color: #111; font-weight: bold;">Free Deliveries*</span> across Nagpur.</p>
         <a href="#popular" class="btn">explore menu</a>
     </div>
 
@@ -1184,41 +1140,6 @@ loved by our 250k+ strong social media family, we bring you real spices and the 
 </section>
 
 <!-- menu section ends -->
-
-<!-- steps section starts (Why Choose Cooking 4 Foodies) -->
-
-<div class="step-container">
-
-    <h1 class="heading">why choose <span>cooking 4 foodies</span></h1>
-
-    <section class="steps">
-
-        <div class="box">
-            <img src="images/step-1.jpg" alt="">
-            <h3>honest pricing</h3>
-        </div>
-        <div class="box">
-            <img src="images/step-2.jpg" alt="">
-            <h3>all raw items procured same day</h3>
-        </div>
-        <div class="box">
-            <img src="images/step-3.jpg" alt="">
-            <h3>cooked in rice bran oil / mustard oil</h3>
-        </div>
-        <div class="box">
-            <img src="images/step-4.jpg" alt="">
-            <h3>home grinded bengali spices</h3>
-        </div>
-        <div class="box">
-            <img src="images/step-5.jpg" alt="">
-            <h3>free home delivery* across nagpur</h3>
-        </div>
-    
-    </section>
-
-</div>
-
-<!-- steps section ends -->
 
 <!-- review section starts  -->
 

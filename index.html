@@ -205,27 +205,27 @@
         }
 
         /* Hover Mechanics including active-touch logic for anti-sticky hovers */
-        @media (hover: hover) and (pointer: fine) {
-            .menu-card:hover .hover-info,
-            .speciality .box-container .box:hover .content {
-                top: 0 !important;
+        @media (hover: hover) {
+            .menu-card:hover .hover-info {
+                top: 0;
             }
         }
         @media (hover: none), (pointer: coarse) {
             /* On touch devices, disable native hover to prevent multiple sticky curtains */
-            .menu-card:hover .hover-info,
-            .speciality .box-container .box:hover .content {
+            .menu-card:hover .hover-info {
                 top: -100% !important; 
             }
+            .speciality .box-container .box:hover .content {
+                top: -100% !important; /* overrides external style.css sticky hover */
+            }
         }
-        
         /* JS Controlled states for tap toggling */
-        .menu-card.active-touch .hover-info,
-        .speciality .box-container .box.active-touch .content {
+        .menu-card.active-touch .hover-info {
             top: 0 !important;
         }
-
-        /* Base speciality styling overrides (if needed to restore original) */
+        .speciality .box-container .box.active-touch .content {
+            top: 0 !important; /* Force reveal on tap */
+        }
         .speciality .box-container .box {
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
@@ -771,21 +771,26 @@
                         return;
                     }
 
-                    // Check if this specific card was active before we clear everything
+                    const isMenuCard = this.classList.contains('menu-card');
                     const wasActive = this.classList.contains('active-touch');
+
+                    // If clicking an active speciality box, do nothing (keep it open until clicked outside)
+                    if (!isMenuCard && wasActive) {
+                        return;
+                    }
 
                     // Remove active class from all other cards to ensure only one is open at a time
                     interactiveCards.forEach(otherCard => {
                         otherCard.classList.remove('active-touch');
                     });
                     
-                    // If it wasn't active, make it active. If it was active, it remains closed (toggles off).
+                    // Toggle logic for menu cards ONLY: 1st tap reveals curtain, 2nd tap closes curtain
                     if (!wasActive) {
                         this.classList.add('active-touch');
                     }
                 });
 
-                // Ensure the curtain doesn't stay open when the cursor is taken away
+                // Ensure the curtain doesn't stay open when the cursor is taken away (Desktop)
                 card.addEventListener('mouseleave', function() {
                     this.classList.remove('active-touch');
                 });

@@ -774,8 +774,26 @@
                     if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
                         return;
                     }
+                    
+                    // Remove active class from all other cards to ensure only one is open at a time
+                    interactiveCards.forEach(otherCard => {
+                        if (otherCard !== this) {
+                            otherCard.classList.remove('active-touch');
+                        }
+                    });
+                    
+                    // Toggle active class on the currently clicked card
                     this.classList.toggle('active-touch');
                 });
+            });
+            
+            // Close curtain if user clicks anywhere outside of a card
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.menu-card') && !e.target.closest('.speciality .box-container .box')) {
+                    interactiveCards.forEach(card => {
+                        card.classList.remove('active-touch');
+                    });
+                }
             });
         }
     </script>

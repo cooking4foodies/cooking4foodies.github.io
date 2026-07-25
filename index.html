@@ -27,14 +27,28 @@
         .logo-text-wrapper {
             display: flex;
             flex-direction: column;
-            align-items: flex-end; /* Aligns "by sonali" to the right edge */
+            align-items: flex-end;
         }
         .logo-subtitle {
-            font-size: 1.25rem; /* Slightly increased font size */
+            font-size: 1.45rem;
             color: #666;
             font-weight: normal;
             margin-top: -0.4rem;
             text-transform: lowercase;
+        }
+
+        /* Location Info Container in Header (Visible across desktop and mobile) */
+        .header-location {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            color: #333;
+            gap: 0.5rem;
+            margin-left: auto;
+            margin-right: 1.5rem;
+        }
+        .header-location i {
+            color: #ff3838;
         }
 
         /* Mobile Navbar & Toggle Fixes (Removed border and background box) */
@@ -121,6 +135,7 @@
             text-align: center;
             padding: 0; /* Full box photo styling */
             width: 100%;
+            cursor: pointer;
         }
         .menu-card img {
             height: 200px;
@@ -164,7 +179,8 @@
         .menu-card.veg-card .hover-info {
             background: rgba(30, 132, 73, 0.9);
         }
-        .menu-card:hover .hover-info {
+        .menu-card:hover .hover-info,
+        .menu-card.active-touch .hover-info {
             top: 0;
         }
         .menu-card .hover-info p {
@@ -187,6 +203,12 @@
             background: #333;
             color: #fff;
         }
+
+        /* Support for touch active state on Speciality section's original styling */
+        .speciality .box-container .box.active-touch .content {
+            top: 0 !important; /* Force reveal on tap for mobile */
+        }
+
         /* Click feedback pulse/shrink animation */
         @keyframes btnClickPulse {
             0% { transform: scale(1); }
@@ -743,6 +765,18 @@
                     };
                 });
             }
+
+            // Click/Tap toggle for Hover Curtains in Specialty & Menu Cards
+            const interactiveCards = document.querySelectorAll('.menu-card, .speciality .box-container .box');
+            interactiveCards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // Prevent toggling if user clicks directly on the "Add to Cart" button inside menu cards
+                    if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                        return;
+                    }
+                    this.classList.toggle('active-touch');
+                });
+            });
         }
     </script>
 
@@ -761,10 +795,13 @@
         </div>
     </a>
 
+    <div class="header-location">
+        <i class="fas fa-map-marker-alt"></i> nagpur
+    </div>
+
     <div id="menu-bar" class="fas fa-bars"></div>
 
     <nav class="navbar">
-        <a href="#home"><i class="fas fa-map-marker-alt" style="color: #ff3838; margin-right: 0.5rem;"></i>nagpur</a>
         <a href="#home">home</a>
         <a href="#speciality">speciality</a>
         <a href="#popular">menu</a>

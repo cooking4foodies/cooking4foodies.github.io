@@ -36,7 +36,7 @@
             align-items: flex-end;
         }
         .logo-subtitle {
-            font-size: 1.6rem; /* Increased font size for 'by sonali' */
+            font-size: 1.6rem; 
             color: #666;
             font-weight: normal;
             margin-top: -0.4rem;
@@ -75,8 +75,8 @@
                 display: block;
             }
             .header-location {
-                font-size: 1.3rem; /* Scale down slightly on mobile so it fits well */
-                margin-right: 2.5rem; /* Increased space between location and hamburger */
+                font-size: 1.3rem; 
+                margin-right: 3rem; 
             }
             .logo img {
                 height: 40px; 
@@ -124,7 +124,7 @@
             color: #ff3838;
         }
         .menu-category h2 span.green-text {
-            color: #1e8449; /* Darker green for better visibility */
+            color: #1e8449; 
         }
         .menu-card-container {
             display: grid;
@@ -150,7 +150,7 @@
             box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
             background: #fff;
             text-align: center;
-            padding: 0; /* Full box photo styling */
+            padding: 0; 
             width: 100%;
             cursor: pointer;
         }
@@ -175,7 +175,7 @@
             display: block;
         }
         .menu-card .price.green-price {
-            color: #1e8449; /* Darker green for better visibility */
+            color: #1e8449; 
         }
         .menu-card .hover-info {
             position: absolute;
@@ -191,6 +191,7 @@
             padding: 2rem;
             text-align: center;
             transition: .3s linear;
+            z-index: 10;
         }
         /* Green hover curtain for vegetarian items */
         .menu-card.veg-card .hover-info {
@@ -203,26 +204,24 @@
         }
 
         /* Hover Mechanics including active-touch logic for anti-sticky hovers */
-        @media (hover: hover) {
-            .menu-card:hover .hover-info {
-                top: 0;
+        @media (hover: hover) and (pointer: fine) {
+            .menu-card:hover .hover-info,
+            .speciality .box-container .box:hover .content {
+                top: 0 !important;
             }
         }
         @media (hover: none), (pointer: coarse) {
             /* On touch devices, disable native hover to prevent multiple sticky curtains */
-            .menu-card:hover .hover-info {
+            .menu-card:hover .hover-info,
+            .speciality .box-container .box:hover .content {
                 top: -100% !important; 
             }
-            .speciality .box-container .box:hover .content {
-                top: -100% !important; /* overrides external style.css sticky hover */
-            }
         }
+        
         /* JS Controlled states for tap toggling */
-        .menu-card.active-touch .hover-info {
-            top: 0 !important;
-        }
+        .menu-card.active-touch .hover-info,
         .speciality .box-container .box.active-touch .content {
-            top: 0 !important; /* Force reveal on tap */
+            top: 0 !important;
         }
         .speciality .box-container .box {
             cursor: pointer;
@@ -484,7 +483,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Beautiful Footer Styling with specific hover colors */
+        /* Beautiful Footer Styling */
         .footer-container {
             background: #111;
             color: #fff;
@@ -782,13 +781,13 @@
                     this.classList.add('active-touch');
                 });
 
-                // Ensure the curtain doesn't stay open when a desktop user moves the cursor away
+                // Ensure the curtain doesn't stay open when the cursor is taken away
                 card.addEventListener('mouseleave', function() {
                     this.classList.remove('active-touch');
                 });
             });
             
-            // Close all curtains if tapping outside any interactive card
+            // Close all curtains if tapping completely outside any interactive card
             document.addEventListener('click', function(e) {
                 if (!e.target.closest('.menu-card') && !e.target.closest('.speciality .box-container .box')) {
                     interactiveCards.forEach(card => {
@@ -838,7 +837,7 @@
 
     <div class="content">
         <h3>food made with love</h3>
-        <p>Craving the true taste of bengal? cooking 4 foodies delivers traditional heritage flavors right to your door, cooked in pure mustard oil and with home grinded bengali spices. Loved by our 250k+ strong social media family.<br><br>Oh! did we forgot to mention about <span style="color: #111; font-weight: bold;">Free Deliveries*</span> across Nagpur.</p>
+        <p>Craving the true taste of bengal? cooking 4 foodies delivers traditional heritage flavors right to your door, cooked in pure mustard oil and with home grinded bengali spices. Loved by our 250k+ strong social media family.<br><br>Oh! did we forgot to mention about <span style="font-weight: bold;">Free Deliveries*</span> across Nagpur.</p>
         <a href="#popular" class="btn">explore menu</a>
     </div>
 
@@ -871,7 +870,7 @@
             <div class="content">
                 <img src="images/s-2.png" alt="">
                 <h3>doi machh</h3>
-                <p>a traditional bengali fish curry featuring lightly fried fish steaks simmered in a rich, yogurt and cashew nut paste gravy.</p>
+                <p>A traditional Bengali fish curry featuring lightly fried fish steaks simmered in a rich, yogurt and cashew nut paste gravy.</p>
             </div>
         </div>
         <div class="box">
@@ -905,7 +904,7 @@
 
 <!-- speciality section ends -->
 
-<!-- menu section starts (replaced popular section) -->
+<!-- menu section starts -->
 
 <section class="popular" id="popular">
 

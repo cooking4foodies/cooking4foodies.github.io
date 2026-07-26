@@ -6,6 +6,52 @@
 <meta name="description" content="Authentic Bengali home-cooked food delivered across Nagpur. Machher kalia, chicken kosha, doi machh & more, made with home-ground spices and pure mustard oil. Free delivery in Nagpur.">
     <title>Cooking 4 Foodies | Authentic Bengali Home Food Delivery in Nagpur</title>
 
+    <link rel="canonical" href="https://cooking4foodies.github.io/">
+
+    <!-- Open Graph tags (Facebook, WhatsApp, LinkedIn previews) -->
+    <meta property="og:type" content="restaurant.menu">
+    <meta property="og:title" content="Cooking 4 Foodies | Authentic Bengali Home Food Delivery in Nagpur">
+    <meta property="og:description" content="Authentic Bengali home-cooked food delivered across Nagpur. Machher kalia, chicken kosha, doi machh & more, made with home-ground spices and pure mustard oil. Free delivery in Nagpur.">
+    <meta property="og:image" content="https://cooking4foodies.github.io/images/home-img.png">
+    <meta property="og:url" content="https://cooking4foodies.github.io/">
+    <meta property="og:locale" content="en_IN">
+    <meta property="og:site_name" content="Cooking 4 Foodies">
+
+    <!-- Twitter Card tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Cooking 4 Foodies | Authentic Bengali Home Food Delivery in Nagpur">
+    <meta name="twitter:description" content="Authentic Bengali home-cooked food delivered across Nagpur. Free delivery in Nagpur.">
+    <meta name="twitter:image" content="https://cooking4foodies.github.io/images/home-img.png">
+
+    <!-- Structured data: helps Google show rich results (address, phone, menu, reviews) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "Cooking 4 Foodies",
+      "image": "https://cooking4foodies.github.io/images/home-img.png",
+      "url": "https://cooking4foodies.github.io/",
+      "telephone": "+91-8976180617",
+      "email": "sonali.debnath4u@gmail.com",
+      "servesCuisine": "Bengali",
+      "priceRange": "₹₹",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Jetwan Society, Khamla",
+        "addressLocality": "Nagpur",
+        "addressRegion": "Maharashtra",
+        "postalCode": "440025",
+        "addressCountry": "IN"
+      },
+      "sameAs": [
+        "https://www.facebook.com/cooking4foodies",
+        "https://www.instagram.com/cooking_4_foodies"
+      ],
+      "menu": "https://cooking4foodies.github.io/#popular",
+      "acceptsReservations": "False"
+    }
+    </script>
+
     <!-- font awesome cdn link  -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
@@ -13,6 +59,14 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
+        /* Hero heading: restores the original h3 styling from style.css
+           now that this heading is semantically an h1 for SEO */
+        .home .content h1{
+            font-size: 5rem;
+            color: #333;
+            font-weight: 700;
+        }
+
         /* Logo & Subtitle Styling */
         header {
             display: flex;
@@ -816,7 +870,7 @@
 <header>
 
     <a href="#" class="logo">
-        <img src="images/pic4.png" alt="logo">
+        <img src="images/pic4.png" alt="Cooking 4 Foodies logo">
         <div class="logo-text-wrapper">
             cooking 4 foodies
             <span class="logo-subtitle">by sonali</span>
@@ -846,13 +900,13 @@
 <section class="home" id="home">
 
     <div class="content">
-        <h3>food made with love</h3>
+        <h1>food made with love</h1>
         <p>Craving the true taste of bengal? cooking 4 foodies delivers traditional heritage flavors right to your door, cooked in pure mustard oil and with home grinded bengali spices. Loved by our 250k+ strong social media family.<br><br>Oh! did we forgot to mention about <span style="font-weight: bold;">Free Deliveries*</span> across Nagpur.</p>
         <a href="#popular" class="btn">explore menu</a>
     </div>
 
     <div class="image">
-        <img src="images/home-img.png" alt="">
+        <img src="images/home-img.png" alt="Assorted authentic Bengali dishes from Cooking 4 Foodies, Nagpur">
     </div>
 
 </section>
@@ -863,12 +917,12 @@
 
 <section class="speciality" id="speciality">
 
-    <h1 class="heading"> our <span>speciality</span> </h1>
+    <h2 class="heading"> our <span>speciality</span> </h2>
 
     <div class="box-container">
 
         <div class="box">
-            <img class="image" src="images/p-8.jpg" alt="">
+            <img class="image" src="images/p-8.jpg" alt="Machher Kalia - Bengali fish curry in onion-tomato gravy">
             <div class="content">
                 <img src="images/s-1.png" alt="">
                 <h3>machher kalia</h3>
@@ -876,7 +930,7 @@
             </div>
         </div>
         <div class="box">
-            <img class="image" src="images/p-5.jpg" alt="">
+            <img class="image" src="images/p-5.jpg" alt="Doi Machh - Bengali fish curry in yogurt cashew gravy">
             <div class="content">
                 <img src="images/s-2.png" alt="">
                 <h3>doi machh</h3>
@@ -884,7 +938,7 @@
             </div>
         </div>
         <div class="box">
-            <img class="image" src="images/p-6.jpg" alt="">
+            <img class="image" src="images/p-6.jpg" alt="Chicken Kosha - slow-roasted chicken in onion-garlic masala">
             <div class="content">
                 <img src="images/s-3.png" alt="">
                 <h3>chicken kosha</h3>
@@ -892,7 +946,7 @@
             </div>
         </div>
         <div class="box">
-            <img class="image" src="images/g-4.jpg" alt="">
+            <img class="image" src="images/g-4.jpg" alt="Dhokar Dalna - fried lentil cakes in cumin gravy">
             <div class="content">
                 <img src="images/s-4.png" alt="">
                 <h3>dhokar dalna</h3>
@@ -900,7 +954,7 @@
             </div>
         </div>
         <div class="box">
-            <img class="image" src="images/p-9.jpg" alt="">
+            <img class="image" src="images/p-9.jpg" alt="Alu Posto - potatoes in poppy seed paste">
             <div class="content">
                 <img src="images/s-5.png" alt="">
                 <h3>alu posto</h3>
@@ -918,14 +972,14 @@
 
 <section class="popular" id="popular">
 
-    <h1 class="heading"> our <span>menu</span> </h1>
+    <h2 class="heading"> our <span>menu</span> </h2>
 
     <!-- 1. Starters -->
     <div class="menu-category">
         <h2><span>starters</span></h2>
         <div class="menu-card-container">
             <div class="menu-card">
-                <img src="images/p-1.jpg" alt="">
+                <img src="images/p-1.jpg" alt="Chicken Pakoda - crispy fried chicken starter">
                 <h3>chicken pakoda (8 pcs)</h3>
                 <span class="price">₹249</span>
                 <div class="hover-info">
@@ -934,7 +988,7 @@
                 </div>
             </div>
             <div class="menu-card">
-                <img src="images/p-2.jpg" alt="">
+                <img src="images/p-2.jpg" alt="Machh Bhaja - crispy fried rohu fish">
                 <h3>machh bhaja (2 pcs)</h3>
                 <span class="price">₹199</span>
                 <div class="hover-info">
@@ -950,7 +1004,7 @@
         <h2><span>main course - non veg items</span></h2>
         <div class="menu-card-container">
             <div class="menu-card">
-                <img src="images/p-3.jpg" alt="">
+                <img src="images/p-3.jpg" alt="Machher Jhol - Bengali fish curry with cumin and potatoes">
                 <h3>machher jhol (2 pcs)</h3>
                 <span class="price">₹249</span>
                 <div class="hover-info">
@@ -959,7 +1013,7 @@
                 </div>
             </div>
             <div class="menu-card">
-                <img src="images/p-8.jpg" alt="">
+                <img src="images/p-8.jpg" alt="Machher Kalia - Bengali fish curry">
                 <h3>machher kalia (2 pcs)</h3>
                 <span class="price">₹249</span>
                 <div class="hover-info">
@@ -968,7 +1022,7 @@
                 </div>
             </div>
             <div class="menu-card">
-                <img src="images/p-5.jpg" alt="">
+                <img src="images/p-5.jpg" alt="Doi Machh - Bengali fish curry in yogurt cashew gravy">
                 <h3>doi machh (2 pcs)</h3>
                 <span class="price">₹299</span>
                 <div class="hover-info">
@@ -977,7 +1031,7 @@
                 </div>
             </div>
             <div class="menu-card">
-                <img src="images/p-6.jpg" alt="">
+                <img src="images/p-6.jpg" alt="Chicken Kosha - Bengali style chicken curry">
                 <h3>chicken kosha (4 pcs)</h3>
                 <span class="price">₹249</span>
                 <div class="hover-info">
@@ -986,7 +1040,7 @@
                 </div>
             </div>
             <div class="menu-card">
-                <img src="images/g-1.jpg" alt="">
+                <img src="images/g-1.jpg" alt="Chicken Jhol - light Bengali style chicken curry">
                 <h3>chicken jhol (4 pcs)</h3>
                 <span class="price">₹249</span>
                 <div class="hover-info">
@@ -995,7 +1049,7 @@
                 </div>
             </div>
             <div class="menu-card">
-                <img src="images/g-2.jpg" alt="">
+                <img src="images/g-2.jpg" alt="Chilli Chicken - Kolkata style spicy chilli chicken">
                 <h3>chilli chicken (8 pcs)</h3>
                 <span class="price">₹299</span>
                 <div class="hover-info">
@@ -1004,7 +1058,7 @@
                 </div>
             </div>
             <div class="menu-card">
-                <img src="images/g-3.jpg" alt="">
+                <img src="images/g-3.jpg" alt="Dim Kosha - boiled eggs in spicy Bengali gravy">
                 <h3>dim kosha (2 pcs)</h3>
                 <span class="price">₹149</span>
                 <div class="hover-info">
@@ -1020,7 +1074,7 @@
         <h2><span class="green-text">sides & vegetables - veg items</span></h2>
         <div class="menu-card-container">
             <div class="menu-card veg-card">
-                <img src="images/g-4.jpg" alt="">
+                <img src="images/g-4.jpg" alt="Dhokar Dalna - Bengali lentil cake curry">
                 <h3>dhokar dalna (4 pcs)</h3>
                 <span class="price green-price">₹249</span>
                 <div class="hover-info">
@@ -1029,7 +1083,7 @@
                 </div>
             </div>
             <div class="menu-card veg-card">
-                <img src="images/p-9.jpg" alt="">
+                <img src="images/p-9.jpg" alt="Alu Posto - potatoes in poppy seed paste">
                 <h3>alu posto - serves 2</h3>
                 <span class="price green-price">₹249</span>
                 <div class="hover-info">
@@ -1038,7 +1092,7 @@
                 </div>
             </div>
             <div class="menu-card veg-card">
-                <img src="images/g-6.jpg" alt="">
+                <img src="images/g-6.jpg" alt="Potol Posto - pointed gourd in poppy seed paste">
                 <h3>potol posto - serves 2</h3>
                 <span class="price green-price">₹249</span>
                 <div class="hover-info">
@@ -1047,7 +1101,7 @@
                 </div>
             </div>
             <div class="menu-card veg-card">
-                <img src="images/g-7.jpg" alt="">
+                <img src="images/g-7.jpg" alt="Alu Potoler Torkari - homestyle vegetable curry">
                 <h3>alu potoler torkari - serves 2</h3>
                 <span class="price green-price">₹249</span>
                 <div class="hover-info">
@@ -1056,7 +1110,7 @@
                 </div>
             </div>
             <div class="menu-card veg-card">
-                <img src="images/g-8.jpg" alt="">
+                <img src="images/g-8.jpg" alt="Alu Phulkopir Torkari - potato and cauliflower curry">
                 <h3>alu phulkopir torkari - serves 2</h3>
                 <span class="price green-price">₹249</span>
                 <div class="hover-info">
@@ -1065,7 +1119,7 @@
                 </div>
             </div>
             <div class="menu-card veg-card">
-                <img src="images/g-9.jpg" alt="">
+                <img src="images/g-9.jpg" alt="Mooger Dal - roasted yellow moong dal">
                 <h3>mooger dal - serves 2</h3>
                 <span class="price green-price">₹199</span>
                 <div class="hover-info">
@@ -1074,7 +1128,7 @@
                 </div>
             </div>
             <div class="menu-card veg-card">
-                <img src="images/s-img-1.jpg" alt="">
+                <img src="images/s-img-1.jpg" alt="Alur Dom - spiced baby potato curry">
                 <h3>alur dom (6 pcs)</h3>
                 <span class="price green-price">₹149</span>
                 <div class="hover-info">
@@ -1083,7 +1137,7 @@
                 </div>
             </div>
             <div class="menu-card veg-card">
-                <img src="images/s-img-2.jpg" alt="">
+                <img src="images/s-img-2.jpg" alt="Alu Bhaja - crispy fried potato slices">
                 <h3>alu bhaja - serves 2</h3>
                 <span class="price green-price">₹99</span>
                 <div class="hover-info">
@@ -1092,7 +1146,7 @@
                 </div>
             </div>
             <div class="menu-card veg-card">
-                <img src="images/s-img-3.jpg" alt="">
+                <img src="images/s-img-3.jpg" alt="Potol Bhaja - crispy fried pointed gourd">
                 <h3>potol bhaja - serves 2</h3>
                 <span class="price green-price">₹99</span>
                 <div class="hover-info">
@@ -1101,7 +1155,7 @@
                 </div>
             </div>
             <div class="menu-card veg-card">
-                <img src="images/s-img-4.jpg" alt="">
+                <img src="images/s-img-4.jpg" alt="Begun Bhaja - crispy fried eggplant slices">
                 <h3>begun bhaja - serves 2</h3>
                 <span class="price green-price">₹99</span>
                 <div class="hover-info">
@@ -1117,7 +1171,7 @@
         <h2><span class="green-text">rice & breads</span></h2>
         <div class="menu-card-container">
             <div class="menu-card veg-card">
-                <img src="images/s-img-5.jpg" alt="">
+                <img src="images/s-img-5.jpg" alt="Steamed basmati rice">
                 <h3>steamed basmati rice - serves 1</h3>
                 <span class="price green-price">₹79</span>
                 <div class="hover-info">
@@ -1126,7 +1180,7 @@
                 </div>
             </div>
             <div class="menu-card veg-card">
-                <img src="images/p-4.jpg" alt="">
+                <img src="images/p-4.jpg" alt="Plain parotta - layered flatbread">
                 <h3>parotta - plain (1 pcs)</h3>
                 <span class="price green-price">₹29</span>
                 <div class="hover-info">
@@ -1135,7 +1189,7 @@
                 </div>
             </div>
             <div class="menu-card veg-card">
-                <img src="images/p-7.jpg" alt="">
+                <img src="images/p-7.jpg" alt="Roti - whole wheat flatbread">
                 <h3>roti (1 pcs)</h3>
                 <span class="price green-price">₹15</span>
                 <div class="hover-info">
@@ -1154,12 +1208,12 @@
 
 <section class="review" id="review">
 
-    <h1 class="heading"> our customers <span>reviews</span> </h1>
+    <h2 class="heading"> our customers <span>reviews</span> </h2>
 
     <div class="box-container">
 
         <div class="box">
-            <img src="images/pic1.png" alt="">
+            <img src="images/pic1.png" alt="Ananya Banerjee, Cooking 4 Foodies customer">
             <h3>ananya banerjee</h3>
             <div class="stars">
                 <i class="fas fa-star"></i>
@@ -1171,7 +1225,7 @@
             <p>today we ordered chiken kosha and dhokar dalna from sonali debnath didi(cooking 4 foodies page) and the food was awesome. she actually made authentic bengali style chiken kosha and dhokar dalna. she used only homemade masala to prepare the food. total 10/10 for food quality, quantity and service. thank you for her new venture 🫰</p>
         </div>
         <div class="box">
-            <img src="images/pic2.png" alt="">
+            <img src="images/pic2.png" alt="Pradeep J. Chowdhury, Cooking 4 Foodies customer">
             <h3>pradeep j. chowdhury</h3>
             <div class="stars">
                 <i class="fas fa-star"></i>
@@ -1183,7 +1237,7 @@
             <p>today i requested ms.sonali debnath, for koshano mutton and dhokar dalna. both the items were cooked beautifully and very tasty. we enjoyed while eating so tasty food. thanks for providing এমন a tasty food.</p>
         </div>
         <div class="box">
-            <img src="images/pic3.png" alt="">
+            <img src="images/pic3.png" alt="Anik Debnath, Cooking 4 Foodies customer">
             <h3>anik debnath</h3>
             <div class="stars">
                 <i class="fas fa-star"></i>
@@ -1205,12 +1259,12 @@
 
 <section class="order" id="order">
 
-    <h1 class="heading"> <span>order</span> now </h1>
+    <h2 class="heading"> <span>order</span> now </h2>
 
     <div class="row">
         
         <div class="image">
-            <img src="images/order-img.jpg" alt="">
+            <img src="images/order-img.jpg" alt="Order authentic Bengali food online from Cooking 4 Foodies">
         </div>
 
         <form id="orderForm" onsubmit="handleOrderSubmit(event)">

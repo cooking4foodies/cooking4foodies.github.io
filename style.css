@@ -1,7 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700&display=swap');
+/* Google Fonts now loaded via <link> in <head> instead of @import - @import blocks the
+   critical rendering path because the browser must fetch and parse this whole file
+   before it can even discover the font request. */
 
 :root{
-  --red:#ff3838;
+  --red:#ff3838;       /* bright brand red - decorative use only (large text, icons, borders) */
+  --red-text:#d81f1f;  /* darker red - meets WCAG AA 4.5:1 for normal-size text/buttons on white */
 }
 
 *{
@@ -17,6 +20,30 @@
 *::selection{
   background:var(--red);
   color:#fff;
+}
+
+/* Visible keyboard focus indicator - the reset above removes the default outline,
+   so this restores one for keyboard users without adding a ring to every mouse click. */
+:focus-visible{
+  outline: .2rem solid var(--red-text);
+  outline-offset: .2rem;
+}
+
+.skip-link{
+  position: absolute;
+  left: -999px;
+  top: auto;
+  background:#fff;
+  color:#333;
+  padding: 1rem 2rem;
+  z-index: 2000;
+  border-radius: .5rem;
+  font-size: 1.6rem;
+}
+
+.skip-link:focus{
+  left: 1rem;
+  top: 1rem;
 }
 
 html{
@@ -49,7 +76,7 @@ section{
   display: inline-block;
   padding:.8rem 3rem;
   border:.2rem solid var(--red);
-  color:var(--red);
+  color:var(--red-text);
   cursor: pointer;
   font-size: 1.7rem;
   border-radius: .5rem;
@@ -65,7 +92,7 @@ section{
   top:0; right: 0;
   width:0%;
   height:100%;
-  background:var(--red);
+  background:var(--red-text);
   transition: .3s linear;
   z-index: -1;
 }
@@ -109,13 +136,14 @@ header .navbar a{
 }
 
 header .navbar a:hover{
-  color:var(--red);
+  color:var(--red-text);
 }
 
 #menu-bar{
   font-size: 3rem;
   cursor: pointer;
   color:#666;
+  background:none;
   border:.1rem solid #666;
   border-radius: .3rem;
   padding:.5rem 1.5rem;
@@ -189,7 +217,8 @@ header .navbar a:hover{
   width:100%;
   object-fit: cover;
   position: absolute;
-  top:-100%; left:0;
+  top:0; left:0;
+  transform: translateY(-100%);
 }
 
 .speciality .box-container .box .content{
@@ -214,7 +243,7 @@ header .navbar a:hover{
 }
 
 .speciality .box-container .box:hover .image{
-  top:0;
+  transform: translateY(0);
 }
 
 .speciality .box-container .box:hover .content{
@@ -248,7 +277,7 @@ header .navbar a:hover{
 .popular .box-container .box .price{
   position: absolute;
   top:3rem; left:3rem;
-  background:var(--red);
+  background:var(--red-text);
   color:#fff;
   font-size: 2rem;
   padding:.5rem 1rem;
@@ -262,7 +291,7 @@ header .navbar a:hover{
 }
 
 .popular .box-container .box .stars i{
-  color:gold;
+  color:#b8860b;
   font-size: 1.7rem;
   padding:1rem .1rem;
 }
@@ -438,7 +467,7 @@ header .navbar a:hover{
 }
 
 .order .row form .btn:hover{
-  background:var(--red);
+  background:var(--red-text);
 }
 
 .footer{

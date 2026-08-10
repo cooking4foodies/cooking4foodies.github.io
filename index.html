@@ -419,29 +419,34 @@
 
         /* Redesigned Aesthetically Beautiful Order Section */
         .order .row {
+            max-width: 80rem;
+            margin: 0 auto;
             background: #fff;
-            border-radius: 1rem;
-            box-shadow: 0 1rem 2rem rgba(0,0,0,.1);
-            padding: 2rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            align-items: center;
-        }
-        .order .row .image {
-            flex: 1 1 40rem;
-        }
-        .order .row .image img {
-            width: 100%;
-            object-fit: cover;
-            border-radius: .5rem;
+            border-radius: 1.2rem;
+            box-shadow: 0 1.5rem 3rem rgba(0,0,0,.08);
+            padding: 3rem;
         }
         .order .row form {
-            flex: 1 1 50rem;
-            background: #f9f9f9;
-            padding: 2.5rem;
-            border-radius: 1rem;
-            box-shadow: inset 0 0 1rem rgba(0,0,0,.03);
+            width: 100%;
+        }
+        .order-section-label {
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: .1rem;
+            color: #999;
+            font-weight: 700;
+            margin: 0 0 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+        }
+        .order-section-label i {
+            color: var(--red-text);
+        }
+        .order-divider {
+            border: none;
+            border-top: .1rem solid #eee;
+            margin: 2.5rem 0;
         }
         .order form .inputBox {
             display: flex;
@@ -498,6 +503,7 @@
             width: 100%;
             margin-bottom: 1rem;
             align-items: center;
+            flex-wrap: wrap;
         }
         .order form .item-row select {
             padding: 1rem;
@@ -507,7 +513,7 @@
             border: .1rem solid #ddd;
             border-radius: .5rem;
             background: #fff;
-            width: 100%;
+            flex: 1 1 22rem;
         }
         .qty-box {
             display: flex;
@@ -543,33 +549,82 @@
             margin: 0 auto;
             display: block;
         }
+        .remove-item-btn {
+            background: #f5f5f5;
+            color: #999;
+            border: .1rem solid #ddd;
+            width: 45px;
+            height: 45px;
+            flex-shrink: 0;
+            border-radius: .5rem;
+            cursor: pointer;
+            font-size: 1.4rem;
+            transition: all .2s;
+        }
+        .remove-item-btn:hover {
+            background: #fff0f0;
+            color: var(--red-text);
+            border-color: var(--red-text);
+        }
         .add-item-btn {
-            background: #333;
-            color: #fff;
+            background: #fff;
+            color: #777;
             padding: 1rem 2rem;
             font-size: 1.5rem;
             border-radius: .5rem;
             cursor: pointer;
-            border: none;
+            border: .15rem dashed #ccc;
             width: 100%;
-            transition: background .2s;
-            margin-bottom: 1rem;
+            transition: all .2s;
+            margin-bottom: 1.5rem;
         }
         .add-item-btn:hover {
-            background: #ff3838;
+            background: #fff5f5;
+            color: var(--red-text);
+            border-color: var(--red-text);
         }
         .cart-total-container {
             display: flex;
-            justify-content: flex-end;
-            font-size: 1.8rem;
-            font-weight: bold;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.7rem;
+            font-weight: 700;
             color: #333;
-            margin-top: 1rem;
-            padding-right: 0.5rem;
+            margin-top: 1.5rem;
+            padding: 1.3rem 1.6rem;
+            background: #fff6f6;
+            border: .1rem solid #ffd6d6;
+            border-radius: .7rem;
         }
         .cart-total-container span {
-            color: #ff3838;
+            color: var(--red-text);
+            font-size: 2.2rem;
             margin-left: 0.8rem;
+        }
+        .order-submit-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .8rem;
+            width: 100%;
+            background: var(--red-text);
+            color: #fff;
+            border: none;
+            padding: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            border-radius: .7rem;
+            cursor: pointer;
+            margin-top: 1.8rem;
+            box-shadow: 0 .8rem 1.6rem rgba(216,31,31,.25);
+        }
+        .order-submit-btn:hover {
+            background: #b71919;
+        }
+        @media(max-width:500px){
+            .order form .item-row select {
+                flex: 1 1 100%;
+            }
         }
 
         /* Success Dialog Overlay Styling */
@@ -820,6 +875,18 @@
             updateCartSummary();
         }
 
+        function removeItemRow(btn) {
+            const container = document.getElementById('items-container');
+            const row = btn.closest('.item-row');
+            if (container.children.length > 1) {
+                row.remove();
+            } else {
+                row.querySelector('select').selectedIndex = 0;
+                row.querySelector('.qty-box input').value = 1;
+            }
+            updateCartSummary();
+        }
+
         function handleOrderSubmit(event) {
             event.preventDefault();
 
@@ -875,30 +942,20 @@
             updateCartSummary();
         }
 
-        window.onload = function() {
+        window.addEventListener('load', function() {
             updateCartSummary();
 
-            // Mobile Navbar toggle functionality
+            // Close mobile menu when a nav link is clicked (menu open/close itself is handled in script.js)
             let menu = document.querySelector('#menu-bar');
             let navbar = document.querySelector('.navbar');
 
             if (menu && navbar) {
-                menu.onclick = () => {
-                    menu.classList.toggle('fa-times');
-                    navbar.classList.toggle('active');
-                };
-
-                window.onscroll = () => {
-                    menu.classList.remove('fa-times');
-                    navbar.classList.remove('active');
-                };
-
-                // Close menu when clicking any nav link on mobile
                 let navLinks = document.querySelectorAll('.navbar a');
                 navLinks.forEach(link => {
                     link.onclick = () => {
                         menu.classList.remove('fa-times');
                         navbar.classList.remove('active');
+                        menu.setAttribute('aria-expanded', 'false');
                     };
                 });
             }
@@ -945,7 +1002,7 @@
                     });
                 }
             });
-        }
+        });
     </script>
 
 </head>
@@ -1350,12 +1407,10 @@
     <h2 class="heading"> <span>order</span> now </h2>
 
     <div class="row">
-        
-        <div class="image">
-            <img loading="lazy" decoding="async" src="images/order-img.jpg" alt="Order authentic Bengali food online from Cooking 4 Foodies">
-        </div>
 
         <form id="orderForm" onsubmit="handleOrderSubmit(event)">
+
+            <div class="order-section-label"><i class="fas fa-user"></i> your details</div>
 
             <div class="inputBox">
                 <input type="text" placeholder="name" aria-label="Name" required>
@@ -1367,6 +1422,8 @@
             </div>
 
             <textarea placeholder="address" name="" id="" cols="30" rows="2" aria-label="Delivery address" required></textarea>
+
+            <hr class="order-divider">
 
             <div class="order-items-wrapper">
                 <div class="order-items-title"><i class="fas fa-utensils"></i> select items & quantities</div>
@@ -1411,6 +1468,7 @@
                             <input type="number" name="quantity[]" value="1" min="0" onchange="updateCartSummary()" readonly>
                             <button type="button" onclick="changeQty(this, 1)" aria-label="Increase quantity">+</button>
                         </div>
+                        <button type="button" class="remove-item-btn" onclick="removeItemRow(this)" aria-label="Remove item"><i class="fas fa-trash"></i></button>
                     </div>
                     <!-- Row 2 -->
                     <div class="item-row">
@@ -1452,6 +1510,7 @@
                             <input type="number" name="quantity[]" value="1" min="0" onchange="updateCartSummary()" readonly>
                             <button type="button" onclick="changeQty(this, 1)" aria-label="Increase quantity">+</button>
                         </div>
+                        <button type="button" class="remove-item-btn" onclick="removeItemRow(this)" aria-label="Remove item"><i class="fas fa-trash"></i></button>
                     </div>
                     <!-- Row 3 -->
                     <div class="item-row">
@@ -1493,6 +1552,7 @@
                             <input type="number" name="quantity[]" value="1" min="0" onchange="updateCartSummary()" readonly>
                             <button type="button" onclick="changeQty(this, 1)" aria-label="Increase quantity">+</button>
                         </div>
+                        <button type="button" class="remove-item-btn" onclick="removeItemRow(this)" aria-label="Remove item"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
                 <button type="button" class="add-item-btn" onclick="addMoreItem()"><i class="fas fa-plus"></i> add another item</button>
@@ -1501,7 +1561,7 @@
                 </div>
             </div>
 
-            <input type="submit" value="order now" class="btn">
+            <button type="submit" class="order-submit-btn">place order <i class="fas fa-arrow-right"></i></button>
 
         </form>
 

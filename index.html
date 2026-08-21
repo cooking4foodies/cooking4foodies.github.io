@@ -61,7 +61,7 @@
             text-transform: lowercase;
         }
 
-        /* Floating Menu Navigation - Hidden by default */
+        /* Desktop Floating Menu Navigation - Hidden by default */
         .floating-menu-nav {
             position: fixed;
             left: 20px;
@@ -107,8 +107,59 @@
             background: var(--red);
             color: #fff;
         }
+
+        /* Mobile Floating Menu Navigation - Hidden by default */
+        .mobile-menu-nav {
+            display: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+            transform: translateY(100%);
+        }
+        .mobile-menu-nav.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
         @media (max-width: 1250px) {
             .floating-menu-nav { display: none; }
+            .mobile-menu-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background: #fff;
+                box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+                z-index: 1000;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding: 12px;
+                gap: 10px;
+                justify-content: flex-start;
+                -ms-overflow-style: none; /* IE and Edge */
+                scrollbar-width: none; /* Firefox */
+            }
+            .mobile-menu-nav::-webkit-scrollbar {
+                display: none; /* Chrome, Safari and Opera */
+            }
+            .mobile-menu-nav a {
+                display: inline-block;
+                background: #f5f5f5;
+                color: #333;
+                font-size: 1.3rem;
+                font-weight: bold;
+                padding: 8px 15px;
+                border-radius: 20px;
+                text-decoration: none;
+                border: 1px solid #ddd;
+            }
+            .mobile-menu-nav a:active {
+                background: var(--red);
+                color: #fff;
+                border-color: var(--red);
+            }
         }
 
         /* Location Info Container in Header */
@@ -367,8 +418,8 @@
     <script>
         // Item prices mapping lookup mapped to new Menu Card
         const itemPrices = {
-            "Paneer Pakoda (8 Pcs)": 299,
             "Beguni (4 Pcs)": 99,
+            "Paneer Pakoda (8 Pcs)": 299,
             "Chicken Pakoda with Green Chutney (8 Pcs)": 299,
             "Masala Fish Fry (2 Pcs)": 249,
             "Machh Bhaja - Plain Fish Fry (2 Pcs)": 199,
@@ -608,19 +659,22 @@
             // Intersection Observer to show/hide floating menu only when scrolling through #popular
             const menuSection = document.getElementById('popular');
             const floatingNav = document.querySelector('.floating-menu-nav');
+            const mobileNav = document.querySelector('.mobile-menu-nav');
 
-            if (menuSection && floatingNav) {
+            if (menuSection) {
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
-                            floatingNav.classList.add('visible');
+                            if (floatingNav) floatingNav.classList.add('visible');
+                            if (mobileNav) mobileNav.classList.add('visible');
                         } else {
-                            floatingNav.classList.remove('visible');
+                            if (floatingNav) floatingNav.classList.remove('visible');
+                            if (mobileNav) mobileNav.classList.remove('visible');
                         }
                     });
                 }, { 
                     root: null,
-                    threshold: 0.05, 
+                    threshold: 0.02, 
                     rootMargin: "0px 0px -20% 0px" 
                 }); 
 
@@ -633,12 +687,21 @@
 
 <a href="#home" class="skip-link">Skip to content</a>
 
-<!-- Floating Section Navigator -->
+<!-- Desktop Floating Section Navigator -->
 <div class="floating-menu-nav">
     <p>Sections</p>
     <a href="#cat-starters">Starters</a>
     <a href="#cat-veg">Veg Main Course</a>
     <a href="#cat-nonveg">Non-Veg Main Course</a>
+    <a href="#cat-rice">Rice & Breads</a>
+    <a href="#cat-preorder">Pre-Order</a>
+</div>
+
+<!-- Mobile Horizontal Section Navigator -->
+<div class="mobile-menu-nav">
+    <a href="#cat-starters">Starters</a>
+    <a href="#cat-veg">Veg</a>
+    <a href="#cat-nonveg">Non-Veg</a>
     <a href="#cat-rice">Rice & Breads</a>
     <a href="#cat-preorder">Pre-Order</a>
 </div>
@@ -739,22 +802,22 @@
     <div class="menu-category" id="cat-starters">
         <h2><span>starters</span></h2>
         <div class="menu-card-container">
-            <div class="menu-card">
-                <img loading="lazy" decoding="async" src="images/p-15.jpg" alt="Paneer Pakoda">
-                <h3>paneer pakoda (8 pcs)</h3>
-                <span class="price">₹299</span>
-                <div class="hover-info">
-                    <p>delicious homemade paneer pakodas.</p>
-                    <button type="button" class="hover-add-btn" onclick="addToCart('Paneer Pakoda (8 Pcs)', this)">add to cart</button>
-                </div>
-            </div>
-            <div class="menu-card">
+            <div class="menu-card veg-card">
                 <img loading="lazy" decoding="async" src="images/p-10.jpg" alt="Beguni">
                 <h3>beguni (4 pcs)</h3>
-                <span class="price">₹99</span>
+                <span class="price green-price">₹99</span>
                 <div class="hover-info">
                     <p>crispy traditional bengali eggplant fritters.</p>
                     <button type="button" class="hover-add-btn" onclick="addToCart('Beguni (4 Pcs)', this)">add to cart</button>
+                </div>
+            </div>
+            <div class="menu-card veg-card">
+                <img loading="lazy" decoding="async" src="images/p-15.jpg" alt="Paneer Pakoda">
+                <h3>paneer pakoda (8 pcs)</h3>
+                <span class="price green-price">₹299</span>
+                <div class="hover-info">
+                    <p>delicious homemade paneer pakodas.</p>
+                    <button type="button" class="hover-add-btn" onclick="addToCart('Paneer Pakoda (8 Pcs)', this)">add to cart</button>
                 </div>
             </div>
             <div class="menu-card">
@@ -1186,8 +1249,8 @@
                         <select name="food-item[]" onchange="updateCartSummary()" required>
                             <option value="" disabled selected>select item from menu</option>
                             <optgroup label="Starters">
-                                <option value="Paneer Pakoda (8 Pcs)">Paneer Pakoda (8 Pcs) - ₹299</option>
                                 <option value="Beguni (4 Pcs)">Beguni (4 Pcs) - ₹99</option>
+                                <option value="Paneer Pakoda (8 Pcs)">Paneer Pakoda (8 Pcs) - ₹299</option>
                                 <option value="Chicken Pakoda with Green Chutney (8 Pcs)">Chicken Pakoda with Green Chutney (8 Pcs) - ₹299</option>
                                 <option value="Masala Fish Fry (2 Pcs)">Masala Fish Fry (2 Pcs) - ₹249</option>
                                 <option value="Machh Bhaja - Plain Fish Fry (2 Pcs)">Machh Bhaja - Plain Fish Fry (2 Pcs) - ₹199</option>

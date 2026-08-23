@@ -622,11 +622,17 @@
         window.addEventListener('DOMContentLoaded', function() {
             updateCartSummary();
 
-            // Mobile menu logic
+            // Mobile menu logic: explicitly handling the hamburger menu click
             let menu = document.querySelector('#menu-bar');
             let navbar = document.querySelector('.navbar');
 
             if (menu && navbar) {
+                menu.onclick = () => {
+                    menu.classList.toggle('fa-times');
+                    navbar.classList.toggle('active');
+                    menu.setAttribute('aria-expanded', navbar.classList.contains('active'));
+                };
+
                 let navLinks = document.querySelectorAll('.navbar a');
                 navLinks.forEach(link => {
                     link.onclick = () => {
@@ -634,6 +640,13 @@
                         navbar.classList.remove('active');
                         menu.setAttribute('aria-expanded', 'false');
                     };
+                });
+                
+                // Close mobile menu on scroll
+                window.addEventListener('scroll', () => {
+                    menu.classList.remove('fa-times');
+                    navbar.classList.remove('active');
+                    menu.setAttribute('aria-expanded', 'false');
                 });
             }
 

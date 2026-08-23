@@ -221,6 +221,11 @@
         /* Mobile Navbar & Toggle Fixes */
         #menu-bar {
             position: relative;
+            /* Fixed footprint so the button (and the badge inside it) has real
+               dimensions even before the icon font has loaded - relying on the
+               glyph alone can leave this collapsed to a few px on slow connections. */
+            min-width: 4.4rem;
+            min-height: 4.4rem;
             font-size: 3rem;
             color: #333;
             border: none;
@@ -232,19 +237,22 @@
         }
 
         /* Cart badge shown on the hamburger icon itself, so a mobile user
-           can see there's something in the cart without opening the menu. */
-        .menu-cart-badge {
+           can see there's something in the cart without opening the menu.
+           Scoped to #menu-bar so it always wins over the generic .cart-badge
+           class (which carries a margin-left meant for the navbar badge). */
+        #menu-bar .menu-cart-badge {
             position: absolute;
             top: 0;
             right: 0;
+            margin: 0;
             font-size: 1.1rem;
             padding: 0.1rem 0.5rem;
             line-height: 1.4;
         }
-        .menu-cart-badge[hidden] { display: none; }
+        #menu-bar .menu-cart-badge[hidden] { display: none; }
 
         @media (max-width: 768px) {
-            #menu-bar { display: block; }
+            #menu-bar { display: flex; align-items: center; justify-content: center; }
             .header-location { font-size: 1.3rem; margin-right: 3rem; }
             .logo img { height: 40px; }
             .logo-subtitle { font-size: 1.3rem; }

@@ -11,6 +11,47 @@
 
     <link rel="canonical" href="https://cooking4foodies.github.io/">
 
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Cooking 4 Foodies | Authentic Bengali Home Food Delivery in Nagpur">
+    <meta property="og:description" content="Authentic Bengali home-cooked food delivered across Nagpur. Machher kalia, chicken kosha, doi machh & more, made with home-ground spices and pure mustard oil. Free delivery.">
+    <meta property="og:image" content="https://cooking4foodies.github.io/images/home-img.png">
+    <meta property="og:url" content="https://cooking4foodies.github.io/">
+    <meta property="og:site_name" content="Cooking 4 Foodies">
+    <meta property="og:locale" content="en_IN">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Cooking 4 Foodies | Authentic Bengali Home Food Delivery in Nagpur">
+    <meta name="twitter:description" content="Authentic Bengali home-cooked food delivered across Nagpur. Made with home-ground spices and pure mustard oil. Free delivery.">
+    <meta name="twitter:image" content="https://cooking4foodies.github.io/images/home-img.png">
+
+    <!-- Structured data for local search / rich results -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FoodEstablishment",
+      "name": "Cooking 4 Foodies",
+      "image": "https://cooking4foodies.github.io/images/home-img.png",
+      "url": "https://cooking4foodies.github.io/",
+      "telephone": "+91-8976180617",
+      "email": "sonali.debnath4u@gmail.com",
+      "servesCuisine": "Bengali",
+      "priceRange": "₹₹",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Nagpur",
+        "addressRegion": "Maharashtra",
+        "addressCountry": "IN"
+      },
+      "sameAs": [
+        "https://www.facebook.com/cooking4foodies",
+        "https://www.instagram.com/cooking_4_foodies",
+        "https://wa.me/918976180617"
+      ]
+    }
+    </script>
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="images/pic4.png">
     <link rel="apple-touch-icon" href="images/pic4.png">
@@ -179,6 +220,7 @@
 
         /* Mobile Navbar & Toggle Fixes */
         #menu-bar {
+            position: relative;
             font-size: 3rem;
             color: #333;
             border: none;
@@ -188,6 +230,18 @@
             display: none;
             outline: none;
         }
+
+        /* Cart badge shown on the hamburger icon itself, so a mobile user
+           can see there's something in the cart without opening the menu. */
+        .menu-cart-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 1.1rem;
+            padding: 0.1rem 0.5rem;
+            line-height: 1.4;
+        }
+        .menu-cart-badge[hidden] { display: none; }
 
         @media (max-width: 768px) {
             #menu-bar { display: block; }
@@ -214,12 +268,12 @@
         }
 
         .menu-category { padding: 2rem 9%; scroll-margin-top: 80px;}
-        .menu-category h2 {
+        .menu-category h3 {
             font-size: 2.5rem; color: #333; margin-bottom: 1.5rem;
             text-transform: capitalize; text-align: center;
         }
-        .menu-category h2 span { color: #ff3838; }
-        .menu-category h2 span.green-text { color: #1e8449; }
+        .menu-category h3 span { color: #ff3838; }
+        .menu-category h3 span.green-text { color: #1e8449; }
         
         .bestseller-badge {
             position: absolute; top: 10px; right: 10px;
@@ -249,7 +303,7 @@
             height: 200px; width: 100%; object-fit: cover;
             border-radius: .5rem .5rem 0 0; margin-bottom: 1rem;
         }
-        .menu-card h3 { font-size: 1.8rem; color: #333; padding: 0 1rem; }
+        .menu-card h4 { font-size: 1.8rem; color: #333; padding: 0 1rem; }
         .menu-card .price {
             font-size: 1.5rem; color: #ff3838; font-weight: bolder;
             margin-top: .5rem; margin-bottom: 1.5rem; display: block;
@@ -415,288 +469,6 @@
         .footer-socials a.whatsapp-btn:hover { background: #25d366; }
         .footer-bottom { border-top: .1rem solid rgba(255,255,255,.1); padding-top: 2rem; text-align: center; font-size: 1.4rem; color: #888; }
     </style>
-    <script>
-        // Item prices mapping lookup mapped to new Menu Card
-        const itemPrices = {
-            "Beguni (4 Pcs)": 99,
-            "Paneer Pakoda (8 Pcs)": 299,
-            "Chicken Pakoda with Green Chutney (8 Pcs)": 299,
-            "Masala Fish Fry (2 Pcs)": 249,
-            "Machh Bhaja - Plain Fish Fry (2 Pcs)": 199,
-            "Egg Omelette (2 Eggs)": 99,
-            "Dhokar Dalna (4 Pcs)": 249,
-            "Phulkopi Alur Torkari - Serves 2": 249,
-            "Alu Posto - Serves 2": 249,
-            "Potol Alur Torkari - Serves 2": 249,
-            "Potol Posto - Serves 2": 249,
-            "Lau Ghonto - Serves 2": 199,
-            "Dahi Baigana Odia Food - Serves 2": 199,
-            "Mooger Dal Bengali Style - Serves 2": 199,
-            "Chholar Dal Bengali Style - Serves 2": 199,
-            "Tel Potol - Serves 2": 199,
-            "Alur Dom (6 Pcs)": 149,
-            "Alu Bhaja - Serves 2": 99,
-            "Potol Bhaja - Serves 2": 99,
-            "Chicken Kosha - Spicy Chicken Curry (4 Pcs)": 249,
-            "Chicken Jhol - Bengali Chicken Curry (4 Pcs)": 249,
-            "Machher Kalia - Bengali Fish Delicacy (2 Pcs)": 249,
-            "Doi Machh - Fish in Yogurt Gravy (2 Pcs)": 299,
-            "Machher Jhol - with jeere bata & alu (2 Pcs)": 249,
-            "Chilli Chicken - Kolkata Style (8 Pcs)": 299,
-            "Dhania Chicken (4 Pcs)": 299,
-            "Paalak Chicken (4 Pcs)": 299,
-            "Dim Kosha - Bengali Egg Curry (2 Pcs)": 149,
-            "Basanti Pulao": 299,
-            "Steamed Basmati Rice - Serves 1": 79,
-            "Luchi (4 Pcs)": 69,
-            "Parotta - Plain (1 Pcs)": 29,
-            "Roti (1 Pcs)": 15,
-            "Mutton Kosha (4 Pcs)": 399,
-            "Champaran Mutton (4 Pcs)": 399,
-            "Chingrir Malaicurry (Small - 4 Pcs/Big - 2 Pcs)": 299,
-            "Kolkata Chicken Biriyani with Egg & Alu": 399,
-            "Ilish Bhapa - Seasonal": 0,
-            "Sorshe Ilish - Seasonal": 0,
-            "Pabdar Jhal - Seasonal": 0
-        };
-
-        function updateCartSummary() {
-            const rows = document.getElementsByClassName('item-row');
-            let totalQty = 0;
-            let totalPrice = 0;
-
-            for (let row of rows) {
-                const select = row.querySelector('select');
-                const qtyInput = row.querySelector('.qty-box input');
-                const selectedItem = select.value;
-                const qty = parseInt(qtyInput.value) || 0;
-
-                if (selectedItem && qty > 0) {
-                    totalQty += qty;
-                    if (itemPrices[selectedItem]) {
-                        totalPrice += itemPrices[selectedItem] * qty;
-                    }
-                }
-            }
-
-            const badge = document.getElementById('cart-count');
-            badge.innerText = totalQty;
-            badge.classList.remove('bounce');
-            void badge.offsetWidth; 
-            badge.classList.add('bounce');
-
-            document.getElementById('total-amount').innerText = '₹' + totalPrice;
-        }
-
-        function addMoreItem(selectedItemVal = "") {
-            const container = document.getElementById('items-container');
-            if (container.children.length === 0) return; 
-            const newRow = container.children[0].cloneNode(true);
-            const selectElem = newRow.querySelector('select');
-            
-            if (selectedItemVal) {
-                selectElem.value = selectedItemVal;
-            } else {
-                selectElem.selectedIndex = 0;
-            }
-            newRow.querySelector('.qty-box input').value = '1';
-            container.appendChild(newRow);
-            updateCartSummary();
-        }
-
-        function addToCart(itemName, btnElement) {
-            btnElement.classList.remove('btn-clicked');
-            void btnElement.offsetWidth; 
-            btnElement.classList.add('btn-clicked');
-
-            const container = document.getElementById('items-container');
-            const rows = container.getElementsByClassName('item-row');
-            
-            let found = false;
-            for (let row of rows) {
-                const select = row.querySelector('select');
-                if (select.value === itemName) {
-                    const qtyInput = row.querySelector('.qty-box input');
-                    qtyInput.value = parseInt(qtyInput.value) + 1;
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found) {
-                for (let row of rows) {
-                    const select = row.querySelector('select');
-                    if (!select.value) {
-                        select.value = itemName;
-                        found = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!found) {
-                addMoreItem(itemName);
-            } else {
-                updateCartSummary();
-            }
-        }
-
-        function changeQty(btn, delta) {
-            const input = btn.parentElement.querySelector('input');
-            let val = parseInt(input.value) + delta;
-            if (val < 0) val = 0;
-            input.value = val;
-
-            if (val === 0) {
-                const container = document.getElementById('items-container');
-                const row = btn.closest('.item-row');
-                if (container.children.length > 1) {
-                    row.remove();
-                } else {
-                    input.value = 1;
-                    row.querySelector('select').selectedIndex = 0;
-                }
-            }
-            updateCartSummary();
-        }
-
-        function removeItemRow(btn) {
-            const container = document.getElementById('items-container');
-            const row = btn.closest('.item-row');
-            if (container.children.length > 1) {
-                row.remove();
-            } else {
-                row.querySelector('select').selectedIndex = 0;
-                row.querySelector('.qty-box input').value = 1;
-            }
-            updateCartSummary();
-        }
-
-        function handleOrderSubmit(event) {
-            event.preventDefault();
-            const formInputs = document.querySelectorAll('#orderForm input, #orderForm textarea');
-            const name = formInputs[0].value;
-            const email = formInputs[1].value;
-            const contact = formInputs[2].value;
-            const address = formInputs[3].value;
-
-            const rows = document.getElementsByClassName('item-row');
-            let orderedItemsList = [];
-            for (let row of rows) {
-                const select = row.querySelector('select');
-                const qtyInput = row.querySelector('.qty-box input');
-                if (select.value && parseInt(qtyInput.value) > 0) {
-                    orderedItemsList.push(select.value + " (Qty: " + qtyInput.value + ")");
-                }
-            }
-
-            const totalAmount = document.getElementById('total-amount').innerText;
-
-            const orderData = {
-                name: name, email: email, contact: contact, address: address,
-                items: orderedItemsList.join(', '), totalAmount: totalAmount
-            };
-
-            const scriptURL = 'https://script.google.com/macros/s/AKfycby1pOgDOYrL_GqkHe24cJWnjMf_9eWlvGo-ROYJhI55jupQjH96M90KGl_HWqrOkddzeA/exec';
-
-            fetch(scriptURL, {
-                method: 'POST', mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(orderData)
-            })
-            .then(() => {
-                document.getElementById('successModal').style.display = 'flex';
-            })
-            .catch(error => {
-                console.error('Error!', error.message);
-                alert('There was an error submitting your order. Please try again.');
-            });
-        }
-        
-        function closeModal() {
-            document.getElementById('successModal').style.display = 'none';
-            document.getElementById('orderForm').reset();
-            updateCartSummary();
-        }
-
-        window.addEventListener('DOMContentLoaded', function() {
-            updateCartSummary();
-
-            // Mobile menu logic: explicitly handling the hamburger menu click
-            let menu = document.querySelector('#menu-bar');
-            let navbar = document.querySelector('.navbar');
-
-            if (menu && navbar) {
-                menu.onclick = () => {
-                    menu.classList.toggle('fa-times');
-                    navbar.classList.toggle('active');
-                    menu.setAttribute('aria-expanded', navbar.classList.contains('active'));
-                };
-
-                let navLinks = document.querySelectorAll('.navbar a');
-                navLinks.forEach(link => {
-                    link.onclick = () => {
-                        menu.classList.remove('fa-times');
-                        navbar.classList.remove('active');
-                        menu.setAttribute('aria-expanded', 'false');
-                    };
-                });
-                
-                // Close mobile menu on scroll
-                window.addEventListener('scroll', () => {
-                    menu.classList.remove('fa-times');
-                    navbar.classList.remove('active');
-                    menu.setAttribute('aria-expanded', 'false');
-                });
-            }
-
-            // Click/Tap toggle for Hover Curtains in Specialty & Menu Cards
-            const interactiveCards = document.querySelectorAll('.menu-card, .speciality .box-container .box');
-            interactiveCards.forEach(card => {
-                card.addEventListener('click', function(e) {
-                    if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
-                    const isMenuCard = this.classList.contains('menu-card');
-                    const wasActive = this.classList.contains('active-touch');
-                    if (!isMenuCard && wasActive) return;
-
-                    interactiveCards.forEach(otherCard => { otherCard.classList.remove('active-touch'); });
-                    if (!wasActive) this.classList.add('active-touch');
-                });
-                card.addEventListener('mouseleave', function() { this.classList.remove('active-touch'); });
-            });
-            
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('.menu-card') && !e.target.closest('.speciality .box-container .box')) {
-                    interactiveCards.forEach(card => { card.classList.remove('active-touch'); });
-                }
-            });
-
-            // Intersection Observer to show/hide floating menu only when scrolling through #popular
-            const menuSection = document.getElementById('popular');
-            const floatingNav = document.querySelector('.floating-menu-nav');
-            const mobileNav = document.querySelector('.mobile-menu-nav');
-
-            if (menuSection) {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            if (floatingNav) floatingNav.classList.add('visible');
-                            if (mobileNav) mobileNav.classList.add('visible');
-                        } else {
-                            if (floatingNav) floatingNav.classList.remove('visible');
-                            if (mobileNav) mobileNav.classList.remove('visible');
-                        }
-                    });
-                }, { 
-                    root: null,
-                    threshold: 0.02, 
-                    rootMargin: "0px 0px -20% 0px" 
-                }); 
-
-                observer.observe(menuSection);
-            }
-        });
-    </script>
 </head>
 <body>
 
@@ -735,7 +507,9 @@
         <i class="fas fa-map-marker-alt"></i> nagpur
     </div>
 
-    <button type="button" id="menu-bar" class="fas fa-bars" aria-label="Menu" aria-expanded="false"></button>
+    <button type="button" id="menu-bar" class="fas fa-bars" aria-label="Menu" aria-expanded="false">
+        <span id="menu-cart-badge" class="cart-badge menu-cart-badge" hidden>0</span>
+    </button>
 
     <nav class="navbar">
         <a href="#home">home</a>
@@ -815,11 +589,11 @@
 
     <!-- 1. Starters -->
     <div class="menu-category" id="cat-starters">
-        <h2><span>starters</span></h2>
+        <h3><span>starters</span></h3>
         <div class="menu-card-container">
             <div class="menu-card veg-card">
                 <img loading="lazy" decoding="async" src="images/p-10.jpg" alt="Beguni">
-                <h3>beguni (4 pcs)</h3>
+                <h4>beguni (4 pcs)</h4>
                 <span class="price green-price">₹99</span>
                 <div class="hover-info">
                     <p>crispy traditional bengali eggplant fritters.</p>
@@ -828,7 +602,7 @@
             </div>
             <div class="menu-card veg-card">
                 <img loading="lazy" decoding="async" src="images/p-15.jpg" alt="Paneer Pakoda">
-                <h3>paneer pakoda (8 pcs)</h3>
+                <h4>paneer pakoda (8 pcs)</h4>
                 <span class="price green-price">₹299</span>
                 <div class="hover-info">
                     <p>delicious homemade paneer pakodas.</p>
@@ -837,7 +611,7 @@
             </div>
             <div class="menu-card">
                 <img loading="lazy" decoding="async" src="images/p-1.jpg" alt="Chicken Pakoda - crispy fried chicken starter">
-                <h3>chicken pakoda with green chutney (8 pcs)</h3>
+                <h4>chicken pakoda with green chutney (8 pcs)</h4>
                 <span class="price">₹299</span>
                 <div class="hover-info">
                     <p>crispy chicken pakodas served with fresh green chutney.</p>
@@ -846,7 +620,7 @@
             </div>
             <div class="menu-card">
                 <img loading="lazy" decoding="async" src="https://placehold.co/400x300/f5f5f5/333333?text=Masala+Fish+Fry" alt="Masala Fish Fry">
-                <h3>masala fish fry (2 pcs)</h3>
+                <h4>masala fish fry (2 pcs)</h4>
                 <span class="price">₹249</span>
                 <div class="hover-info">
                     <p>spicy and flavorful fried fish coated in masala.</p>
@@ -855,7 +629,7 @@
             </div>
             <div class="menu-card">
                 <img loading="lazy" decoding="async" src="images/p-2.jpg" alt="Machh Bhaja - crispy fried rohu fish">
-                <h3>machh bhaja - plain fish fry (2 pcs)</h3>
+                <h4>machh bhaja - plain fish fry (2 pcs)</h4>
                 <span class="price">₹199</span>
                 <div class="hover-info">
                     <p>traditional crispy rohu fish fry spiced to perfection.</p>
@@ -864,7 +638,7 @@
             </div>
             <div class="menu-card">
                 <img loading="lazy" decoding="async" src="images/p-19.jpg" alt="Egg Omelette">
-                <h3>egg omelette (2 eggs)</h3>
+                <h4>egg omelette (2 eggs)</h4>
                 <span class="price">₹99</span>
                 <div class="hover-info">
                     <p>fluffy homestyle egg omelette.</p>
@@ -876,12 +650,12 @@
 
     <!-- 2. Vegetarian Main Course -->
     <div class="menu-category" id="cat-veg">
-        <h2><span class="green-text">vegetarian main course</span></h2>
+        <h3><span class="green-text">vegetarian main course</span></h3>
         <div class="menu-card-container">
             <div class="menu-card veg-card">
                 <div class="bestseller-badge veg-badge">Bestseller</div>
                 <img loading="lazy" decoding="async" src="images/g-4.jpg" alt="Dhokar Dalna">
-                <h3>dhokar dalna (4 pcs)</h3>
+                <h4>dhokar dalna (4 pcs)</h4>
                 <span class="price green-price">₹249</span>
                 <div class="hover-info">
                     <p>bengali lentil cake curry prepared in a rich, aromatic gravy.</p>
@@ -891,7 +665,7 @@
             <div class="menu-card veg-card">
                 <div class="bestseller-badge veg-badge">Bestseller</div>
                 <img loading="lazy" decoding="async" src="images/g-8.jpg" alt="Phulkopi Alur Torkari">
-                <h3>phulkopi alur torkari - serves 2</h3>
+                <h4>phulkopi alur torkari - serves 2</h4>
                 <span class="price green-price">₹249</span>
                 <div class="hover-info">
                     <p>traditional bengali potato and cauliflower curry.</p>
@@ -901,7 +675,7 @@
             <div class="menu-card veg-card">
                 <div class="bestseller-badge veg-badge">Bestseller</div>
                 <img loading="lazy" decoding="async" src="images/p-9.jpg" alt="Alu Posto">
-                <h3>alu posto - serves 2</h3>
+                <h4>alu posto - serves 2</h4>
                 <span class="price green-price">₹249</span>
                 <div class="hover-info">
                     <p>potatoes cooked in a delicious poppy seed paste.</p>
@@ -910,7 +684,7 @@
             </div>
             <div class="menu-card veg-card">
                 <img loading="lazy" decoding="async" src="images/g-7.jpg" alt="Potol Alur Torkari">
-                <h3>potol alur torkari - serves 2</h3>
+                <h4>potol alur torkari - serves 2</h4>
                 <span class="price green-price">₹249</span>
                 <div class="hover-info">
                     <p>homestyle seasonal vegetable curry.</p>
@@ -919,7 +693,7 @@
             </div>
             <div class="menu-card veg-card">
                 <img loading="lazy" decoding="async" src="images/g-6.jpg" alt="Potol Posto">
-                <h3>potol posto - serves 2</h3>
+                <h4>potol posto - serves 2</h4>
                 <span class="price green-price">₹249</span>
                 <div class="hover-info">
                     <p>pointed gourd cooked in a rich, spiced poppy seed paste.</p>
@@ -928,7 +702,7 @@
             </div>
             <div class="menu-card veg-card">
                 <img loading="lazy" decoding="async" src="https://placehold.co/400x300/f5f5f5/333333?text=Lau+Ghonto" alt="Lau Ghonto">
-                <h3>lau ghonto - serves 2</h3>
+                <h4>lau ghonto - serves 2</h4>
                 <span class="price green-price">₹199</span>
                 <div class="hover-info">
                     <p>homestyle bottle gourd preparation.</p>
@@ -937,7 +711,7 @@
             </div>
             <div class="menu-card veg-card">
                 <img loading="lazy" decoding="async" src="images/p-11.jpg" alt="Dahi Baigana">
-                <h3>dahi baigana odia food - serves 2</h3>
+                <h4>dahi baigana odia food - serves 2</h4>
                 <span class="price green-price">₹199</span>
                 <div class="hover-info">
                     <p>eggplant lightly cooked in a spiced yogurt base.</p>
@@ -946,7 +720,7 @@
             </div>
             <div class="menu-card veg-card">
                 <img loading="lazy" decoding="async" src="images/g-9.jpg" alt="Mooger Dal Bengali Style">
-                <h3>mooger dal bengali style - serves 2</h3>
+                <h4>mooger dal bengali style - serves 2</h4>
                 <span class="price green-price">₹199</span>
                 <div class="hover-info">
                     <p>roasted yellow moong dal prepared with traditional spices.</p>
@@ -955,7 +729,7 @@
             </div>
             <div class="menu-card veg-card">
                 <img loading="lazy" decoding="async" src="images/p-18.jpg" alt="Chholar Dal Bengali Style">
-                <h3>chholar dal bengali style - serves 2</h3>
+                <h4>chholar dal bengali style - serves 2</h4>
                 <span class="price green-price">₹199</span>
                 <div class="hover-info">
                     <p>authentic chholar dal with aromatic spices.</p>
@@ -964,7 +738,7 @@
             </div>
             <div class="menu-card veg-card">
                 <img loading="lazy" decoding="async" src="https://placehold.co/400x300/f5f5f5/333333?text=Tel+Potol" alt="Tel Potol">
-                <h3>tel potol - serves 2</h3>
+                <h4>tel potol - serves 2</h4>
                 <span class="price green-price">₹199</span>
                 <div class="hover-info">
                     <p>deliciously fried and simmered pointed gourd dish.</p>
@@ -973,7 +747,7 @@
             </div>
             <div class="menu-card veg-card">
                 <img loading="lazy" decoding="async" src="images/s-img-1.jpg" alt="Alur Dom">
-                <h3>alur dom (6 pcs)</h3>
+                <h4>alur dom (6 pcs)</h4>
                 <span class="price green-price">₹149</span>
                 <div class="hover-info">
                     <p>spiced baby potato curry cooked bengali style.</p>
@@ -982,7 +756,7 @@
             </div>
             <div class="menu-card veg-card">
                 <img loading="lazy" decoding="async" src="images/s-img-2.jpg" alt="Alu Bhaja">
-                <h3>alu bhaja - serves 2</h3>
+                <h4>alu bhaja - serves 2</h4>
                 <span class="price green-price">₹99</span>
                 <div class="hover-info">
                     <p>crispy shallow-fried potato slices.</p>
@@ -991,7 +765,7 @@
             </div>
             <div class="menu-card veg-card">
                 <img loading="lazy" decoding="async" src="images/s-img-3.jpg" alt="Potol Bhaja">
-                <h3>potol bhaja - serves 2</h3>
+                <h4>potol bhaja - serves 2</h4>
                 <span class="price green-price">₹99</span>
                 <div class="hover-info">
                     <p>crispy fried pointed gourd slices.</p>
@@ -1003,12 +777,12 @@
 
     <!-- 3. Non-Vegetarian Main Course -->
     <div class="menu-category" id="cat-nonveg">
-        <h2><span>non-vegetarian main course</span></h2>
+        <h3><span>non-vegetarian main course</span></h3>
         <div class="menu-card-container">
             <div class="menu-card">
                 <div class="bestseller-badge">Bestseller</div>
                 <img loading="lazy" decoding="async" src="images/p-6.jpg" alt="Chicken Kosha">
-                <h3>chicken kosha - spicy chicken curry (4 pcs)</h3>
+                <h4>chicken kosha - spicy chicken curry (4 pcs)</h4>
                 <span class="price">₹249</span>
                 <div class="hover-info">
                     <p>thick, spicy, and deeply flavorful traditional chicken kosha.</p>
@@ -1018,7 +792,7 @@
             <div class="menu-card">
                 <div class="bestseller-badge">Bestseller</div>
                 <img loading="lazy" decoding="async" src="images/g-1.jpg" alt="Chicken Jhol">
-                <h3>chicken jhol - bengali chicken curry (4 pcs)</h3>
+                <h4>chicken jhol - bengali chicken curry (4 pcs)</h4>
                 <span class="price">₹249</span>
                 <div class="hover-info">
                     <p>light and comforting authentic bengali style chicken curry.</p>
@@ -1028,7 +802,7 @@
             <div class="menu-card">
                 <div class="bestseller-badge">Bestseller</div>
                 <img loading="lazy" decoding="async" src="images/p-8.jpg" alt="Machher Kalia">
-                <h3>machher kalia - bengali fish delicacy (2 pcs)</h3>
+                <h4>machher kalia - bengali fish delicacy (2 pcs)</h4>
                 <span class="price">₹249</span>
                 <div class="hover-info">
                     <p>traditional bengali fish delicacy cooked in a rich gravy.</p>
@@ -1037,7 +811,7 @@
             </div>
             <div class="menu-card">
                 <img loading="lazy" decoding="async" src="images/p-5.jpg" alt="Doi Machh">
-                <h3>doi machh - fish in yogurt gravy (2 pcs)</h3>
+                <h4>doi machh - fish in yogurt gravy (2 pcs)</h4>
                 <span class="price">₹299</span>
                 <div class="hover-info">
                     <p>tender fish pieces simmered in a creamy yogurt and cashew paste.</p>
@@ -1046,7 +820,7 @@
             </div>
             <div class="menu-card">
                 <img loading="lazy" decoding="async" src="images/p-3.jpg" alt="Machher Jhol">
-                <h3>machher jhol - with jeere bata & alu (2 pcs)</h3>
+                <h4>machher jhol - with jeere bata & alu (2 pcs)</h4>
                 <span class="price">₹249</span>
                 <div class="hover-info">
                     <p>traditional bengali fish curry with cumin paste and potatoes.</p>
@@ -1055,7 +829,7 @@
             </div>
             <div class="menu-card">
                 <img loading="lazy" decoding="async" src="images/g-2.jpg" alt="Chilli Chicken">
-                <h3>chilli chicken - kolkata style (8 pcs)</h3>
+                <h4>chilli chicken - kolkata style (8 pcs)</h4>
                 <span class="price">₹299</span>
                 <div class="hover-info">
                     <p>popular kolkata style spicy and tangy chilli chicken.</p>
@@ -1064,7 +838,7 @@
             </div>
             <div class="menu-card">
                 <img loading="lazy" decoding="async" src="images/p-12.jpg" alt="Dhania Chicken">
-                <h3>dhania chicken (4 pcs)</h3>
+                <h4>dhania chicken (4 pcs)</h4>
                 <span class="price">₹299</span>
                 <div class="hover-info">
                     <p>flavorful chicken curry infused with fresh coriander.</p>
@@ -1073,7 +847,7 @@
             </div>
             <div class="menu-card">
                 <img loading="lazy" decoding="async" src="images/p-13.jpg" alt="Paalak Chicken">
-                <h3>paalak chicken (4 pcs)</h3>
+                <h4>paalak chicken (4 pcs)</h4>
                 <span class="price">₹299</span>
                 <div class="hover-info">
                     <p>rich chicken curry prepared with a vibrant spinach base.</p>
@@ -1082,7 +856,7 @@
             </div>
             <div class="menu-card">
                 <img loading="lazy" decoding="async" src="images/g-3.jpg" alt="Dim Kosha">
-                <h3>dim kosha - bengali egg curry (2 pcs)</h3>
+                <h4>dim kosha - bengali egg curry (2 pcs)</h4>
                 <span class="price">₹149</span>
                 <div class="hover-info">
                     <p>boiled eggs cooked in a rich, spicy bengali-style gravy.</p>
@@ -1094,11 +868,11 @@
 
     <!-- 4. Rice & Breads -->
     <div class="menu-category" id="cat-rice">
-        <h2><span class="green-text">rice & breads</span></h2>
+        <h3><span class="green-text">rice & breads</span></h3>
         <div class="menu-card-container">
             <div class="menu-card veg-card">
                 <img loading="lazy" decoding="async" src="images/p-17.jpg" alt="Basanti Pulao">
-                <h3>basanti pulao</h3>
+                <h4>basanti pulao</h4>
                 <span class="price green-price">₹299</span>
                 <div class="hover-info">
                     <p>sweet and fragrant traditional bengali yellow rice pulao.</p>
@@ -1107,7 +881,7 @@
             </div>
             <div class="menu-card veg-card">
                 <img loading="lazy" decoding="async" src="images/s-img-5.jpg" alt="Steamed basmati rice">
-                <h3>steamed basmati rice - serves 1</h3>
+                <h4>steamed basmati rice - serves 1</h4>
                 <span class="price green-price">₹79</span>
                 <div class="hover-info">
                     <p>fluffy long-grain steamed basmati rice.</p>
@@ -1116,7 +890,7 @@
             </div>
             <div class="menu-card veg-card">
                 <img loading="lazy" decoding="async" src="images/p-14.jpg" alt="Luchi">
-                <h3>luchi (4 pcs)</h3>
+                <h4>luchi (4 pcs)</h4>
                 <span class="price green-price">₹69</span>
                 <div class="hover-info">
                     <p>deep-fried puffed indian bread.</p>
@@ -1125,7 +899,7 @@
             </div>
             <div class="menu-card veg-card">
                 <img loading="lazy" decoding="async" src="images/p-4.jpg" alt="Plain parotta">
-                <h3>parotta - plain (1 pcs)</h3>
+                <h4>parotta - plain (1 pcs)</h4>
                 <span class="price green-price">₹29</span>
                 <div class="hover-info">
                     <p>soft layered plain parotta.</p>
@@ -1134,7 +908,7 @@
             </div>
             <div class="menu-card veg-card">
                 <img loading="lazy" decoding="async" src="images/p-7.jpg" alt="Roti">
-                <h3>roti (1 pcs)</h3>
+                <h4>roti (1 pcs)</h4>
                 <span class="price green-price">₹15</span>
                 <div class="hover-info">
                     <p>freshly made whole wheat flatbread.</p>
@@ -1146,11 +920,11 @@
 
     <!-- 5. Pre-Order Only Items -->
     <div class="menu-category" id="cat-preorder">
-        <h2><span>pre-order only items (min 4 qty.)</span></h2>
+        <h3><span>pre-order only items (min 4 qty.)</span></h3>
         <div class="menu-card-container">
             <div class="menu-card">
                 <img loading="lazy" decoding="async" src="https://placehold.co/400x300/f5f5f5/333333?text=Mutton+Kosha" alt="Mutton Kosha">
-                <h3>mutton kosha (4 pcs)</h3>
+                <h4>mutton kosha (4 pcs)</h4>
                 <span class="price">₹399</span>
                 <div class="hover-info">
                     <p>slow cooked tender mutton in spicy dark gravy.</p>
@@ -1159,7 +933,7 @@
             </div>
             <div class="menu-card">
                 <img loading="lazy" decoding="async" src="https://placehold.co/400x300/f5f5f5/333333?text=Champaran+Mutton" alt="Champaran Mutton">
-                <h3>champaran mutton (4 pcs)</h3>
+                <h4>champaran mutton (4 pcs)</h4>
                 <span class="price">₹399</span>
                 <div class="hover-info">
                     <p>rustic mutton slow-cooked with whole spices.</p>
@@ -1168,7 +942,7 @@
             </div>
             <div class="menu-card">
                 <img loading="lazy" decoding="async" src="https://placehold.co/400x300/f5f5f5/333333?text=Chingrir+Malaicurry" alt="Chingrir Malaicurry">
-                <h3>chingrir malaicurry (small - 4 pcs/big - 2 pcs)</h3>
+                <h4>chingrir malaicurry (small - 4 pcs/big - 2 pcs)</h4>
                 <span class="price">₹299</span>
                 <div class="hover-info">
                     <p>traditional prawn curry in rich coconut milk gravy.</p>
@@ -1177,7 +951,7 @@
             </div>
             <div class="menu-card">
                 <img loading="lazy" decoding="async" src="images/p-20.jpg" alt="Kolkata Chicken Biriyani">
-                <h3>kolkata chicken biriyani with egg & alu</h3>
+                <h4>kolkata chicken biriyani with egg & alu</h4>
                 <span class="price">₹399</span>
                 <div class="hover-info">
                     <p>authentic kolkata style biriyani with tender chicken, egg, and potato.</p>
@@ -1186,7 +960,7 @@
             </div>
             <div class="menu-card">
                 <img loading="lazy" decoding="async" src="images/p-16.jpg" alt="Ilish Bhapa">
-                <h3>ilish bhapa - seasonal</h3>
+                <h4>ilish bhapa - seasonal</h4>
                 <span class="price">Ask for Price</span>
                 <div class="hover-info">
                     <p>steamed hilsa fish in mustard sauce. seasonal availability.</p>
@@ -1194,7 +968,7 @@
             </div>
             <div class="menu-card">
                 <img loading="lazy" decoding="async" src="https://placehold.co/400x300/f5f5f5/333333?text=Sorshe+Ilish" alt="Sorshe Ilish">
-                <h3>sorshe ilish - seasonal</h3>
+                <h4>sorshe ilish - seasonal</h4>
                 <span class="price">Ask for Price</span>
                 <div class="hover-info">
                     <p>hilsa fish prepared in a pungent mustard gravy.</p>
@@ -1202,7 +976,7 @@
             </div>
             <div class="menu-card">
                 <img loading="lazy" decoding="async" src="https://placehold.co/400x300/f5f5f5/333333?text=Pabdar+Jhal" alt="Pabdar Jhal">
-                <h3>pabdar jhal - seasonal</h3>
+                <h4>pabdar jhal - seasonal</h4>
                 <span class="price">Ask for Price</span>
                 <div class="hover-info">
                     <p>pabda fish in a lightly spiced mustard gravy.</p>
@@ -1398,7 +1172,7 @@
 <a href="#home" class="fas fa-angle-up" id="scroll-top" aria-label="Back to top"></a>
 
 <!-- custom js file link  -->
-<script src="js/script.js"></script>
+<script src="script.js" defer></script>
 
 </body>
 </html>

@@ -495,19 +495,26 @@ header .navbar a:hover{
 
 #scroll-top{
   position: fixed;
-  top:-120%;
-  right:2rem;
+  right: 2rem;
+  bottom: 2rem;
   padding:.5rem 1.5rem;
   font-size: 4rem;
   background:var(--red);
   color:#fff;
   border-radius: .5rem;
-  transition: 1s linear;
   z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(1.5rem);
+  transition: opacity .35s ease, transform .35s ease, visibility .35s;
 }
 
 #scroll-top.active{
-  top:calc(100% - 12rem)
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 

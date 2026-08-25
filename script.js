@@ -15,7 +15,7 @@ const itemPrices = {
     "Dahi Baigana Odia Food - Serves 2": 199,
     "Mooger Dal Bengali Style - Serves 2": 199,
     "Chholar Dal Bengali Style - Serves 2": 199,
-    "Tel Potol - Serves 2": 199,
+    "Korola Bhaja - Serves 2": 119,
     "Alur Dom (6 Pcs)": 149,
     "Alu Bhaja - Serves 2": 99,
     "Potol Bhaja - Serves 2": 99,

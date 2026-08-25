@@ -575,6 +575,10 @@ header .navbar a:hover{
     background:#fff;
   }
 
+  #scroll-top{
+    display: none;
+  }
+
 }
 
 @media(max-width:450px){

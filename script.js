@@ -282,28 +282,50 @@ window.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Intersection Observer to show/hide floating menu only while scrolling through #popular
-    const menuSection = document.getElementById('popular');
+    // Floating/mobile section navigator: visible only while an actual menu
+    // category (Starters, Veg Main Course, etc.) is in view - not merely
+    // while the outer #popular section has started entering the viewport.
     const floatingNav = document.querySelector('.floating-menu-nav');
     const mobileNav = document.querySelector('.mobile-menu-nav');
 
-    if (menuSection) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    if (floatingNav) floatingNav.classList.add('visible');
-                    if (mobileNav) mobileNav.classList.add('visible');
-                } else {
-                    if (floatingNav) floatingNav.classList.remove('visible');
-                    if (mobileNav) mobileNav.classList.remove('visible');
-                }
-            });
-        }, {
-            root: null,
-            threshold: 0.02,
-            rootMargin: "0px 0px -20% 0px"
+    // Scroll-spy: highlight the nav link for whichever menu category is
+    // currently in view, in both the desktop and mobile section navigators.
+    const categorySections = document.querySelectorAll('.menu-category[id]');
+    if (categorySections.length) {
+        const navLinksByHref = {};
+        document.querySelectorAll('.floating-menu-nav a, .mobile-menu-nav a').forEach(link => {
+            const href = link.getAttribute('href');
+            if (!navLinksByHref[href]) navLinksByHref[href] = [];
+            navLinksByHref[href].push(link);
         });
 
-        observer.observe(menuSection);
+        const setActiveCategory = (id) => {
+            Object.values(navLinksByHref).flat().forEach(link => link.classList.remove('active'));
+            const links = navLinksByHref['#' + id];
+            if (links) links.forEach(link => link.classList.add('active'));
+        };
+
+        const visibleCategoryIds = new Set();
+
+        const categoryObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    visibleCategoryIds.add(entry.target.id);
+                    setActiveCategory(entry.target.id);
+                } else {
+                    visibleCategoryIds.delete(entry.target.id);
+                }
+            });
+
+            const inMenu = visibleCategoryIds.size > 0;
+            if (floatingNav) floatingNav.classList.toggle('visible', inMenu);
+            if (mobileNav) mobileNav.classList.toggle('visible', inMenu);
+        }, {
+            root: null,
+            threshold: 0,
+            rootMargin: "-40% 0px -55% 0px"
+        });
+
+        categorySections.forEach(section => categoryObserver.observe(section));
     }
 });

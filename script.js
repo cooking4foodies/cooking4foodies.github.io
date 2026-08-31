@@ -1,7 +1,7 @@
 // Item prices mapping lookup mapped to Menu Card
 const itemPrices = {
     "Beguni (4 Pcs)": 99,
-    "Paneer Pakoda (8 Pcs)": 299,
+    "Masoor Daler Bora (8 Pcs)": 149,
     "Chicken Pakoda with Green Chutney (8 Pcs)": 299,
     "Masala Fish Fry (2 Pcs)": 249,
     "Machh Bhaja - Plain Fish Fry (2 Pcs)": 199,

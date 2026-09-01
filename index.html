@@ -482,20 +482,44 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Footer Styling */
-        .footer-container { background: #111; color: #fff; padding: 4rem 9% 2rem 9%; }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; margin-bottom: 3rem; }
-        .footer-box h3 { font-size: 2.2rem; color: #ff3838; margin-bottom: 1.5rem; }
-        .footer-box p { font-size: 1.4rem; color: #aaa; line-height: 1.8; margin-bottom: .5rem; }
-        .footer-box p i { color: #ff3838; margin-right: 1rem; }
-        .footer-socials { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .footer-container { background: #111; color: #fff; padding: 3rem 9% 1.4rem 9%; }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 1.8rem;
+            align-items: start;
+        }
+        .footer-box h3 { font-size: 1.8rem; color: #ff3838; margin-bottom: .8rem; }
+        .footer-box p { font-size: 1.3rem; color: #aaa; line-height: 1.55; margin-bottom: .3rem; }
+        .footer-box p i { color: #ff3838; margin-right: .8rem; }
+        .footer-map {
+            margin-top: .8rem;
+            border-radius: .7rem;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,.1);
+            line-height: 0;
+        }
+        .footer-map iframe { display: block; filter: grayscale(.2) contrast(1.05); }
+        .footer-socials { display: flex; gap: .8rem; margin-top: .8rem; }
         .footer-socials a {
-            height: 40px; width: 40px; line-height: 40px; text-align: center;
-            border-radius: 50%; background: #222; color: #fff; font-size: 1.6rem; transition: .2s linear;
+            height: 34px; width: 34px; line-height: 34px; text-align: center;
+            border-radius: 50%; background: #222; color: #fff; font-size: 1.4rem; transition: .2s linear;
         }
         .footer-socials a.facebook-btn:hover { background: #3b5998; }
         .footer-socials a.instagram-btn:hover { background: #e1306c; }
         .footer-socials a.whatsapp-btn:hover { background: #25d366; }
-        .footer-bottom { border-top: .1rem solid rgba(255,255,255,.1); padding-top: 2rem; text-align: center; font-size: 1.4rem; color: #888; }
+        .footer-bottom { border-top: .1rem solid rgba(255,255,255,.1); padding-top: 1.2rem; text-align: center; font-size: 1.2rem; color: #888; }
+
+        /* Keep "Our Address" (with the map) and "Connect With Us" paired
+           side by side at every width, instead of an auto-fit grid that
+           can wrap them apart and leave Connect With Us stranded below. */
+        @media (max-width: 991px) {
+            .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 1.6rem; }
+        }
+        @media (max-width: 480px) {
+            .footer-grid { grid-template-columns: 1fr; gap: 1.6rem; }
+        }
     </style>
 </head>
 <body>
@@ -1073,7 +1097,7 @@
             <div class="inputBox">
                 <input type="tel" placeholder="contact no" aria-label="Contact number" required>
             </div>
-            <textarea placeholder="address" name="" id="" cols="30" rows="2" aria-label="Delivery address" required></textarea>
+            <textarea placeholder="address" name="address" cols="30" rows="2" aria-label="Delivery address" required></textarea>
 
             <hr class="order-divider">
 
@@ -1180,6 +1204,14 @@
         <div class="footer-box">
             <h3>our address</h3>
             <p><i class="fas fa-map-marker-alt"></i> Shastri Layout, Khamla, Nagpur, MH - 440025</p>
+            <div class="footer-map">
+                <iframe
+                    src="https://www.google.com/maps?q=Shastri+Layout,+Khamla,+Nagpur,+Maharashtra+440025&output=embed"
+                    width="100%" height="140" style="border:0;" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="Cooking 4 Foodies location map">
+                </iframe>
+            </div>
         </div>
         <div class="footer-box">
             <h3>connect with us</h3>

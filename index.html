@@ -504,6 +504,80 @@
         .modal-content button:hover { background: #333; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* UPI Payment Modal */
+        .pay-modal { max-width: 440px; text-align: center; }
+        .pay-modal .pay-order-id {
+            font-size: 1.5rem; font-weight: 700; color: #333; letter-spacing: .05em;
+            background: #f6f6f6; border: 1px dashed #ccc; border-radius: .6rem;
+            padding: .8rem 1rem; margin-bottom: 1.2rem; word-break: break-all;
+            text-transform: none;
+        }
+        .pay-modal .pay-amount { font-size: 3rem; font-weight: 800; color: #1e8449; margin-bottom: .4rem; }
+        .pay-modal .pay-amount-label { font-size: 1.3rem; color: #888; margin-bottom: 1.5rem; }
+
+        /* Payment method toggle */
+        .pay-method-toggle {
+            display: flex; gap: .6rem; margin: 1.5rem 0;
+            background: #f2f2f2; padding: .5rem; border-radius: .8rem;
+        }
+        .pay-tab {
+            flex: 1; background: transparent !important; color: #666 !important;
+            border: none; padding: 1rem .6rem !important; border-radius: .6rem;
+            font-size: 1.3rem !important; font-weight: 700; cursor: pointer;
+            transition: all .2s ease; font-family: inherit;
+        }
+        .pay-tab.active {
+            background: #fff !important; color: #ff3838 !important;
+            box-shadow: 0 .2rem .6rem rgba(0,0,0,.12);
+        }
+        .pay-tab:hover:not(.active) { color: #333 !important; }
+
+        /* Cash on delivery pane */
+        .pay-cod-box {
+            background: #f0f9f3; border: 1px solid #cde9d8; border-radius: .8rem;
+            padding: 2rem 1.5rem; margin-bottom: 1.5rem;
+        }
+        .pay-cod-box i { font-size: 3.5rem; color: #1e8449; margin-bottom: 1rem; }
+        .pay-cod-box p { font-size: 1.5rem; color: #333; margin: 0; }
+        .pay-cod-box strong { color: #1e8449; font-size: 1.8rem; }
+        .pay-qr {
+            display: flex; justify-content: center; padding: 1.2rem; background: #fff;
+            border: 1px solid #eee; border-radius: .8rem; margin: 0 auto 1.2rem auto; width: fit-content;
+        }
+        .pay-qr img, .pay-qr canvas { display: block; }
+        .pay-vpa {
+            font-size: 1.4rem; color: #555; margin-bottom: 1.5rem; word-break: break-all;
+        }
+        /* UPI IDs and order IDs must render exactly as-is - the site's
+           global capitalize/lowercase styling would otherwise mangle them. */
+        .pay-vpa strong, #pay-order-id-value, #pay-ref-input, #success-message strong {
+            color: #333;
+            text-transform: none !important;
+        }
+        .pay-upi-btn {
+            display: inline-block; background: #1e8449; color: #fff; text-decoration: none;
+            padding: 1.1rem 2rem; border-radius: .6rem; font-size: 1.5rem; font-weight: 700;
+            margin-bottom: 1.5rem; width: 100%; box-sizing: border-box;
+        }
+        .pay-step {
+            text-align: left; font-size: 1.35rem; color: #555; line-height: 1.6;
+            background: #fff8e6; border-left: .4rem solid #f0b429; border-radius: .4rem;
+            padding: 1rem 1.2rem; margin-bottom: 1.5rem;
+        }
+        .pay-ref-input {
+            width: 100%; padding: 1.1rem; font-size: 1.5rem; border: 1px solid #ccc;
+            border-radius: .6rem; margin-bottom: 1rem; box-sizing: border-box; font-family: inherit;
+        }
+        .pay-actions { display: flex; gap: 1rem; }
+        .pay-actions button { flex: 1; }
+        .pay-cancel-btn { background: #eee !important; color: #555 !important; }
+        .pay-cancel-btn:hover { background: #ddd !important; color: #333 !important; }
+        .pay-error { color: #d81f1f; font-size: 1.3rem; margin-bottom: 1rem; display: none; }
+        @media (max-width: 480px) {
+            .pay-modal { padding: 2rem 1.5rem; }
+            .pay-actions { flex-direction: column; }
+        }
+
         /* Footer Styling */
         .footer-container { background: #111; color: #fff; padding: 3rem 9% 1.4rem 9%; }
         .footer-grid {
@@ -995,7 +1069,7 @@
         <h3><span>pre-order only items (min 4 qty.)</span></h3>
         <div class="menu-card-container">
             <div class="menu-card">
-                <img width="400" height="300" loading="lazy" decoding="async" src="https://placehold.co/400x300/f5f5f5/333333?text=Mutton+Kosha" alt="Mutton Kosha">
+                <img width="839" height="600" loading="lazy" decoding="async" src="images/p-24.jpg" alt="Mutton Kosha">
                 <h4>mutton kosha (4 pcs)</h4>
                 <span class="price">₹399</span>
                 <div class="hover-info">
@@ -1198,12 +1272,69 @@
 </section>
 <!-- order section ends -->
 
+<!-- UPI Payment Modal -->
+<div id="paymentModal" class="modal-overlay">
+    <div class="modal-content pay-modal">
+        <h3>choose payment method</h3>
+        <div class="pay-order-id">Order ID: <span id="pay-order-id-value"></span></div>
+        <div class="pay-amount" id="pay-amount-value">₹0</div>
+
+        <!-- Payment method toggle -->
+        <div class="pay-method-toggle">
+            <button type="button" id="pay-tab-upi" class="pay-tab active"
+                    onclick="selectPaymentMethod('upi')">pay online (UPI)</button>
+            <button type="button" id="pay-tab-cod" class="pay-tab"
+                    onclick="selectPaymentMethod('cod')">cash on delivery</button>
+        </div>
+
+        <!-- UPI pane -->
+        <div id="pay-pane-upi">
+            <div class="pay-amount-label">scan the code below with any UPI app</div>
+
+            <div class="pay-qr" id="pay-qr"></div>
+
+            <div class="pay-vpa">paying to <strong id="pay-vpa-value"></strong></div>
+
+            <a href="#" id="pay-upi-link" class="pay-upi-btn">pay now in UPI app</a>
+
+            <div class="pay-step">
+                After paying, enter the <strong>12-digit UPI reference / UTR number</strong>
+                from your payment app below, then press confirm. Your order is only
+                placed once you confirm.
+            </div>
+
+            <input type="text" id="pay-ref-input" class="pay-ref-input"
+                   placeholder="12-digit UPI reference number" inputmode="numeric" maxlength="12">
+        </div>
+
+        <!-- Cash on delivery pane -->
+        <div id="pay-pane-cod" style="display:none;">
+            <div class="pay-cod-box">
+                <i class="fas fa-wallet"></i>
+                <p>Pay <strong id="pay-cod-amount">₹0</strong> in cash when your
+                   order is delivered to your door.</p>
+            </div>
+            <div class="pay-step">
+                Please keep the exact amount ready if possible. We will call you on
+                the number you provided to confirm your order before we start cooking.
+            </div>
+        </div>
+
+        <div class="pay-error" id="pay-error"></div>
+
+        <div class="pay-actions">
+            <button type="button" class="pay-cancel-btn" onclick="closePaymentModal()">cancel</button>
+            <button type="button" id="pay-confirm-btn" onclick="confirmPayment()">confirm payment</button>
+        </div>
+    </div>
+</div>
+
 <!-- Success Dialog Modal -->
 <div id="successModal" class="modal-overlay">
     <div class="modal-content">
         <i class="fas fa-check-circle"></i>
         <h3>order placed successfully!</h3>
-        <p>thank you for ordering with cooking 4 foodies. your delicious food is on its way!</p>
+        <p id="success-message">thank you for ordering with cooking 4 foodies. your delicious food is on its way!</p>
         <button onclick="closeModal()">ok</button>
     </div>
 </div>
@@ -1244,6 +1375,11 @@
 <a href="#home" class="fas fa-angle-up" id="scroll-top" aria-label="Back to top"></a>
 
 <!-- custom js file link  -->
+<!-- QR code generator for the UPI payment modal.
+     Bundled locally rather than loaded from a CDN, so payment never
+     depends on a third-party host being reachable. -->
+<script src="qrcode.min.js"></script>
+
 <script src="script.js" defer></script>
 
 </body>

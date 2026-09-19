@@ -171,50 +171,235 @@ function removeItemRow(btn) {
     updateCartSummary();
 }
 
+// ---------------------------------------------------------------
+// UPI payment flow
+//
+// IMPORTANT: a static site cannot verify UPI payments by itself.
+// A plain UPI QR to a personal VPA has no callback, so the customer
+// self-reports the UPI reference number and Sonali cross-checks it
+// against her bank notification. Payment status is therefore recorded
+// as "Pending Verification", never as confirmed-by-the-site.
+// ---------------------------------------------------------------
+const UPI_VPA = 'sonali.debnath4u@okicici';
+const UPI_PAYEE_NAME = 'Cooking 4 Foodies';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby1pOgDOYrL_GqkHe24cJWnjMf_9eWlvGo-ROYJhI55jupQjH96M90KGl_HWqrOkddzeA/exec';
+
+// Holds the order being paid for, between opening the payment modal
+// and the customer confirming payment.
+let pendingOrder = null;
+let selectedPaymentMethod = 'upi';
+
+function generateOrderId() {
+    const d = new Date();
+    const yy = String(d.getFullYear()).slice(-2);
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    // 4 random alphanumeric chars, ambiguous characters (0/O/1/I) excluded
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let suffix = '';
+    for (let i = 0; i < 4; i++) {
+        suffix += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return `C4F-${yy}${mm}${dd}-${suffix}`;
+}
+
+function buildUpiUri(amount, orderId) {
+    const params = new URLSearchParams({
+        pa: UPI_VPA,
+        pn: UPI_PAYEE_NAME,
+        am: Number(amount).toFixed(2),
+        cu: 'INR',
+        tn: 'Order ' + orderId
+    });
+    // URLSearchParams encodes spaces as "+", which some UPI apps show
+    // literally ("Cooking+4+Foodies"). %20 is handled correctly everywhere.
+    return 'upi://pay?' + params.toString().replace(/\+/g, '%20');
+}
+
 function handleOrderSubmit(event) {
     event.preventDefault();
+
     const formInputs = document.querySelectorAll('#orderForm input, #orderForm textarea');
-    const name = formInputs[0].value;
-    const email = formInputs[1].value;
-    const contact = formInputs[2].value;
-    const address = formInputs[3].value;
+    const name = formInputs[0].value.trim();
+    const email = formInputs[1].value.trim();
+    const contact = formInputs[2].value.trim();
+    const address = formInputs[3].value.trim();
 
     const rows = document.getElementsByClassName('item-row');
     let orderedItemsList = [];
+    let totalPrice = 0;
     for (let row of rows) {
         const select = row.querySelector('select');
         const qtyInput = row.querySelector('.qty-box input');
-        if (select.value && parseInt(qtyInput.value) > 0) {
-            orderedItemsList.push(select.value + " (Qty: " + qtyInput.value + ")");
+        const qty = parseInt(qtyInput.value) || 0;
+        if (select.value && qty > 0) {
+            orderedItemsList.push(select.value + " (Qty: " + qty + ")");
+            if (itemPrices[select.value]) {
+                totalPrice += itemPrices[select.value] * qty;
+            }
         }
     }
 
-    const totalAmount = document.getElementById('total-amount').innerText;
+    if (orderedItemsList.length === 0) {
+        alert('Please select at least one item before placing your order.');
+        return;
+    }
 
-    const orderData = {
+    // Seasonal "Ask for price" items have no price, so they can't be prepaid.
+    if (totalPrice <= 0) {
+        alert('Your selection contains only seasonal items priced on request. Please call +91-8976180617 to place this order.');
+        return;
+    }
+
+    pendingOrder = {
+        orderId: generateOrderId(),
         name: name, email: email, contact: contact, address: address,
-        items: orderedItemsList.join(', '), totalAmount: totalAmount
+        items: orderedItemsList.join(', '),
+        amount: totalPrice
     };
 
-    const scriptURL = 'https://script.google.com/macros/s/AKfycby1pOgDOYrL_GqkHe24cJWnjMf_9eWlvGo-ROYJhI55jupQjH96M90KGl_HWqrOkddzeA/exec';
+    openPaymentModal(pendingOrder);
+}
 
-    fetch(scriptURL, {
+function openPaymentModal(order) {
+    document.getElementById('pay-order-id-value').innerText = order.orderId;
+    document.getElementById('pay-amount-value').innerText = '₹' + order.amount;
+    document.getElementById('pay-vpa-value').innerText = UPI_VPA;
+
+    const upiUri = buildUpiUri(order.amount, order.orderId);
+    document.getElementById('pay-upi-link').setAttribute('href', upiUri);
+
+    // Render the QR fresh each time (clears any previous order's code)
+    const qrBox = document.getElementById('pay-qr');
+    qrBox.innerHTML = '';
+    if (typeof QRCode !== 'undefined') {
+        new QRCode(qrBox, {
+            text: upiUri,
+            width: 200,
+            height: 200,
+            correctLevel: QRCode.CorrectLevel.M
+        });
+    } else {
+        qrBox.innerHTML = '<p style="font-size:1.3rem;color:#888;">QR unavailable — please use the "pay now" button or pay manually to ' + UPI_VPA + '</p>';
+    }
+
+    document.getElementById('pay-ref-input').value = '';
+    document.getElementById('pay-cod-amount').innerText = '₹' + order.amount;
+    selectPaymentMethod('upi');
+    hidePayError();
+    document.getElementById('paymentModal').style.display = 'flex';
+}
+
+function selectPaymentMethod(method) {
+    selectedPaymentMethod = method;
+    const isUpi = method === 'upi';
+
+    document.getElementById('pay-pane-upi').style.display = isUpi ? 'block' : 'none';
+    document.getElementById('pay-pane-cod').style.display = isUpi ? 'none' : 'block';
+
+    document.getElementById('pay-tab-upi').classList.toggle('active', isUpi);
+    document.getElementById('pay-tab-cod').classList.toggle('active', !isUpi);
+
+    document.getElementById('pay-confirm-btn').innerText =
+        isUpi ? 'confirm payment' : 'place order';
+
+    hidePayError();
+}
+
+function closePaymentModal() {
+    document.getElementById('paymentModal').style.display = 'none';
+    pendingOrder = null;
+}
+
+function showPayError(msg) {
+    const el = document.getElementById('pay-error');
+    el.innerText = msg;
+    el.style.display = 'block';
+}
+
+function hidePayError() {
+    document.getElementById('pay-error').style.display = 'none';
+}
+
+function confirmPayment() {
+    if (!pendingOrder) return;
+
+    const isUpi = selectedPaymentMethod === 'upi';
+    let ref = '';
+
+    if (isUpi) {
+        ref = document.getElementById('pay-ref-input').value.trim();
+        if (!/^\d{12}$/.test(ref)) {
+            showPayError('Please enter the 12-digit UPI reference number from your payment app.');
+            return;
+        }
+    }
+    hidePayError();
+
+    const btn = document.getElementById('pay-confirm-btn');
+    const originalLabel = btn.innerText;
+    btn.disabled = true;
+    btn.innerText = 'submitting...';
+
+    const orderData = {
+        orderId: pendingOrder.orderId,
+        name: pendingOrder.name,
+        email: pendingOrder.email,
+        contact: pendingOrder.contact,
+        address: pendingOrder.address,
+        items: pendingOrder.items,
+        totalAmount: '₹' + pendingOrder.amount,
+        paymentMethod: isUpi ? 'UPI (Prepaid)' : 'Cash on Delivery',
+        upiReference: isUpi ? ref : '',
+        paymentStatus: isUpi ? 'Pending Verification' : 'To Collect on Delivery',
+        paidTo: isUpi ? UPI_VPA : '',
+        orderedAt: new Date().toLocaleString('en-IN')
+    };
+
+    fetch(SCRIPT_URL, {
         method: 'POST', mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData)
     })
         .then(() => {
+            const placedId = pendingOrder.orderId;
+            const contact = pendingOrder.contact;
+            const amount = pendingOrder.amount;
+            document.getElementById('paymentModal').style.display = 'none';
+
+            const tail = isUpi
+                ? 'We will confirm your payment and call you shortly on ' + contact + '.'
+                : 'Please keep <strong>₹' + amount + '</strong> ready in cash for the delivery. ' +
+                  'We will call you shortly on ' + contact + ' to confirm.';
+
+            document.getElementById('success-message').innerHTML =
+                'Your order <strong>' + placedId + '</strong> has been received.<br>' + tail;
             document.getElementById('successModal').style.display = 'flex';
+            pendingOrder = null;
         })
         .catch(error => {
             console.error('Error!', error.message);
-            alert('There was an error submitting your order. Please try again.');
+            showPayError('Could not submit your order. Please try again, or call +91-8976180617.');
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerText = originalLabel;
         });
 }
 
 function closeModal() {
     document.getElementById('successModal').style.display = 'none';
     document.getElementById('orderForm').reset();
+    // Reset the item rows back to a single empty row
+    const container = document.getElementById('items-container');
+    while (container.children.length > 1) {
+        container.removeChild(container.lastChild);
+    }
+    const firstRow = container.children[0];
+    if (firstRow) {
+        firstRow.querySelector('select').selectedIndex = 0;
+        firstRow.querySelector('.qty-box input').value = 1;
+    }
     updateCartSummary();
 }
 

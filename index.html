@@ -282,23 +282,6 @@
         }
         header .navbar a.contact-us-btn i { font-size: 1.9rem; }
 
-        /* Persistent mobile WhatsApp icon shortcut, hidden on desktop where
-           the full button above already covers this. */
-        .contact-us-mobile {
-            display: none;
-            align-items: center;
-            justify-content: center;
-            width: 4rem;
-            height: 4rem;
-            border-radius: 50%;
-            background: #25d366;
-            color: #fff !important;
-            font-size: 2.1rem;
-            margin-left: .8rem;
-            flex-shrink: 0;
-        }
-        .contact-us-mobile:hover { background: #1ebc59; }
-
         /* Mobile Navbar & Toggle Fixes */
         #menu-bar {
             position: relative;
@@ -337,7 +320,6 @@
             .header-location { font-size: 1.3rem; margin-right: 3rem; }
             .logo img { height: 40px; }
             .logo-subtitle { font-size: 1.3rem; }
-            .contact-us-mobile { display: flex; }
             header .navbar a.contact-us-btn { margin-left: 0; justify-content: center; }
             header .navbar {
                 position: absolute;
@@ -704,14 +686,6 @@
             <i class="fab fa-whatsapp"></i> contact us
         </a>
     </nav>
-
-    <!-- Persistent WhatsApp shortcut, always visible on mobile next to the
-         hamburger icon (not hidden inside the collapsible nav dropdown),
-         so it's reachable in one tap without opening the menu. -->
-    <a href="https://wa.me/918976180617?text=I%20would%20like%20to%20know%20about%20Ordering%20Food" target="_blank" rel="noopener noreferrer"
-       class="contact-us-mobile" aria-label="Contact us on WhatsApp">
-        <i class="fab fa-whatsapp"></i>
-    </a>
 </header>
 <!-- header section ends -->
 

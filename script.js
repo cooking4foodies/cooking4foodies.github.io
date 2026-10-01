@@ -45,17 +45,22 @@ const itemPrices = {
     "Pabdar Jhal - Seasonal": 0
 };
 
-// Helper function to check if an item requires a minimum of 2
+// List of all pre-order items requiring a minimum quantity of 2
+const preOrderItems = [
+    "Mutton Chaap",
+    "Mutton Kosha (4 Pcs)",
+    "Champaran Mutton (4 Pcs)",
+    "Chingrir Malaicurry (Small - 4 Pcs/Big - 2 Pcs)",
+    "Kolkata Chicken Biriyani with Egg & Alu",
+    "Ilish Bhapa - Seasonal",
+    "Sorshe Ilish - Seasonal",
+    "Pabdar Jhal - Seasonal"
+];
+
+// Helper function to get default starting quantity
 function getInitialQty(itemName) {
-    if (!itemName) return 1;
-    try {
-        const safeName = itemName.replace(/"/g, '\\"');
-        const option = document.querySelector(`select[name="food-item[]"] option[value="${safeName}"]`);
-        if (option && option.parentElement && option.parentElement.tagName === 'OPTGROUP' && option.parentElement.label === 'Pre-Order Only') {
-            return 2;
-        }
-    } catch(e) {
-        console.error(e);
+    if (preOrderItems.includes(itemName)) {
+        return 2;
     }
     return 1;
 }
@@ -156,7 +161,7 @@ function addToCart(itemName, btnElement) {
     if (!found) {
         for (let row of rows) {
             const select = row.querySelector('select');
-            if (!select.value) {
+            if (!select.value) { // Empty select box available
                 select.value = itemName;
                 row.querySelector('.qty-box input').value = getInitialQty(itemName);
                 found = true;
@@ -165,7 +170,7 @@ function addToCart(itemName, btnElement) {
         }
     }
 
-    if (!found) {
+    if (!found) { // No empty rows available, add a new one
         addMoreItem(itemName);
     } else {
         updateCartSummary();
@@ -178,7 +183,7 @@ function changeQty(btn, delta) {
     const select = row.querySelector('select');
     let val = parseInt(input.value) + delta;
     
-    // If it's a pre-order item (min 2), dropping below 2 removes it entirely.
+    // If it's a pre-order item (min 2), dropping below 2 removes it entirely
     if (getInitialQty(select.value) === 2 && val === 1 && delta === -1) {
         val = 0;
     }

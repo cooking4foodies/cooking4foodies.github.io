@@ -45,6 +45,34 @@ const itemPrices = {
     "Pabdar Jhal - Seasonal": 0
 };
 
+// Helper function to check if an item requires a minimum of 2
+function getInitialQty(itemName) {
+    if (!itemName) return 1;
+    try {
+        const safeName = itemName.replace(/"/g, '\\"');
+        const option = document.querySelector(`select[name="food-item[]"] option[value="${safeName}"]`);
+        if (option && option.parentElement && option.parentElement.tagName === 'OPTGROUP' && option.parentElement.label === 'Pre-Order Only') {
+            return 2;
+        }
+    } catch(e) {
+        console.error(e);
+    }
+    return 1;
+}
+
+// Intercept manual dropdown changes to force min 2 for Pre-Order items
+document.addEventListener('change', function(e) {
+    if (e.target.tagName === 'SELECT' && e.target.name === 'food-item[]') {
+        const row = e.target.closest('.item-row');
+        const qtyInput = row.querySelector('.qty-box input');
+        
+        if (getInitialQty(e.target.value) === 2 && parseInt(qtyInput.value) < 2) {
+            qtyInput.value = 2;
+            updateCartSummary(); 
+        }
+    }
+});
+
 function bounce(el) {
     el.classList.remove('bounce');
     void el.offsetWidth;
@@ -74,8 +102,6 @@ function updateCartSummary() {
     badge.innerText = totalQty;
     bounce(badge);
 
-    // Mobile hamburger notification: mirrors the cart count so a mobile
-    // user can see there's something in the cart without opening the menu.
     const menuBadge = document.getElementById('menu-cart-badge');
     if (menuBadge) {
         menuBadge.innerText = totalQty;
@@ -101,7 +127,9 @@ function addMoreItem(selectedItemVal = "") {
     } else {
         selectElem.selectedIndex = 0;
     }
-    newRow.querySelector('.qty-box input').value = '1';
+    
+    newRow.querySelector('.qty-box input').value = getInitialQty(selectedItemVal);
+    
     container.appendChild(newRow);
     updateCartSummary();
 }
@@ -130,6 +158,7 @@ function addToCart(itemName, btnElement) {
             const select = row.querySelector('select');
             if (!select.value) {
                 select.value = itemName;
+                row.querySelector('.qty-box input').value = getInitialQty(itemName);
                 found = true;
                 break;
             }
@@ -144,19 +173,26 @@ function addToCart(itemName, btnElement) {
 }
 
 function changeQty(btn, delta) {
-    const input = btn.parentElement.querySelector('input');
+    const row = btn.closest('.item-row');
+    const input = row.querySelector('input');
+    const select = row.querySelector('select');
     let val = parseInt(input.value) + delta;
+    
+    // If it's a pre-order item (min 2), dropping below 2 removes it entirely.
+    if (getInitialQty(select.value) === 2 && val === 1 && delta === -1) {
+        val = 0;
+    }
+
     if (val < 0) val = 0;
     input.value = val;
 
     if (val === 0) {
         const container = document.getElementById('items-container');
-        const row = btn.closest('.item-row');
         if (container.children.length > 1) {
             row.remove();
         } else {
             input.value = 1;
-            row.querySelector('select').selectedIndex = 0;
+            select.selectedIndex = 0;
         }
     }
     updateCartSummary();
@@ -176,19 +212,11 @@ function removeItemRow(btn) {
 
 // ---------------------------------------------------------------
 // UPI payment flow
-//
-// IMPORTANT: a static site cannot verify UPI payments by itself.
-// A plain UPI QR to a personal VPA has no callback, so the customer
-// self-reports the UPI reference number and Sonali cross-checks it
-// against her bank notification. Payment status is therefore recorded
-// as "Pending Verification", never as confirmed-by-the-site.
 // ---------------------------------------------------------------
 const UPI_VPA = 'sonali.debnath4u@okicici';
 const UPI_PAYEE_NAME = 'Cooking 4 Foodies';
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby1pOgDOYrL_GqkHe24cJWnjMf_9eWlvGo-ROYJhI55jupQjH96M90KGl_HWqrOkddzeA/exec';
 
-// Holds the order being paid for, between opening the payment modal
-// and the customer confirming payment.
 let pendingOrder = null;
 let selectedPaymentMethod = 'upi';
 
@@ -197,7 +225,6 @@ function generateOrderId() {
     const yy = String(d.getFullYear()).slice(-2);
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const dd = String(d.getDate()).padStart(2, '0');
-    // 4 random alphanumeric chars, ambiguous characters (0/O/1/I) excluded
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     let suffix = '';
     for (let i = 0; i < 4; i++) {
@@ -214,8 +241,6 @@ function buildUpiUri(amount, orderId) {
         cu: 'INR',
         tn: 'Order ' + orderId
     });
-    // URLSearchParams encodes spaces as "+", which some UPI apps show
-    // literally ("Cooking+4+Foodies"). %20 is handled correctly everywhere.
     return 'upi://pay?' + params.toString().replace(/\+/g, '%20');
 }
 
@@ -248,7 +273,6 @@ function handleOrderSubmit(event) {
         return;
     }
 
-    // Seasonal "Ask for price" items have no price, so they can't be prepaid.
     if (totalPrice <= 0) {
         alert('Your selection contains only seasonal items priced on request. Please call +91-8976180617 to place this order.');
         return;
@@ -272,7 +296,6 @@ function openPaymentModal(order) {
     const upiUri = buildUpiUri(order.amount, order.orderId);
     document.getElementById('pay-upi-link').setAttribute('href', upiUri);
 
-    // Render the QR fresh each time (clears any previous order's code)
     const qrBox = document.getElementById('pay-qr');
     qrBox.innerHTML = '';
     if (typeof QRCode !== 'undefined') {
@@ -393,7 +416,7 @@ function confirmPayment() {
 function closeModal() {
     document.getElementById('successModal').style.display = 'none';
     document.getElementById('orderForm').reset();
-    // Reset the item rows back to a single empty row
+    
     const container = document.getElementById('items-container');
     while (container.children.length > 1) {
         container.removeChild(container.lastChild);
@@ -409,7 +432,6 @@ function closeModal() {
 window.addEventListener('DOMContentLoaded', function () {
     updateCartSummary();
 
-    // Mobile hamburger menu toggle
     const menu = document.querySelector('#menu-bar');
     const navbar = document.querySelector('.navbar');
 
@@ -430,8 +452,6 @@ window.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Single scroll handler: closes the mobile nav and toggles the
-    // back-to-top button's visibility.
     window.addEventListener('scroll', () => {
         if (menu && navbar) {
             menu.classList.remove('fa-times');
@@ -449,7 +469,6 @@ window.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Click/Tap toggle for hover curtains on Specialty & Menu cards (touch devices)
     const interactiveCards = document.querySelectorAll('.menu-card, .speciality .box-container .box');
     interactiveCards.forEach(card => {
         card.addEventListener('click', function (e) {
@@ -470,14 +489,9 @@ window.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Floating/mobile section navigator: visible only while an actual menu
-    // category (Starters, Veg Main Course, etc.) is in view - not merely
-    // while the outer #popular section has started entering the viewport.
     const floatingNav = document.querySelector('.floating-menu-nav');
     const mobileNav = document.querySelector('.mobile-menu-nav');
 
-    // Scroll-spy: highlight the nav link for whichever menu category is
-    // currently in view, in both the desktop and mobile section navigators.
     const categorySections = document.querySelectorAll('.menu-category[id]');
     if (categorySections.length) {
         const navLinksByHref = {};

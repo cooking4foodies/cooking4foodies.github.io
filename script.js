@@ -2,6 +2,7 @@
 const itemPrices = {
     "Beguni (4 Pcs)": 99,
     "Masoor Daler Bora (8 Pcs)": 149,
+    "Prawns Masala Fry (Medium - 6 Pcs/Big - 3 Pcs)": 299,
     "Chicken Pakoda with Green Chutney (8 Pcs)": 299,
     "Masala Fish Fry (2 Pcs)": 249,
     "Machh Bhaja - Plain Fish Fry (2 Pcs)": 199,
@@ -20,15 +21,14 @@ const itemPrices = {
     "Alur Dom (6 Pcs)": 149,
     "Alu Bhaja / Alu Makha - Serves 2": 99,
     "Potol Bhaja - Serves 2": 99,
+    "Chicken Dak Bungalow (4 Pcs)": 399,
     "Chicken Kosha - Spicy Chicken Curry (4 Pcs)": 299,
     "Chicken Jhol - Bengali Chicken Curry (4 Pcs)": 299,
     "Machher Kalia - Bengali Fish Delicacy (2 Pcs)": 299,
     "Doi Machh - Fish in Yogurt Gravy (2 Pcs)": 299,
     "Machher Jhol - with jeere bata & alu (2 Pcs)": 249,
     "Chilli Chicken - Kolkata Style (8 Pcs)": 299,
-    "Dhania Chicken (4 Pcs)": 299,
     "Chicken Maharani (4 Pcs)": 449,
-    "Paalak Chicken (4 Pcs)": 299,
     "Dim Kosha - Bengali Egg Curry (2 Pcs)": 149,
     "Basanti Pulao with Gobindobhog Rice, Ghee": 299,
     "Steamed Basmati Rice - Serves 1": 79,
@@ -37,11 +37,9 @@ const itemPrices = {
     "Roti (1 Pcs)": 15,
     "Mutton Chaap": 549,
     "Mutton Kosha (4 Pcs)": 399,
-    "Champaran Mutton (4 Pcs)": 399,
-    "Chingrir Malaicurry (Small - 4 Pcs/Big - 2 Pcs)": 299,
+    "Chingrir Malaicurry (Medium - 4 Pcs/Big - 2 Pcs)": 299,
     "Kolkata Chicken Biriyani with Egg & Alu": 399,
     "Ilish Bhapa - Seasonal": 0,
-    "Sorshe Ilish - Seasonal": 0,
     "Pabdar Jhal - Seasonal": 0
 };
 
@@ -49,11 +47,8 @@ const itemPrices = {
 const preOrderItems = [
     "Mutton Chaap",
     "Mutton Kosha (4 Pcs)",
-    "Champaran Mutton (4 Pcs)",
-    "Chingrir Malaicurry (Small - 4 Pcs/Big - 2 Pcs)",
     "Kolkata Chicken Biriyani with Egg & Alu",
     "Ilish Bhapa - Seasonal",
-    "Sorshe Ilish - Seasonal",
     "Pabdar Jhal - Seasonal"
 ];
 

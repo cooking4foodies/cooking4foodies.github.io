@@ -600,6 +600,41 @@
             .pay-actions { flex-direction: column; }
         }
 
+        /* Kitchen Closed Banner Styling */
+        .kitchen-closed-banner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #ff3838;
+            color: #fff;
+            text-align: center;
+            padding: 1.2rem 2rem;
+            font-size: 1.6rem;
+            font-weight: 700;
+            z-index: 10000;
+            box-shadow: 0 0.4rem 1rem rgba(0,0,0,0.2);
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+        .kitchen-closed-banner.active {
+            display: flex;
+        }
+        .kitchen-closed-banner button {
+            background: transparent;
+            color: #fff;
+            border: none;
+            font-size: 2.5rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+        }
+        .kitchen-closed-banner button:hover {
+            color: #f1f1f1;
+        }
+
         /* Footer Styling */
         .footer-container { background: #111; color: #fff; padding: 3rem 9% 1.4rem 9%; }
         .footer-grid {
@@ -636,6 +671,12 @@
     </style>
 </head>
 <body>
+
+<!-- Kitchen Closed Banner -->
+<div id="kitchen-closed-banner" class="kitchen-closed-banner">
+    <span>Kitchen Closed for the day! We will reopen for orders tomorrow at 10:00 AM.</span>
+    <button type="button" id="close-banner-btn" aria-label="Close banner">&times;</button>
+</div>
 
 <a href="#home" class="skip-link">Skip to content</a>
 
@@ -781,7 +822,7 @@
                 </div>
             </div>
             <div class="menu-card">
-                <img width="400" height="300" loading="lazy" decoding="async" src="https://placehold.co/400x300/f5f5f5/333333?text=Prawns+Masala+Fry" alt="Prawns Masala Fry">
+                <img width="840" height="600" loading="lazy" decoding="async" src="images/p-29.jpg" alt="Prawns Masala Fry">
                 <h4>prawns masala fry (medium - 6 pcs/big - 3 pcs)</h4>
                 <span class="price">₹299</span>
                 <div class="hover-info">

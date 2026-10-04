@@ -47,9 +47,7 @@ const itemPrices = {
 const preOrderItems = [
     "Mutton Chaap",
     "Mutton Kosha (4 Pcs)",
-    "Kolkata Chicken Biriyani with Egg & Alu",
-    "Ilish Bhapa - Seasonal",
-    "Pabdar Jhal - Seasonal"
+    "Kolkata Chicken Biriyani with Egg & Alu"
 ];
 
 // Helper function to get default starting quantity
@@ -246,6 +244,13 @@ function buildUpiUri(amount, orderId) {
 
 function handleOrderSubmit(event) {
     event.preventDefault();
+    
+    // Kitchen Closed Check
+    const currentHour = new Date().getHours();
+    if (currentHour >= 22 || currentHour < 10) {
+        alert("Kitchen Closed for the day! We will reopen for orders tomorrow at 10:00 AM.");
+        return;
+    }
 
     const formInputs = document.querySelectorAll('#orderForm input, #orderForm textarea');
     const name = formInputs[0].value.trim();
@@ -429,8 +434,41 @@ function closeModal() {
     updateCartSummary();
 }
 
+function checkKitchenHours() {
+    const currentHour = new Date().getHours();
+    // Closed between 22:00 (10 PM) and 9:59 (before 10 AM)
+    const isClosed = currentHour >= 22 || currentHour < 10;
+    
+    if (isClosed) {
+        const banner = document.getElementById('kitchen-closed-banner');
+        if (banner) banner.classList.add('active');
+        
+        const submitBtn = document.querySelector('.order-submit-btn');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Kitchen Closed <i class="fas fa-lock"></i>';
+            submitBtn.style.background = '#ccc';
+            submitBtn.style.cursor = 'not-allowed';
+            submitBtn.style.boxShadow = 'none';
+            // Disable hover effect dynamically 
+            submitBtn.onmouseover = function() { this.style.background = '#ccc'; }
+        }
+    }
+}
+
 window.addEventListener('DOMContentLoaded', function () {
     updateCartSummary();
+    
+    // Check timing when page loads
+    checkKitchenHours();
+
+    // Close banner functionality
+    const closeBannerBtn = document.getElementById('close-banner-btn');
+    if (closeBannerBtn) {
+        closeBannerBtn.addEventListener('click', () => {
+            document.getElementById('kitchen-closed-banner').classList.remove('active');
+        });
+    }
 
     const menu = document.querySelector('#menu-bar');
     const navbar = document.querySelector('.navbar');

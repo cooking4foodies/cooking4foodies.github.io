@@ -248,7 +248,7 @@ function handleOrderSubmit(event) {
     // Kitchen Closed Check
     const currentHour = new Date().getHours();
     if (currentHour >= 22 || currentHour < 10) {
-        alert("Kitchen Closed for the day! We will reopen for orders tomorrow at 10:00 AM.");
+        alert("Kitchen Closed! We will reopen for orders at 10:00 AM.");
         return;
     }
 

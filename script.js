@@ -286,7 +286,8 @@ function handleOrderSubmit(event) {
     pendingOrder = {
         orderId: generateOrderId(),
         name: name, email: email, contact: contact, address: address,
-        items: orderedItemsList.join(', '),
+        // CHANGED: Joined items with a pipe instead of a comma so 'Ghee' stays together
+        items: orderedItemsList.join(' | '),
         amount: totalPrice
     };
 

@@ -32,7 +32,7 @@ const itemPrices = {
     "Dim Kosha - Bengali Egg Curry (2 Pcs)": 149,
     "Basanti Pulao with Gobindobhog Rice, Ghee": 299,
     "Steamed Basmati Rice - Serves 1": 79,
-    "Luchi (4 Pcs)": 69,
+    "Luchi (5 Pcs)": 79,
     "Parotta - Plain (1 Pcs)": 29,
     "Roti (1 Pcs)": 15,
     "Mutton Chaap": 549,

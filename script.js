@@ -25,7 +25,7 @@ const itemPrices = {
     "Chicken Kosha - Spicy Chicken Curry (4 Pcs)": 299,
     "Chicken Jhol - Bengali Chicken Curry (4 Pcs)": 299,
     "Machher Kalia - Bengali Fish Delicacy (2 Pcs)": 299,
-    "Doi Machh - Fish in Yogurt Gravy (2 Pcs)": 299,
+    "Sorshe Posto Machh (2 Pcs)": 349,
     "Machher Jhol - with jeere bata & alu (2 Pcs)": 249,
     "Chilli Chicken - Kolkata Style (8 Pcs)": 299,
     "Chicken Maharani (4 Pcs)": 449,
@@ -39,7 +39,6 @@ const itemPrices = {
     "Mutton Kosha (4 Pcs)": 399,
     "Chingrir Malaicurry (Medium - 4 Pcs/Big - 2 Pcs)": 299,
     "Kolkata Chicken Biriyani with Egg & Alu": 399,
-    "Ilish Bhapa - Seasonal": 0,
     "Pabdar Jhal - Seasonal": 0
 };
 
@@ -286,7 +285,6 @@ function handleOrderSubmit(event) {
     pendingOrder = {
         orderId: generateOrderId(),
         name: name, email: email, contact: contact, address: address,
-        // CHANGED: Joined items with a pipe instead of a comma so 'Ghee' stays together
         items: orderedItemsList.join(' | '),
         amount: totalPrice
     };

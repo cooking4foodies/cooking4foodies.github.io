@@ -531,7 +531,9 @@ input:focus, textarea:focus, select:focus {
   body { padding: 12px; zoom: 1; }
   .app-container { grid-template-columns: 1fr; }
   .header-banner { flex-direction: column; text-align: center; gap: 8px; }
-  .input-row { flex-direction: column; }
+  .input-row { flex-direction: column; align-items: stretch !important; }
+  .custom-row { grid-template-columns: 1fr 60px 45px 32px; gap: 4px; }
+  .custom-row input { padding: 8px 4px; font-size: 11px; min-width:0; }
 }
 
 /* Veg / Non-Veg type filter tabs */
@@ -1295,18 +1297,63 @@ async function buildInvoice() {
     backgroundColor: '#ffffff'
   });
   
-  const imgData = canvas.toDataURL('image/jpeg', 1.0);
+  const fileName = `${inv}_${name.replace(/[^a-z0-9]+/gi, '_')}.jpg`;
+
+  canvas.toBlob(async function(blob) {
+    const file = new File([blob], fileName, { type: 'image/jpeg' });
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    // Try using Web Share API (Triggers native iOS share sheet to easily Save or send via WhatsApp)
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: fileName,
+          text: 'Cooking 4 Foodies Invoice'
+        });
+      } catch (e) {
+        fallbackDownload(blob, fileName, isIOS);
+      }
+    } else {
+      fallbackDownload(blob, fileName, isIOS);
+    }
+
+    // Log the order after successful generation
+    const logs = JSON.parse(localStorage.getItem(logKey) || '[]');
+    logs.push(record);
+    localStorage.setItem(logKey, JSON.stringify(logs));
+    updateLogCount();
+  }, 'image/jpeg', 1.0);
+}
+
+function fallbackDownload(blob, fileName, isIOS) {
+  const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
-  link.href = imgData;
-  link.download = `${inv}_${name.replace(/[^a-z0-9]+/gi, '_')}.jpg`;
+  link.href = url;
+  link.download = fileName;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 
-  const logs = JSON.parse(localStorage.getItem(logKey) || '[]');
-  logs.push(record);
-  localStorage.setItem(logKey, JSON.stringify(logs));
-  updateLogCount();
+  // Bulletproof fallback for iOS if the auto-download click is blocked
+  if (isIOS) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const overlay = document.createElement('div');
+      overlay.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:99999; overflow-y:auto; padding:20px; text-align:center; box-sizing:border-box;";
+      overlay.innerHTML = `<div style="background:#fff; padding:20px; border-radius:12px; display:inline-block; max-width:100%; box-sizing:border-box; margin-top:20px;">
+        <div style="font-family:sans-serif; margin-bottom:15px; font-size:14px; color:#333; line-height:1.5;">
+          <strong>Invoice Generated</strong><br>
+          If it didn't save automatically, <strong>long-press</strong> the image below and tap <em>"Save to Photos"</em>.
+        </div>
+        <img src="${e.target.result}" style="max-width:100%; border:1px solid #ddd; border-radius:6px; box-shadow:0 4px 12px rgba(0,0,0,0.1);"/>
+        <button onclick="this.parentNode.parentNode.remove()" style="margin-top:20px; width:100%; padding:14px; background:#9e1b1b; color:#fff; border:none; border-radius:8px; font-weight:bold; font-size:14px;">Done</button>
+      </div>`;
+      document.body.appendChild(overlay);
+    };
+    reader.readAsDataURL(blob);
+  }
 }
 
 function updateLogCount() {

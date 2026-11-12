@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooking 4 Foodies - Invoice Suite (JPEG Export)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+<style>
+:root {
+  --primary: #9e1b1b;
+  --accent: #d46b08;
+  --bg-body: #f5f2eb;
+  --bg-card: #ffffff;
+  --text-main: #1a1a1a;
+  --text-muted: #555555;
+  --border: #e2d7ce;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg-body); }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-body);
+  color: var(--text-main);
+  padding: 24px;
+  zoom: 1.15;
+  word-spacing: -0.5px;
+  letter-spacing: -0.1px;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 1180px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 24px;
+}
+
+.header-banner {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff;
+  padding: 22px 28px;
+  border-radius: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 8px 20px rgba(158,27,27,0.2);
+}
+.header-banner h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 24px;
+  letter-spacing: 0.5px;
+}
+.header-banner p { font-size: 11.5px; opacity: 0.95; margin-top: 4px; }
+.header-badge {
+  background: rgba(255,255,255,0.2);
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+  border: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+.card-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--primary);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input-row { display: flex; gap: 12px; margin-bottom: 12px; }
+.input-row > div { flex: 1; }
+label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 5px;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 12px;
+  background: #faf8f5;
+  color: var(--text-main);
+  transition: all 0.2s;
+}
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  background: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(212,107,8,0.1);
+}
+.customer-found {
+  font-size: 9.5px;
+  color: #188038;
+  font-weight: 600;
+  margin-top: 4px;
+  min-height: 14px;
+}
+
+/* Search Box */
+.menu-search-wrapper {
+  margin-bottom: 12px;
+  position: relative;
+}
+.menu-search-input {
+  width: 100%;
+  padding: 8px 12px 8px 32px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+}
+.menu-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.menu-list-wrapper {
+  max-height: 560px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+.menu-list-wrapper::-webkit-scrollbar { width: 4px; }
+.menu-list-wrapper::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+.cat-header {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: var(--primary);
+  background: var(--bg-body);
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin: 14px 0 8px;
+  text-transform: uppercase;
+}
+.cat-header:first-child { margin-top: 0; }
+
+.menu-item {
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  background: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  margin-bottom: 6px;
+  transition: 0.15s;
+}
+.menu-item:hover, .menu-item.active {
+  border-color: var(--accent);
+  background: #fffdf8;
+}
+.menu-item label {
+  font-size: 11.5px;
+  cursor: pointer;
+  margin: 0;
+  text-transform: none;
+  color: var(--text-main);
+  font-weight: 500;
+}
+.menu-item .price {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 11px;
+  display: inline-block;
+  margin-top: 2px;
+}
+.qty-control {
+  display: flex;
+  align-items: center;
+  background: #f4f4f4;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  overflow: hidden;
+}
+.qty-control button {
+  border: none;
+  background: #fff;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--primary);
+  font-size: 13px;
+}
+.qty-control span {
+  font-weight: 600;
+  font-size: 11.5px;
+  width: 24px;
+  text-align: center;
+}
+
+.custom-row {
+  display: grid;
+  grid-template-columns: 1fr 70px 50px 30px;
+  gap: 6px;
+  align-items: center;
+  margin-top: 8px;
+}
+.remove-btn {
+  border: none;
+  background: #fbe9e7;
+  color: #c62828;
+  border-radius: 6px;
+  height: 32px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.btn-primary {
+  width: 100%;
+  background: var(--primary);
+  color: #fff;
+  border: 0;
+  padding: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(158,27,27,0.3);
+  transition: 0.2s;
+}
+.btn-primary:hover { background: #7f1515; }
+.btn-secondary {
+  background: var(--accent);
+  color: #fff;
+  border: 0;
+  padding: 9px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.summary-box {
+  background: #fdf6ec;
+  border: 1px solid #f0d9c4;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+.summary-box small { font-size: 8.5px; font-weight: 700; color: #777; display: block; margin-bottom: 2px; }
+.summary-box strong { font-size: 14px; color: var(--primary); }
+
+.log-actions {
+  text-align: center;
+  margin-top: 14px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.log-actions a { color: var(--accent); font-weight: 600; text-decoration: none; margin: 0 6px; }
+
+/* Printable Invoice Template */
+#invoice-wrapper { position: absolute; left: -9999px; top: -9999px; }
+.invoice-template {
+  width: 148mm;
+  min-height: 210mm;
+  background: #ffffff;
+  padding: 8mm 8mm 6mm;
+  color: #111111;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  box-sizing: border-box;
+  word-spacing: -0.3px;
+  letter-spacing: -0.1px;
+}
+.invoice-template::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+}
+
+.inv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 6px;
+}
+.inv-brand h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 21px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+}
+.inv-brand .tagline {
+  font-size: 9px;
+  font-weight: 700;
+  color: #222;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin: 3px 0 4px;
+}
+.inv-brand .address-meta {
+  font-size: 10px;
+  color: #444;
+  line-height: 1.4;
+}
+
+.inv-meta-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.invoice-title-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 23px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  line-height: 1;
+}
+
+.inv-meta-grid {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 8px;
+  row-gap: 3px;
+  font-size: 10.5px;
+  line-height: 1.4;
+}
+.inv-meta-grid .lbl-orange {
+  color: var(--accent);
+  font-weight: 700;
+  text-align: left;
+}
+.inv-meta-grid .val-bold {
+  font-weight: 700;
+  color: #000;
+  text-align: left;
+}
+
+.inv-divider {
+  height: 1px;
+  background: #e8ded4;
+  margin: 7px 0 9px;
+}
+
+.inv-billed-box {
+  margin-bottom: 10px;
+}
+.inv-billed-label {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 3px;
+}
+.inv-client-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #000;
+}
+.inv-client-sub {
+  font-size: 10.5px;
+  color: #444;
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 4px;
+}
+.order-table th {
+  background: var(--primary);
+  color: #fff;
+  padding: 8px 9px;
+  text-align: left;
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}
+.order-table td {
+  padding: 8px 9px;
+  border-bottom: 1px solid #f0e6de;
+  font-size: 11px;
+  color: #111;
+}
+.order-table td:first-child { font-weight: 600; }
+.order-table tbody tr:nth-child(even) { background: #faf7f4; }
+
+.inv-bottom-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  padding: 0 2px;
+}
+
+.inv-qr-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.inv-qr-box {
+  width: 94px;
+  height: 94px;
+  border: 1px solid #dcd1c7;
+  border-radius: 8px;
+  padding: 4px;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+.inv-qr-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.inv-upi-text {
+  font-size: 9px;
+  color: #444;
+  font-weight: 600;
+}
+
+.total-box {
+  background: #fdfbf7;
+  padding: 10px 14px;
+  border-radius: 6px;
+  text-align: right;
+  font-size: 11px;
+  width: 52%;
+  border: 1px solid #ebdcd0;
+}
+.total-sub-row {
+  margin-bottom: 4px;
+  color: #333;
+}
+.grand-total {
+  font-weight: 800;
+  color: var(--primary);
+  font-size: 16px;
+  border-top: 1px dashed var(--accent);
+  margin-top: 6px;
+  padding-top: 6px;
+}
+
+.inv-footer {
+  margin-top: 24px;
+  text-align: center;
+  position: relative;
+  padding-top: 10px;
+}
+.inv-footer-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+.inv-footer-line::before, .inv-footer-line::after {
+  content: "";
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #dcd1c7, transparent);
+  flex: 1;
+  margin: 0 10px;
+}
+.inv-footer-title {
+  font-size: 12.5px;
+  color: var(--primary);
+  font-weight: 700;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.3px;
+}
+.inv-footer-sub {
+  font-size: 8.5px;
+  color: #777;
+  letter-spacing: 0.3px;
+  font-weight: 500;
+}
+
+@media(max-width:768px){
+  body { padding: 12px; zoom: 1; }
+  .app-container { grid-template-columns: 1fr; }
+  .header-banner { flex-direction: column; text-align: center; gap: 8px; }
+  .input-row { flex-direction: column; }
+}
+
+/* Veg / Non-Veg type filter tabs */
+.menu-type-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.menu-type-tabs button {
+  flex: 1;
+  white-space: nowrap;
+  border: 1px solid var(--border);
+  background: #faf8f5;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  padding: 7px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.15s;
+}
+.menu-type-tabs button.on { color: #fff; border-color: transparent; }
+.menu-type-tabs button[data-type="all"].on { background: var(--primary); }
+.menu-type-tabs button[data-type="veg"].on { background: #1f7a3d; }
+.menu-type-tabs button[data-type="nonveg"].on { background: #c62828; }
+
+/* Menu-card style category headers */
+.cat-header.veg { color: #1f7a3d; background: #eef7f0; }
+.cat-header.nonveg { color: #c62828; background: #fdeeee; }
+.cat-header.combo { color: #8b1a2b; background: #fbeed6; border-left: 3px solid #8b1a2b; }
+.menu-type-tabs button[data-type="combo"].on { background: #8b1a2b; }
+
+/* Veg / Non-Veg markers, same convention as the printed menu card */
+.type-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid;
+  border-radius: 2px;
+  margin-right: 6px;
+  vertical-align: -1px;
+  flex: none;
+}
+.type-mark::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.type-mark.veg { border-color: #1f7a3d; color: #1f7a3d; }
+.type-mark.nonveg { border-color: #c62828; color: #c62828; }
+.type-mark.nonveg::before {
+  width: 0; height: 0; border-radius: 0;
+  background: transparent;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-bottom: 5px solid currentColor;
+}
+
+.best-tag {
+  display: inline-block;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 20px;
+  padding: 1px 6px;
+  margin-left: 6px;
+  vertical-align: 1px;
+}
+
+.best-tag.chef-tag { background: var(--accent); color: #fff; }
+.seasonal-price {
+  width: 74px;
+  padding: 3px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  border-radius: 6px;
+  margin-top: 3px;
+  background: #fff;
+}
+.seasonal-note { font-size: 9px; color: #777; margin-left: 4px; }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <div class="header-banner">
+    <div>
+      <h1>Cooking 4 Foodies</h1>
+      <p>Bengali Home Food by Sonali · Express Invoicing Suite</p>
+    </div>
+    <div class="header-badge">Nagpur Hub</div>
+  </div>
+
+  <div class="left-col">
+    <div class="card">
+      <h3 class="card-title">👤 Customer Details</h3>
+      <div class="input-row">
+        <div>
+          <label>Customer Name</label>
+          <input type="text" id="in-name" list="customer-list" placeholder="Enter or search name..." autocomplete="off">
+          <datalist id="customer-list"></datalist>
+        </div>
+        <div>
+          <label>Phone (Auto-Lookup)</label>
+          <input type="text" id="in-phone" placeholder="10-digit number" maxlength="10" inputmode="numeric">
+          <div id="customer-found" class="customer-found"></div>
+        </div>
+      </div>
+      <div class="input-row">
+        <div style="flex: 2;">
+          <label>Delivery Address</label>
+          <textarea id="in-address" rows="2" placeholder="Street, Flat/House No, Landmark"></textarea>
+        </div>
+        <div>
+          <label>Discount (%)</label>
+          <input type="number" id="in-discount" value="0" min="0" max="100" step="0.5">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">🛵 Delivery & Extra Charges</h3>
+      <div class="input-row">
+        <div style="flex: 1.2;">
+          <label>Delivery Billing Type</label>
+          <select id="in-delivery-type">
+            <option value="customer_direct">Customer pays rider directly (Hide on bill)</option>
+            <option value="paid_by_me_invoiced">Paid by kitchen (Add fee to bill)</option>
+            <option value="absorbed_goodwill">Goodwill (Show FREE Delivery)</option>
+          </select>
+        </div>
+        <div>
+          <label id="delivery-fee-label">Delivery Fee (₹)</label>
+          <input type="number" id="in-delivery-fee" placeholder="0" min="0">
+        </div>
+        <div>
+          <label>Packaging (₹, Optional)</label>
+          <input type="number" id="in-packaging-fee" placeholder="0" min="0">
+        </div>
+      </div>
+      <div id="delivery-help" style="font-size:10px; color:#666; background:#fdf6ec; border-left:3px solid var(--accent); padding:8px 10px; border-radius:4px; line-height:1.4;"></div>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">✨ Add Custom / Seasonal Item</h3>
+      <div class="input-row" style="align-items:flex-end;">
+        <div style="flex:2;">
+          <label>Item Name</label>
+          <input type="text" id="custom-name" placeholder="E.g. Mishti Doi / Special request item">
+        </div>
+        <div>
+          <label>Price (₹)</label>
+          <input type="number" id="custom-price" placeholder="299" min="0">
+        </div>
+        <div style="flex:0.6;">
+          <label>Qty</label>
+          <input type="number" id="custom-qty" value="1" min="1">
+        </div>
+      </div>
+      <button class="btn-secondary" style="width:100%;" onclick="addCustomItem()">+ Add Custom Dish</button>
+      <div id="custom-list"></div>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">📊 Live Billing Summary</h3>
+      <div class="summary-grid">
+        <div class="summary-box">
+          <small>SUBTOTAL</small>
+          <strong id="sum-subtotal">₹0</strong>
+        </div>
+        <div class="summary-box">
+          <small>DISCOUNT</small>
+          <strong id="sum-discount">₹0</strong>
+        </div>
+        <div class="summary-box">
+          <small>FINAL TOTAL</small>
+          <strong id="sum-total">₹0</strong>
+        </div>
+      </div>
+      <div style="font-size:10.5px; color:var(--text-muted); display:flex; justify-content:space-between;">
+        <span>Rider Cost: <strong id="sum-delivery-cost">₹0</strong></span>
+        <span>Kitchen Net: <strong id="sum-net-revenue" style="color:#188038;">₹0</strong></span>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="generateInvoice()">Download High-Res JPEG Invoice</button>
+    <div class="log-actions">
+      <span id="log-count-text">0 orders recorded</span> · 
+      <a href="#" onclick="downloadLogOnly(); return false;">Export Excel</a> · 
+      <a href="#" onclick="resetOrderLog(); return false;" style="color:#999;">Reset Data</a>
+    </div>
+  </div>
+
+  <div class="right-col">
+    <div class="card" style="margin-bottom:0;">
+      <h3 class="card-title">🍲 Select Menu Items</h3>
+      <div class="menu-search-wrapper">
+        <span class="menu-search-icon">🔍</span>
+        <input type="text" id="menu-search" class="menu-search-input" placeholder="Search menu dishes (e.g. Bora, Kosha, Posto)..." oninput="filterMenu(this.value)">
+      </div>
+      <div class="menu-type-tabs">
+        <button type="button" data-type="all" class="on" onclick="setMenuType('all', this)">All Items</button>
+        <button type="button" data-type="veg" onclick="setMenuType('veg', this)">Vegetarian</button>
+        <button type="button" data-type="nonveg" onclick="setMenuType('nonveg', this)">Non-Vegetarian</button>
+        <button type="button" data-type="combo" onclick="setMenuType('combo', this)">Combo Thalis</button>
+      </div>
+      <div class="menu-list-wrapper" id="menu-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PRINTABLE INVOICE TEMPLATE -->
+<div id="invoice-wrapper">
+  <div class="invoice-template" id="invoice">
+    
+    <!-- Top Header Layout with INVOICE Tag and Parallel Indent Grid -->
+    <div class="inv-header">
+      <div class="inv-brand">
+        <h2>COOKING 4 FOODIES</h2>
+        <div class="tagline">Bengali Home Food Cloud Kitchen</div>
+        <div class="address-meta">
+          Shastri Layout, Khamla, Nagpur<br>
+          Ph: +91-8976180617<br>
+          Website: cooking4foodies.github.io
+        </div>
+      </div>
+      <div class="inv-meta-right">
+        <div class="invoice-title-tag">INVOICE</div>
+        <div class="inv-meta-grid">
+          <div class="lbl-orange">Invoice No:</div>
+          <div class="val-bold" id="out-inv-num"></div>
+          <div class="lbl-orange">Invoice Date:</div>
+          <div class="val-bold" id="out-date"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inv-divider"></div>
+
+    <!-- Customer Details -->
+    <div class="inv-billed-box">
+      <div class="inv-billed-label">BILLED TO:</div>
+      <div class="inv-client-name" id="out-name"></div>
+      <div class="inv-client-sub" id="out-phone"></div>
+      <div class="inv-client-sub" id="out-address"></div>
+    </div>
+
+    <!-- Items Table -->
+    <table class="order-table">
+      <thead>
+        <tr>
+          <th style="width:48%;">ITEM</th>
+          <th style="text-align:center; width:22%; white-space:nowrap;">UNIT PRICE</th>
+          <th style="text-align:center; width:10%;">QTY</th>
+          <th style="text-align:right; width:20%;">AMOUNT</th>
+        </tr>
+      </thead>
+      <tbody id="out-items-body"></tbody>
+    </table>
+
+    <!-- QR Code & Totals Section -->
+    <div class="inv-bottom-section">
+      <div class="inv-qr-container">
+        <div class="inv-qr-box">
+          <img id="upi-qr-img" src="" alt="UPI QR Code">
+        </div>
+        <div class="inv-upi-text">Scan to pay with any UPI app</div>
+      </div>
+
+      <div class="total-box">
+        <div class="total-sub-row">Subtotal: <span id="out-subtotal"></span></div>
+        <div class="total-sub-row" id="out-discount-row">Discount: <span id="out-discount"></span></div>
+        <div class="total-sub-row" id="out-packaging-row">Packaging: <span id="out-packaging"></span></div>
+        <div class="total-sub-row" id="out-delivery-row"></div>
+        <div class="grand-total">Total Amount: <span id="out-total"></span></div>
+      </div>
+    </div>
+
+    <!-- Professional Footer -->
+    <div class="inv-footer">
+      <div class="inv-footer-line">
+        <span class="inv-footer-title">Thank you for choosing Cooking 4 Foodies!</span>
+      </div>
+      <div class="inv-footer-sub">This is an electronically generated invoice, no signature required.</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const menuData = [
+  // ================= COMBO THALIS (as per combo thali card) =================
+  {id:'c1',cat:'Combo Thalis',combo:true,veg:true,name:'Sobji Bhat Combo - With Dal',price:249},
+  {id:'c2',cat:'Combo Thalis',combo:true,veg:true,name:'Sobji Bhat Combo - Without Dal',price:199},
+  {id:'c3',cat:'Combo Thalis',combo:true,veg:false,name:'Dim Bhat Combo - With Dal',price:279},
+  {id:'c4',cat:'Combo Thalis',combo:true,veg:false,name:'Dim Bhat Combo - Without Dal',price:229},
+  {id:'c5',cat:'Combo Thalis',combo:true,veg:false,name:'Machh Bhat Combo - With Dal',price:279},
+  {id:'c6',cat:'Combo Thalis',combo:true,veg:false,name:'Machh Bhat Combo - Without Dal',price:229},
+  {id:'c7',cat:'Combo Thalis',combo:true,veg:false,name:'Chicken Bhat Combo - With Dal',price:279},
+  {id:'c8',cat:'Combo Thalis',combo:true,veg:false,name:'Chicken Bhat Combo - Without Dal',price:229},
+
+  // ================= VEGETARIAN MENU (as per menu card) =================
+  {id:'m24',cat:'Veg · Starters',veg:true,name:'Masoori Daler Bora (8 Pcs)',price:149},
+  {id:'m25',cat:'Veg · Starters',veg:true,name:'Beguni (4 Pcs)',price:99},
+
+  {id:'m18',cat:'Veg · Main Course',veg:true,name:'Dhokar Dalna (4 Pcs)',price:249,best:true},
+  {id:'m14',cat:'Veg · Main Course',veg:true,name:'Phulkopi Alur Torkari - Serves 2',price:249,best:true},
+  {id:'m15',cat:'Veg · Main Course',veg:true,name:'Alu Posto - Serves 2',price:299,best:true},
+  {id:'m16',cat:'Veg · Main Course',veg:true,name:'Potol Posto - Serves 2',price:299},
+  {id:'m17',cat:'Veg · Main Course',veg:true,name:'Potol Alur Torkari - Serves 2',price:249},
+  {id:'m40',cat:'Veg · Main Course',veg:true,name:'Bhindi Peanut Masala Dry - Serves 2',price:249},
+  {id:'m10',cat:'Veg · Main Course',veg:true,name:'Mooger Dal Bengali Style - Serves 2',price:199},
+  {id:'m30',cat:'Veg · Main Course',veg:true,name:'Chholar Dal Bengali Style - Serves 2',price:199},
+  {id:'m49',cat:'Veg · Main Course',veg:true,name:'Potoler Dolma',price:399,chef:true},
+  {id:'m19',cat:'Veg · Main Course',veg:true,name:'Alur Dom (6 Pcs)',price:149},
+  {id:'m41',cat:'Veg · Main Course',veg:true,name:'Korola Bhaja - Serves 2',price:119},
+  {id:'m20',cat:'Veg · Main Course',veg:true,name:'Alu Bhaja / Alu Makha - Serves 2',price:99},
+  {id:'m21',cat:'Veg · Main Course',veg:true,name:'Potol Bhaja - Serves 2',price:99},
+
+  {id:'m39',cat:'Veg · Rice & Breads',veg:true,name:'Basanti Pulao with Gobindobhog Rice, Ghee',price:299},
+  {id:'m11',cat:'Veg · Rice & Breads',veg:true,name:'Steamed Basmati Rice - Serves 1',price:79},
+  {id:'m32',cat:'Veg · Rice & Breads',veg:true,name:'Luchi (5 Pcs)',price:79},
+  {id:'m12',cat:'Veg · Rice & Breads',veg:true,name:'Parotta - Plain (1 Pcs)',price:29},
+  {id:'m13',cat:'Veg · Rice & Breads',veg:true,name:'Roti (1 Pcs)',price:15},
+
+  // ================= NON-VEGETARIAN MENU (as per menu card) =================
+  {id:'m45',cat:'Non-Veg · Starters',veg:false,name:'Prawns Masala Fry (Medium - 6 Pcs/ Big - 3 Pcs)',price:299},
+  {id:'m1',cat:'Non-Veg · Starters',veg:false,name:'Chicken Pakoda with Green Chutney (8 Pcs)',price:299},
+  {id:'m23',cat:'Non-Veg · Starters',veg:false,name:'Masala Fish Fry (2 Pcs)',price:249},
+  {id:'m2',cat:'Non-Veg · Starters',veg:false,name:'Machh Bhaja - Plain Fish Fry (2 Pcs)',price:199},
+  {id:'m38',cat:'Non-Veg · Starters',veg:false,name:'Egg Omelette (2 Eggs)',price:99},
+
+  {id:'m46',cat:'Non-Veg · Main Course',veg:false,name:'Chicken Dak Bungalow (4 Pcs)',price:399,best:true},
+  {id:'m6',cat:'Non-Veg · Main Course',veg:false,name:'Chicken Kosha - Spicy Chicken Curry (4 Pcs)',price:299,best:true},
+  {id:'m4',cat:'Non-Veg · Main Course',veg:false,name:'Machher Kalia - Bengali Fish Delicacy (2 Pcs)',price:299,best:true},
+  {id:'m35',cat:'Non-Veg · Main Course',veg:false,name:'Chingrir Malaicurry (Medium - 4 Pcs/ Big - 2 Pcs)',price:299},
+  {id:'m50',cat:'Non-Veg · Main Course',veg:false,name:'Sorshe Posto Machh (2 Pcs)',price:349},
+  {id:'m3',cat:'Non-Veg · Main Course',veg:false,name:'Machher Jhol - with jeere bata & alu (2 Pcs)',price:249},
+  {id:'m7',cat:'Non-Veg · Main Course',veg:false,name:'Chicken Jhol - Bengali Chicken Curry (4 Pcs)',price:299},
+  {id:'m8',cat:'Non-Veg · Main Course',veg:false,name:'Chilli Chicken - Kolkata Style (8 Pcs)',price:299},
+  {id:'m47',cat:'Non-Veg · Main Course',veg:false,name:'Chicken Maharani (4 Pcs)',price:449,chef:true},
+  {id:'m9',cat:'Non-Veg · Main Course',veg:false,name:'Dim Kosha - Bengali Egg Curry (2 Pcs)',price:149},
+
+  {id:'m48',cat:'Non-Veg · Pre-Order Only - Min 2 Qty',veg:false,name:'Mutton Chaap',price:549,minQty:2,chef:true},
+  {id:'m33',cat:'Non-Veg · Pre-Order Only - Min 2 Qty',veg:false,name:'Mutton Kosha (4 Pcs)',price:399,minQty:2},
+  {id:'m36',cat:'Non-Veg · Pre-Order Only - Min 2 Qty',veg:false,name:'Kolkata Chicken Biriyani with Egg & Alu',price:399,minQty:2},
+  {id:'m42',cat:'Non-Veg · Pre-Order Only - Min 2 Qty',veg:false,name:'Ilish Bhapa - Seasonal',price:0,minQty:2,seasonal:true},
+  {id:'m44',cat:'Non-Veg · Pre-Order Only - Min 2 Qty',veg:false,name:'Pabdar Jhal - Seasonal',price:0,minQty:2,seasonal:true}
+];
+
+// State storage for checked status & quantities across searches
+const selectionsState = {};
+menuData.forEach(item => {
+  selectionsState[item.id] = { checked: false, qty: 1, price: item.price };
+});
+let menuTypeFilter = 'all';
+
+function cleanItemName(name) {
+  return name
+    .replace(/\s*\([^)]*\)/g, '')
+    .replace(/\s*-\s*(Bengali\s+Fish\s+Delicacy|Bengali\s+Chicken\s+Curry|Spicy\s+Chicken\s+Curry|Fish\s+in\s+Yogurt\s+Gravy|Bengali\s+Egg\s+Curry|Kolkata\s+Style|Plain\s+Fish\s+Fry|Plain|Serves\s*\d+)/gi, '')
+    .replace(/\s+with\s+.*$/gi, '')
+    .replace(/\s+(Bengali\s+Style|Odia\s+Food)/gi, '')
+    .replace(/\s*-\s*Serves\s*\d+/gi, '')
+    .replace(/\s*Serves\s*\d+/gi, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
+
+const $ = id => document.getElementById(id);
+const fmt = n => '₹' + Math.round(n || 0).toLocaleString('en-IN');
+let customItems = [];
+const customerKey = 'c4f_customers_v2', logKey = 'c4f_invoice_log_v2';
+
+const loadCustomers = () => JSON.parse(localStorage.getItem(customerKey) || '{}');
+
+function saveCustomer() {
+  const phone = $('in-phone').value.replace(/\D/g, '').slice(-10);
+  const name = $('in-name').value.trim();
+  const address = $('in-address').value.trim();
+  if (phone.length === 10 && name) {
+    const c = loadCustomers();
+    c[phone] = { name, address, phone };
+    localStorage.setItem(customerKey, JSON.stringify(c));
+  }
+}
+
+function fillByPhone() {
+  const phone = $('in-phone').value.replace(/\D/g, '').slice(-10);
+  const c = loadCustomers()[phone];
+  if (c) {
+    $('in-name').value = c.name || '';
+    $('in-address').value = c.address || '';$('customer-found').textContent = '✓ Saved profile loaded';
+  } else {
+    $('customer-found').textContent = phone.length === 10 ? 'New customer profile' : '';
+  }
+  updateTotals();
+}
+
+function fillByName() {
+  const name = $('in-name').value.trim().toLowerCase();
+  const c = Object.values(loadCustomers()).find(x => (x.name || '').toLowerCase() === name);
+  if (c) {
+    $('in-phone').value = c.phone;
+    $('in-address').value = c.address || '';$('customer-found').textContent = '✓ Saved profile loaded';
+  }
+  updateTotals();
+}
+
+$('in-phone').addEventListener('input', fillByPhone);
+$('in-name').addEventListener('change', fillByName);$('in-name').addEventListener('blur', fillByName);
+
+function renderCustomers() {
+  const dl = $('customer-list');
+  dl.innerHTML = '';
+  Object.values(loadCustomers()).forEach(c => {
+    const o = document.createElement('option');
+    o.value = c.name;
+    dl.appendChild(o);
+  });
+}
+
+function renderMenu(filterText = '') {
+  const list = $('menu-list');
+  list.innerHTML = '';
+  const search = filterText.trim().toLowerCase();
+
+  const filtered = menuData.filter(item => {
+    if (menuTypeFilter === 'veg' && (!item.veg || item.combo)) return false;
+    if (menuTypeFilter === 'nonveg' && (item.veg || item.combo)) return false;
+    if (menuTypeFilter === 'combo' && !item.combo) return false;
+    if (!search) return true;
+    return item.name.toLowerCase().includes(search) || item.cat.toLowerCase().includes(search);
+  });
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div style="font-size:11px; color:#888; text-align:center; padding:24px 0;">No matching dishes found.</div>';
+    return;
+  }
+
+  let last = '';
+  filtered.forEach(item => {
+    if (item.cat !== last) {
+      last = item.cat;
+      const h = document.createElement('div');
+      h.className = 'cat-header ' + (item.combo ? 'combo' : item.veg ? 'veg' : 'nonveg');
+      h.textContent = last;
+      list.appendChild(h);
+    }
+    const state = selectionsState[item.id] || { checked: false, qty: 1, price: item.price };
+    const d = document.createElement('div');
+    d.className = `menu-item ${state.checked ? 'active' : ''}`;
+    d.id = 'row-' + item.id;
+    const priceBlock = item.seasonal
+      ? `<input type="number" min="0" step="1" class="seasonal-price" value="${state.price || ''}" placeholder="Ask price"
+              onclick="event.preventDefault(); event.stopPropagation();"
+              oninput="setSeasonalPrice('${item.id}', this.value)"><span class="seasonal-note">Seasonal rate</span>`
+      : `<span class="price">${fmt(state.price)}</span>`;
+    d.innerHTML = `
+      <input type="checkbox" id="c-${item.id}" ${state.checked ? 'checked' : ''} onchange="toggleItem('${item.id}')">
+      <label for="c-${item.id}">
+        <span class="type-mark ${item.veg ? 'veg' : 'nonveg'}"></span>${item.name}${item.best ? '<span class="best-tag">★ Bestseller</span>' : ''}${item.chef ? '<span class="best-tag chef-tag">★ Chef Special</span>' : ''}<br>
+        ${priceBlock}${item.minQty ? ` <small style="color:#777;">(Min ${item.minQty})</small>` : ''}
+      </label>
+      <div class="qty-control">
+        <button type="button" onclick="adjustQty('${item.id}', -1)">−</button>
+        <span id="q-${item.id}">${state.qty}</span>
+        <button type="button" onclick="adjustQty('${item.id}', 1)">+</button>
+      </div>`;
+    list.appendChild(d);
+  });
+}
+
+function filterMenu(query) {
+  renderMenu(query);
+}
+
+function setMenuType(type, btn) {
+  menuTypeFilter = type;
+  document.querySelectorAll('.menu-type-tabs button').forEach(b => b.classList.remove('on'));
+  if (btn) btn.classList.add('on');
+  renderMenu($('menu-search').value);
+}
+
+function setSeasonalPrice(id, value) {
+  const price = Math.max(0, Number(value) || 0);
+  selectionsState[id].price = price;
+  if (price > 0) {
+    selectionsState[id].checked = true;
+    const chk = $('c-' + id);
+    if (chk) chk.checked = true;
+    const row = $('row-' + id);
+    if (row) row.classList.add('active');
+  }
+  updateTotals();
+}
+
+function toggleItem(id) {
+  const chk = $('c-' + id);
+  if (!chk) return;
+  selectionsState[id].checked = chk.checked;
+  const row = $('row-' + id);
+  if (row) row.classList.toggle('active', chk.checked);
+  updateTotals();
+}
+
+function adjustQty(id, delta) {
+  const item = menuData.find(x => x.id === id);
+  let currentQty = selectionsState[id].qty;
+  let q = Math.max(1, currentQty + delta);
+  selectionsState[id].qty = q;
+
+  const span = $('q-' + id);
+  if (span) span.textContent = q;
+
+  if (delta > 0) {
+    selectionsState[id].checked = true;
+    const chk = $('c-' + id);
+    if (chk) chk.checked = true;
+    const row = $('row-' + id);
+    if (row) row.classList.add('active');
+  }
+
+  if (item.minQty && q < item.minQty && selectionsState[id].checked) {
+    if (delta < 0 && q === 1) {
+      selectionsState[id].checked = false;
+      const chk = $('c-' + id);
+      if (chk) chk.checked = false;
+      const row = $('row-' + id);
+      if (row) row.classList.remove('active');
+    }
+  }
+  updateTotals();
+}
+
+function addCustomItem() {
+  const name = $('custom-name').value.trim();
+  const price = Number($('custom-price').value);
+  const qty = Math.max(1, Number($('custom-qty').value) || 1);
+  if (!name || price < 0) {
+    alert('Please provide item name and price.');
+    return;
+  }
+  customItems.push({ id: 'custom-' + Date.now(), name, price, qty });
+  $('custom-name').value = '';
+  $('custom-price').value = '';$('custom-qty').value = 1;
+  renderCustom();
+  updateTotals();
+}
+
+function renderCustom() {
+  const box = $('custom-list');
+  box.innerHTML = '';
+  customItems.forEach((x, i) => {
+    const d = document.createElement('div');
+    d.className = 'custom-row';
+    d.innerHTML = `
+      <input value="${x.name.replace(/"/g, '&quot;')}" onchange="customItems[${i}].name=this.value">
+      <input type="number" min="0" value="${x.price}" onchange="customItems[${i}].price=Number(this.value); updateTotals()">
+      <input type="number" min="1" value="${x.qty}" onchange="customItems[${i}].qty=Math.max(1, Number(this.value)); updateTotals()">
+      <button class="remove-btn" onclick="customItems.splice(${i},1); renderCustom(); updateTotals()">×</button>
+    `;
+    box.appendChild(d);
+  });
+}
+
+function selectedItems() {
+  const items = [];
+  menuData.forEach(item => {
+    const st = selectionsState[item.id];
+    if (st && st.checked) {
+      items.push({
+        ...item,
+        price: Number(st.price) || 0,
+        qty: Math.max(1, st.qty || 1)
+      });
+    }
+  });
+  return items.concat(customItems);
+}
+
+function calc() {
+  const items = selectedItems();
+  const subtotal = items.reduce((s, x) => s + x.price * x.qty, 0);
+  const discPct = Math.max(0, Math.min(100, Number($('in-discount').value) || 0));
+  const discount = subtotal * discPct / 100;
+  const afterDiscount = subtotal - discount;
+  const packaging = Math.max(0, Number($('in-packaging-fee').value) || 0);
+  const delivery = Number($('in-delivery-fee').value) || 0;
+  const type = $('in-delivery-type').value;
+  const customerCharge = type === 'paid_by_me_invoiced' ? delivery : 0;
+  const myCost = type === 'customer_direct' ? 0 : delivery;
+  const total = afterDiscount + packaging + customerCharge;
+  const netRevenue = total - myCost;
+  return { items, subtotal, discPct, discount, packaging, delivery, type, customerCharge, myCost, total, netRevenue };
+}
+
+function updateTotals() {
+  const c = calc();
+  $('sum-subtotal').textContent = fmt(c.subtotal);
+  $('sum-discount').textContent = fmt(c.discount);$('sum-total').textContent = fmt(c.total);
+  $('sum-delivery-cost').textContent = fmt(c.myCost);$('sum-net-revenue').textContent = fmt(c.netRevenue);
+  updateDeliveryHelp();
+}
+
+function updateDeliveryHelp() {
+  const t = $('in-delivery-type').value;
+  if (t === 'customer_direct') {
+    $('delivery-help').innerHTML = '<strong>Direct to Rider:</strong> Customer pays delivery person separately. Zero delivery fee on the bill.';
+    $('delivery-fee-label').textContent = 'INTERNAL RIDER COST (₹)';
+  } else if (t === 'paid_by_me_invoiced') {
+    $('delivery-help').innerHTML = '<strong>Add to Invoice:</strong> Delivery fee is added to customer bill.';$('delivery-fee-label').textContent = 'DELIVERY CHARGE (₹)';
+  } else {
+    $('delivery-help').innerHTML = '<strong>Goodwill:</strong> Invoice explicitly mentions FREE Delivery while cost is deducted from net.';$('delivery-fee-label').textContent = 'ACTUAL RIDER COST (₹)';
+  }
+}
+
+$('in-delivery-type').addEventListener('change', updateDeliveryHelp);
+['in-delivery-fee', 'in-packaging-fee', 'in-discount'].forEach(id => $(id).addEventListener('input', updateTotals));
+
+function getNextDailyInvoiceNumber(now) {
+  const yearStr = now.getFullYear().toString();
+  const monthStr = String(now.getMonth() + 1).padStart(2, '0');
+  const dayStr = String(now.getDate()).padStart(2, '0');
+  const datePrefix = `INV-${yearStr}${monthStr}${dayStr}`;
+
+  const logs = JSON.parse(localStorage.getItem(logKey) || '[]');
+  const todaysInvoices = logs.filter(x => x.invoiceNo && x.invoiceNo.startsWith(datePrefix));
+
+  let maxSeq = 0;
+  todaysInvoices.forEach(x => {
+    const suffix = x.invoiceNo.slice(-2);
+    const num = parseInt(suffix, 10);
+    if (!isNaN(num) && num > maxSeq) {
+      maxSeq = num;
+    }
+  });
+
+  const nextSeq = Math.min(99, maxSeq + 1);
+  return `${datePrefix}${String(nextSeq).padStart(2, '0')}`;
+}
+
+let invoiceBusy = false;
+async function generateInvoice() {
+  if (invoiceBusy) return;               
+  invoiceBusy = true;
+  const btn = document.querySelector('button[onclick="generateInvoice()"]');
+  const label = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = 'Generating Image...'; }
+  try {
+    await buildInvoice();
+  } catch (e) {
+    console.error('Invoice error:', e);
+    alert('Invoice could not be downloaded. Please check your internet connection and try again.');
+  } finally {
+    invoiceBusy = false;
+    if (btn) { btn.disabled = false; btn.textContent = label; }
+  }
+}
+
+async function buildInvoice() {
+  if (typeof html2canvas === 'undefined') {
+    return alert('Canvas library could not load. Please check your internet connection.');
+  }
+  const name = $('in-name').value.trim();
+  const phone = $('in-phone').value.replace(/\D/g, '');
+  const address = $('in-address').value.trim();
+  const c = calc();
+
+  if (!name) return alert('Please enter customer name.');
+  if (phone.length !== 10) return alert('Please enter a valid 10-digit phone number.');
+  if (!address) return alert('Please enter the delivery address.');
+  if (!c.items.length) return alert('Please choose at least one menu item.');
+  const unpriced = c.items.find(x => x.seasonal && !(x.price > 0));
+  if (unpriced) return alert(`Please enter today's rate for "${unpriced.name}".`);
+
+  saveCustomer();
+  renderCustomers();
+
+  const now = new Date();
+  const inv = getNextDailyInvoiceNumber(now);
+
+  $('out-inv-num').textContent = inv;
+  $('out-date').textContent = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+  $('out-name').textContent = name;
+  $('out-phone').textContent = 'Mob. +91 ' + phone;
+  $('out-address').textContent = address;
+
+  const upiString = `upi://pay?pa=sonali.debnath4u@okicici&pn=Cooking4Foodies&am=${c.total}&cu=INR`;
+  const qr = qrcode(0, 'M');
+  qr.addData(upiString);
+  qr.make();
+  const qrImg = $('upi-qr-img');
+  qrImg.src = qr.createDataURL(8, 16);
+  try { await qrImg.decode(); } catch (e) { /* safe to continue */ }
+
+  const body = $('out-items-body');
+  body.innerHTML = '';
+  c.items.forEach(x => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${x.combo ? x.name : cleanItemName(x.name)}</td>
+      <td style="text-align:center; white-space:nowrap;">${fmt(x.price)}</td>
+      <td style="text-align:center;">${x.qty}</td>
+      <td style="text-align:right;">${fmt(x.price * x.qty)}</td>
+    `;
+    body.appendChild(tr);
+  });
+
+  $('out-subtotal').textContent = fmt(c.subtotal);
+  $('out-discount').textContent = `-${fmt(c.discount)} (${c.discPct}%)`;
+  $('out-discount-row').style.display = c.discount ? 'block' : 'none';
+
+  const pr = $('out-packaging-row');
+  pr.style.display = 'block';
+  if (c.packaging > 0) {
+    pr.innerHTML = 'Packaging: <span>' + fmt(c.packaging) + '</span>';
+  } else {
+    pr.innerHTML = 'Packaging: <span style="color:#188038; font-weight:700;">FREE</span>';
+  }
+
+  const dr = $('out-delivery-row');
+  if (c.type === 'customer_direct') {
+    dr.style.display = 'none';
+  } else if (c.type === 'absorbed_goodwill') {
+    dr.style.display = 'block';
+    dr.innerHTML = 'Delivery: <span style="color:#188038; font-weight:700;">FREE</span>';
+  } else {
+    dr.style.display = 'block';
+    dr.innerHTML = 'Delivery: <span>' + fmt(c.customerCharge) + '</span>';
+  }
+
+  $('out-total').textContent = fmt(c.total);
+
+  const record = {
+    invoiceNo: inv,
+    date: now.toISOString(),
+    name, phone, address,
+    items: c.items,
+    subtotal: c.subtotal,
+    discountPct: c.discPct,
+    discount: c.discount,
+    packagingFee: c.packaging,
+    deliveryType: c.type,
+    deliveryCharged: c.customerCharge,
+    deliveryCost: c.myCost,
+    invoiceTotal: c.total,
+    netRevenue: c.netRevenue
+  };
+
+  const invElement = $('invoice');
+  
+  const canvas = await html2canvas(invElement, {
+    scale: 3, 
+    useCORS: true,
+    backgroundColor: '#ffffff'
+  });
+  
+  const imgData = canvas.toDataURL('image/jpeg', 1.0);
+  const link = document.createElement('a');
+  link.href = imgData;
+  link.download = `${inv}_${name.replace(/[^a-z0-9]+/gi, '_')}.jpg`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  const logs = JSON.parse(localStorage.getItem(logKey) || '[]');
+  logs.push(record);
+  localStorage.setItem(logKey, JSON.stringify(logs));
+  updateLogCount();
+}
+
+function updateLogCount() {
+  $('log-count-text').textContent = JSON.parse(localStorage.getItem(logKey) || '[]').length + ' orders recorded';
+}
+
+function downloadLogOnly() {
+  const logs = JSON.parse(localStorage.getItem(logKey) || '[]');
+  if (!logs.length) return alert('No orders recorded yet.');
+  const rows = logs.map(x => ({
+    Invoice: x.invoiceNo,
+    Date: x.date,
+    Customer: x.name,
+    Phone: x.phone,
+    Address: x.address,
+    Subtotal: x.subtotal,
+    DiscountPct: x.discountPct,
+    Discount: x.discount,
+    PackagingFee: x.packagingFee || 0,
+    DeliveryType: x.deliveryType,
+    DeliveryCharged: x.deliveryCharged,
+    MyDeliveryCost: x.deliveryCost,
+    InvoiceTotal: x.invoiceTotal,
+    NetRevenue: x.netRevenue,
+    Items: x.items.map(i => `${i.name} x${i.qty}`).join('; ')
+  }));
+  const wb = XLSX.utils.book_new(), ws = XLSX.utils.json_to_sheet(rows);
+  XLSX.utils.book_append_sheet(wb, ws, 'Orders');
+  XLSX.writeFile(wb, 'Cooking4Foodies_Order_Log.xlsx');
+}
+
+function resetOrderLog() {
+  if (confirm('Reset all order records?')) {
+    localStorage.removeItem(logKey);
+    updateLogCount();
+  }
+}
+
+// Initial render
+renderMenu();
+renderCustomers();
+updateDeliveryHelp();
+updateLogCount();
+</script>
+</body>
+</html>

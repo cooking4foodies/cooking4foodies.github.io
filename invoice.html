@@ -318,7 +318,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 .inv-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 16px; }
-.inv-brand h2 { font-family: 'Cinzel', serif; font-size: 34px; font-weight: 800; color: var(--primary); letter-spacing: 0.5px; line-height: 1.1; margin-bottom: 4px; }
+.inv-brand h2 { white-space: nowrap; font-family: 'Cinzel', serif; font-size: 34px; font-weight: 800; color: var(--primary); letter-spacing: 0.5px; line-height: 1.1; margin-bottom: 4px; }
 .inv-brand .tagline { font-size: 15px; font-weight: 700; color: #222; letter-spacing: 1px; text-transform: uppercase; margin: 6px 0 10px; }
 .inv-brand .address-meta { font-size: 16px; color: #444; line-height: 1.5; }
 
@@ -362,7 +362,9 @@ input:focus, textarea:focus, select:focus {
 @media(max-width:768px){
   body { padding: 12px; zoom: 1; }
   .app-container { grid-template-columns: 1fr; }
-  .header-banner { flex-direction: column; text-align: center; gap: 8px; }
+  .header-banner { flex-direction: column; text-align: center; gap: 8px; padding: 16px; }
+  .header-banner h1 { font-size: 21px; white-space: nowrap; letter-spacing: 0; }
+  .header-banner p { font-size: 10px; }
   .input-row { flex-direction: column; align-items: stretch !important; }
   .custom-row { grid-template-columns: 1fr 60px 45px 32px; gap: 4px; }
   .custom-row input { padding: 8px 4px; font-size: 11px; min-width:0; }

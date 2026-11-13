@@ -2,7 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#9e1b1b">
+<meta name="format-detection" content="telephone=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Cooking 4 Foodies - Invoice Suite (JPEG Export)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +28,13 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { background: var(--bg-body); }
+html {
+  background: var(--bg-body);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+button, a, label, select { touch-action: manipulation; }
 body {
   font-family: 'Inter', sans-serif;
   background: var(--bg-body);
@@ -110,6 +122,16 @@ input, textarea, select {
   background: #faf8f5;
   color: var(--text-main);
   transition: all 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 0;
+}
+select {
+  padding-right: 32px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23555' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  text-overflow: ellipsis;
 }
 input:focus, textarea:focus, select:focus {
   outline: none;
@@ -181,7 +203,7 @@ input:focus, textarea:focus, select:focus {
   margin-bottom: 6px;
   transition: 0.15s;
 }
-.menu-item:hover, .menu-item.active {
+.menu-item.active {
   border-color: var(--accent);
   background: #fffdf8;
 }
@@ -204,7 +226,8 @@ input:focus, textarea:focus, select:focus {
   text-transform: uppercase;
   transition: 0.2s;
 }
-.add-btn:hover { background: var(--accent); color: #fff; }
+.add-btn:active { background: var(--accent); color: #fff; }
+@media (hover:hover) { .add-btn:hover { background: var(--accent); color: #fff; } .menu-item:hover { border-color: var(--accent); background: #fffdf8; } .btn-primary:hover { background: #7f1515; } }
 .menu-item .price {
   color: var(--accent);
   font-weight: 700;
@@ -270,7 +293,7 @@ input:focus, textarea:focus, select:focus {
   box-shadow: 0 4px 12px rgba(158,27,27,0.3);
   transition: 0.2s;
 }
-.btn-primary:hover { background: #7f1515; }
+.btn-primary:active { background: #7f1515; }
 .btn-secondary {
   background: var(--accent);
   color: #fff;
@@ -373,16 +396,6 @@ input:focus, textarea:focus, select:focus {
 @media(min-width:1025px){
   body { zoom: 1.15; }
 }
-@media(max-width:1024px){
-  body { padding: 12px; }
-  .app-container { grid-template-columns: 1fr; }
-  .header-banner { flex-direction: column; text-align: center; gap: 8px; }
-  .input-row { flex-direction: column; align-items: stretch !important; }
-  .custom-row { grid-template-columns: 1fr 70px 50px 32px; gap: 4px; }
-  .custom-row input { padding: 8px 4px; font-size: 16px !important; min-width:0; }
-  input, textarea, select { font-size: 16px !important; }
-}
-
 /* Veg / Non-Veg type filter tabs */
 .menu-type-tabs {
   display: flex;
@@ -466,6 +479,152 @@ input:focus, textarea:focus, select:focus {
   background: #fff;
 }
 .seasonal-note { font-size: 9px; color: #777; margin-left: 4px; }
+/* ===== MOBILE / TOUCH OVERRIDES (kept last so they win over base rules) ===== */
+@media(max-width:1024px){
+  body {
+    padding: 12px;
+    padding-top: max(12px, env(safe-area-inset-top));
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+    padding-bottom: calc(92px + env(safe-area-inset-bottom));
+  }
+  .app-container { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .card { min-width: 0; }
+  /* flatten columns so cards can be re-ordered into the natural billing flow */
+  .left-col, .right-col { display: contents; }
+  .c-customer { order: 1; }
+  .c-menu     { order: 2; }
+  .c-delivery { order: 3; }
+  .c-custom   { order: 4; }
+  .c-summary  { order: 5; }
+  .btn-primary.js-generate { order: 6; }
+  .log-actions { order: 7; }
+  .card, .right-col .card { margin-bottom: 0 !important; padding: 16px; }
+
+  .header-banner { flex-direction: column; text-align: center; gap: 8px; padding: 16px 18px; }
+  .header-banner h1 { font-size: 21px; }
+  .header-banner p { font-size: 12px; }
+
+  .input-row { flex-direction: column; align-items: stretch !important; gap: 12px; }
+  .input-row > div { flex: 0 0 auto !important; }
+  label { font-size: 11px; margin-bottom: 6px; }
+  input, textarea, select { padding: 11px 12px; min-height: 44px; border-radius: 10px; }
+  textarea { min-height: 76px; }
+  .customer-found { font-size: 11px; }
+
+  /* two-up rows for short fields */
+  .delivery-grid, .custom-add { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: end !important; }
+  .delivery-grid > div:first-child, .custom-add > div:first-child { grid-column: 1 / -1; }
+  #delivery-help { font-size: 11.5px !important; }
+
+  /* menu */
+  .menu-search-input { padding-left: 36px; }
+  .menu-search-icon { left: 12px; font-size: 15px; }
+  .menu-type-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .menu-type-tabs button { min-height: 42px; font-size: 11px; padding: 6px 4px; white-space: normal; line-height: 1.15; }
+  .menu-list-wrapper {
+    max-height: 62vh;
+    max-height: 62dvh;
+    padding-right: 0;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cat-header { font-size: 11.5px; }
+  .menu-item { padding: 10px 12px; gap: 10px; margin-bottom: 8px; }
+  .item-details { font-size: 14px; line-height: 1.35; }
+  .menu-item .price { font-size: 13px; margin-top: 3px; }
+  .best-tag { font-size: 9px; padding: 1px 7px; }
+  .type-mark { width: 14px; height: 14px; vertical-align: -2px; }
+  .seasonal-price { width: 96px; padding: 6px 8px; min-height: 38px; margin-top: 4px; }
+  .seasonal-note { font-size: 10.5px; }
+  .add-btn { min-width: 68px; min-height: 40px; padding: 8px 14px; font-size: 12px; border-radius: 8px; }
+  .qty-control { border-radius: 8px; }
+  .qty-control button { width: 38px; height: 40px; font-size: 18px; }
+  .qty-control span { width: 30px; font-size: 14px; }
+
+  /* custom items */
+  .custom-row {
+    grid-template-columns: 1fr 1fr 44px;
+    grid-template-areas: "name name name" "price qty rm";
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+    align-items: stretch;
+  }
+  .custom-row > :nth-child(1) { grid-area: name; }
+  .custom-row > :nth-child(2) { grid-area: price; }
+  .custom-row > :nth-child(3) { grid-area: qty; }
+  .custom-row > :nth-child(4) { grid-area: rm; }
+  .custom-row input { padding: 11px 10px; min-width: 0; }
+  .remove-btn { height: 44px; width: 44px; font-size: 20px; border-radius: 10px; }
+  .btn-secondary { min-height: 46px; font-size: 12px; border-radius: 10px; margin-top: 4px; }
+
+  /* summary */
+  .summary-grid { gap: 6px; }
+  .summary-box { padding: 10px 6px; }
+  .summary-box small { font-size: 10px; }
+  .summary-box strong { font-size: 15px; overflow-wrap: anywhere; }
+  .card .summary-grid + div { font-size: 12px !important; flex-wrap: wrap; gap: 6px 12px; }
+
+  .btn-primary { padding: 16px; font-size: 14px; border-radius: 12px; }
+  .log-actions { font-size: 12.5px; padding-bottom: 4px; }
+  .log-actions a { display: inline-block; padding: 10px 8px; margin: 0; }
+
+  /* sticky total + action bar */
+  .mobile-bar { display: flex; }
+}
+
+/* iOS / Android: stop focus auto-zoom on every touch device */
+@media (pointer: coarse) {
+  input, textarea, select { font-size: 16px !important; }
+}
+
+/* Very small phones (iPhone SE / 320-360px Androids) */
+@media(max-width:360px){
+  .menu-type-tabs { grid-template-columns: repeat(2, 1fr); }
+  .summary-box strong { font-size: 13.5px; }
+  .header-banner h1 { font-size: 19px; }
+}
+
+/* Mobile sticky total bar */
+.mobile-bar {
+  display: none;
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 50;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff;
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -6px 18px rgba(0,0,0,0.08);
+  padding: 10px 14px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  padding-left: max(14px, env(safe-area-inset-left));
+  padding-right: max(14px, env(safe-area-inset-right));
+}
+.mobile-bar .mb-info { line-height: 1.2; min-width: 0; }
+.mobile-bar .mb-info small { display: block; font-size: 11px; color: var(--text-muted); font-weight: 600; }
+.mobile-bar .mb-info strong { font-size: 20px; color: var(--primary); font-weight: 800; }
+.mobile-bar .mb-btn {
+  flex: none;
+  background: var(--primary);
+  color: #fff;
+  border: 0;
+  border-radius: 12px;
+  min-height: 46px;
+  padding: 0 20px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(158,27,27,0.3);
+}
+.mobile-bar .mb-btn:disabled, .btn-primary:disabled { opacity: 0.6; }
+body.kb-open .mobile-bar { display: none; }
+@media(max-width:1024px){ .mobile-bar { display: flex; } .customer-found:empty { display: none; } }
+@media(min-width:1025px){ .mobile-bar { display: none !important; } }
+
 </style>
 </head>
 <body>
@@ -480,35 +639,35 @@ input:focus, textarea:focus, select:focus {
   </div>
 
   <div class="left-col">
-    <div class="card">
+    <div class="card c-customer">
       <h3 class="card-title">👤 Customer Details</h3>
       <div class="input-row">
         <div>
           <label>Customer Name</label>
-          <input type="text" id="in-name" list="customer-list" placeholder="Enter or search name..." autocomplete="off">
+          <input type="text" id="in-name" list="customer-list" placeholder="Enter or search name..." autocomplete="off" autocapitalize="words" enterkeyhint="next">
           <datalist id="customer-list"></datalist>
         </div>
         <div>
           <label>Phone (Auto-Lookup)</label>
-          <input type="text" id="in-phone" placeholder="10-digit number" maxlength="10" inputmode="numeric">
+          <input type="tel" id="in-phone" placeholder="10-digit number" maxlength="10" inputmode="numeric" pattern="[0-9]*" autocomplete="off" enterkeyhint="next">
           <div id="customer-found" class="customer-found"></div>
         </div>
       </div>
       <div class="input-row">
         <div style="flex: 2;">
           <label>Delivery Address</label>
-          <textarea id="in-address" rows="2" placeholder="Street, Flat/House No, Landmark"></textarea>
+          <textarea id="in-address" rows="2" placeholder="Street, Flat/House No, Landmark" autocapitalize="sentences"></textarea>
         </div>
         <div>
           <label>Discount (%)</label>
-          <input type="number" id="in-discount" value="0" min="0" max="100" step="0.5">
+          <input type="number" id="in-discount" value="0" min="0" max="100" step="0.5" inputmode="decimal">
         </div>
       </div>
     </div>
 
-    <div class="card">
+    <div class="card c-delivery">
       <h3 class="card-title">🛵 Delivery & Extra Charges</h3>
-      <div class="input-row">
+      <div class="input-row delivery-grid">
         <div style="flex: 1.2;">
           <label>Delivery Billing Type</label>
           <select id="in-delivery-type">
@@ -519,37 +678,37 @@ input:focus, textarea:focus, select:focus {
         </div>
         <div>
           <label id="delivery-fee-label">Delivery Fee (₹)</label>
-          <input type="number" id="in-delivery-fee" placeholder="0" min="0">
+          <input type="number" id="in-delivery-fee" placeholder="0" min="0" inputmode="numeric">
         </div>
         <div>
           <label>Packaging (₹, Optional)</label>
-          <input type="number" id="in-packaging-fee" placeholder="0" min="0">
+          <input type="number" id="in-packaging-fee" placeholder="0" min="0" inputmode="numeric">
         </div>
       </div>
       <div id="delivery-help" style="font-size:10px; color:#666; background:#fdf6ec; border-left:3px solid var(--accent); padding:8px 10px; border-radius:4px; line-height:1.4;"></div>
     </div>
 
-    <div class="card">
+    <div class="card c-custom">
       <h3 class="card-title">✨ Add Custom / Seasonal Item</h3>
-      <div class="input-row" style="align-items:flex-end;">
+      <div class="input-row custom-add" style="align-items:flex-end;">
         <div style="flex:2;">
           <label>Item Name</label>
           <input type="text" id="custom-name" placeholder="E.g. Mishti Doi / Special request item">
         </div>
         <div>
           <label>Price (₹)</label>
-          <input type="number" id="custom-price" placeholder="299" min="0">
+          <input type="number" id="custom-price" placeholder="299" min="0" inputmode="numeric">
         </div>
         <div style="flex:0.6;">
           <label>Qty</label>
-          <input type="number" id="custom-qty" value="1" min="1">
+          <input type="number" id="custom-qty" value="1" min="1" inputmode="numeric">
         </div>
       </div>
       <button class="btn-secondary" style="width:100%;" onclick="addCustomItem()">+ Add Custom Dish</button>
       <div id="custom-list"></div>
     </div>
 
-    <div class="card">
+    <div class="card c-summary">
       <h3 class="card-title">📊 Live Billing Summary</h3>
       <div class="summary-grid">
         <div class="summary-box">
@@ -571,7 +730,7 @@ input:focus, textarea:focus, select:focus {
       </div>
     </div>
 
-    <button class="btn-primary" onclick="generateInvoice()">Download High-Res JPEG Invoice</button>
+    <button class="btn-primary js-generate" onclick="generateInvoice()">Download High-Res JPEG Invoice</button>
     <div class="log-actions">
       <span id="log-count-text">0 orders recorded</span> · 
       <a href="#" onclick="downloadLogOnly(); return false;">Export Excel</a> · 
@@ -580,11 +739,11 @@ input:focus, textarea:focus, select:focus {
   </div>
 
   <div class="right-col">
-    <div class="card" style="margin-bottom:0;">
+    <div class="card c-menu" style="margin-bottom:0;">
       <h3 class="card-title">🍲 Select Menu Items</h3>
       <div class="menu-search-wrapper">
         <span class="menu-search-icon">🔍</span>
-        <input type="text" id="menu-search" class="menu-search-input" placeholder="Search menu dishes (e.g. Bora, Kosha, Posto)..." oninput="filterMenu(this.value)">
+        <input type="text" id="menu-search" class="menu-search-input" placeholder="Search dishes (Bora, Kosha, Posto...)" enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="filterMenu(this.value)">
       </div>
       <div class="menu-type-tabs">
         <button type="button" data-type="all" class="on" onclick="setMenuType('all', this)">All Items</button>
@@ -595,6 +754,15 @@ input:focus, textarea:focus, select:focus {
       <div class="menu-list-wrapper" id="menu-list"></div>
     </div>
   </div>
+</div>
+
+<!-- MOBILE STICKY TOTAL BAR -->
+<div class="mobile-bar" id="mobile-bar">
+  <div class="mb-info">
+    <small id="mb-count">0 items</small>
+    <strong id="mb-total">₹0</strong>
+  </div>
+  <button type="button" class="mb-btn js-generate" onclick="generateInvoice()">Create Invoice</button>
 </div>
 
 <!-- PRINTABLE INVOICE TEMPLATE -->
@@ -842,7 +1010,7 @@ function renderMenu(filterText = '') {
     d.className = `menu-item ${state.checked ? 'active' : ''}`;
     d.id = 'row-' + item.id;
     const priceBlock = item.seasonal
-      ? `<input type="number" min="0" step="1" class="seasonal-price" value="${state.price || ''}" placeholder="Ask price"
+      ? `<input type="number" inputmode="numeric" min="0" step="1" class="seasonal-price" value="${state.price || ''}" placeholder="Ask price"
               onclick="event.preventDefault(); event.stopPropagation();"
               oninput="setSeasonalPrice('${item.id}', this.value)"><span class="seasonal-note">Seasonal rate</span>`
       : `<span class="price">${fmt(state.price)}</span>`;
@@ -958,10 +1126,10 @@ function renderCustom() {
     const d = document.createElement('div');
     d.className = 'custom-row';
     d.innerHTML = `
-      <input value="${x.name.replace(/"/g, '&quot;')}" onchange="customItems[${i}].name=this.value">
-      <input type="number" min="0" value="${x.price}" onchange="customItems[${i}].price=Number(this.value); updateTotals()">
-      <input type="number" min="1" value="${x.qty}" onchange="customItems[${i}].qty=Math.max(1, Number(this.value)); updateTotals()">
-      <button class="remove-btn" onclick="customItems.splice(${i},1); renderCustom(); updateTotals()">×</button>
+      <input aria-label="Item name" placeholder="Item name" value="${x.name.replace(/"/g, '&quot;')}" onchange="customItems[${i}].name=this.value">
+      <input type="number" inputmode="numeric" aria-label="Price" placeholder="Price ₹" min="0" value="${x.price}" onchange="customItems[${i}].price=Number(this.value); updateTotals()">
+      <input type="number" inputmode="numeric" aria-label="Quantity" placeholder="Qty" min="1" value="${x.qty}" onchange="customItems[${i}].qty=Math.max(1, Number(this.value)); updateTotals()">
+      <button class="remove-btn" aria-label="Remove item" onclick="customItems.splice(${i},1); renderCustom(); updateTotals()">×</button>
     `;
     box.appendChild(d);
   });
@@ -1003,6 +1171,9 @@ function updateTotals() {
   $('sum-subtotal').textContent = fmt(c.subtotal);
   $('sum-discount').textContent = fmt(c.discount);$('sum-total').textContent = fmt(c.total);
   $('sum-delivery-cost').textContent = fmt(c.myCost);$('sum-net-revenue').textContent = fmt(c.netRevenue);
+  const mt = $('mb-total'), mc = $('mb-count');
+  if (mt) mt.textContent = fmt(c.total);
+  if (mc) mc.textContent = c.items.length + (c.items.length === 1 ? ' item' : ' items') + ' · Total';
   updateDeliveryHelp();
 }
 
@@ -1047,9 +1218,9 @@ let invoiceBusy = false;
 async function generateInvoice() {
   if (invoiceBusy) return;               
   invoiceBusy = true;
-  const btn = document.querySelector('button[onclick="generateInvoice()"]');
-  const label = btn ? btn.textContent : '';
-  if (btn) { btn.disabled = true; btn.textContent = 'Generating Image...'; }
+  const btns = Array.from(document.querySelectorAll('.js-generate'));
+  const labels = btns.map(b => b.textContent);
+  btns.forEach(b => { b.disabled = true; b.textContent = 'Generating...'; });
   try {
     await buildInvoice();
   } catch (e) {
@@ -1057,7 +1228,7 @@ async function generateInvoice() {
     alert('Invoice could not be downloaded. Please check your internet connection and try again.');
   } finally {
     invoiceBusy = false;
-    if (btn) { btn.disabled = false; btn.textContent = label; }
+    btns.forEach((b, i) => { b.disabled = false; b.textContent = labels[i]; });
   }
 }
 
@@ -1153,10 +1324,27 @@ async function buildInvoice() {
 
   const invElement = $('invoice');
   
+  // make sure web fonts are ready so text isn't measured with fallbacks on phones
+  try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch (e) {}
+
   const canvas = await html2canvas(invElement, {
-    scale: 2, 
+    scale: 2,
     useCORS: true,
-    backgroundColor: '#ffffff'
+    backgroundColor: '#ffffff',
+    scrollX: 0,
+    scrollY: 0,
+    windowWidth: 1000,
+    onclone: (doc) => {
+      // the live copy is hidden off-screen; show it in the clone so mobile Safari/Chrome render it
+      const w = doc.getElementById('invoice-wrapper');
+      if (w) {
+        w.style.visibility = 'visible';
+        w.style.position = 'absolute';
+        w.style.top = '0';
+        w.style.left = '0';
+        w.style.zIndex = '0';
+      }
+    }
   });
   
   const fileName = `${inv}_${name.replace(/[^a-z0-9]+/gi, '_')}.jpg`;
@@ -1174,7 +1362,8 @@ async function buildInvoice() {
           text: 'Cooking 4 Foodies Invoice'
         });
       } catch (e) {
-        fallbackDownload(blob, fileName, isIOS);
+        // user closed the share sheet: do nothing; any other failure: fall back to download
+        if (!e || e.name !== 'AbortError') fallbackDownload(blob, fileName, isIOS);
       }
     } else {
       fallbackDownload(blob, fileName, isIOS);
@@ -1203,7 +1392,7 @@ function fallbackDownload(blob, fileName, isIOS) {
     const reader = new FileReader();
     reader.onload = function(e) {
       const overlay = document.createElement('div');
-      overlay.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:99999; overflow-y:auto; padding:20px; text-align:center; box-sizing:border-box;";
+      overlay.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:99999; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:20px; padding-top:max(20px, env(safe-area-inset-top)); padding-bottom:max(20px, env(safe-area-inset-bottom)); text-align:center; box-sizing:border-box;";
       overlay.innerHTML = `<div style="background:#fff; padding:20px; border-radius:12px; display:inline-block; max-width:100%; box-sizing:border-box; margin-top:20px;">
         <div style="font-family:sans-serif; margin-bottom:15px; font-size:14px; color:#333; line-height:1.5;">
           <strong>Invoice Generated</strong><br>
@@ -1254,11 +1443,21 @@ function resetOrderLog() {
   }
 }
 
+// Hide the sticky bar while a field is being edited (keyboard open on phones)
+(function () {
+  const isField = el => el && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName);
+  document.addEventListener('focusin', e => { if (isField(e.target)) document.body.classList.add('kb-open'); });
+  document.addEventListener('focusout', () => {
+    setTimeout(() => { if (!isField(document.activeElement)) document.body.classList.remove('kb-open'); }, 80);
+  });
+})();
+
 // Initial render
 renderMenu();
 renderCustomers();
 updateDeliveryHelp();
 updateLogCount();
+updateTotals();
 </script>
 </body>
 </html>

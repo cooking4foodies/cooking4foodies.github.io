@@ -172,7 +172,7 @@ input:focus, textarea:focus, select:focus {
 
 .menu-item {
   display: grid;
-  grid-template-columns: 24px 1fr auto;
+  grid-template-columns: 1fr auto;
   gap: 10px;
   align-items: center;
   background: #fff;
@@ -186,14 +186,26 @@ input:focus, textarea:focus, select:focus {
   border-color: var(--accent);
   background: #fffdf8;
 }
-.menu-item label {
+.item-details {
   font-size: 11.5px;
-  cursor: pointer;
   margin: 0;
-  text-transform: none;
   color: var(--text-main);
   font-weight: 500;
+  line-height: 1.4;
 }
+.add-btn {
+  background: #fff4e6;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 6px 18px;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 11px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: 0.2s;
+}
+.add-btn:hover { background: var(--accent); color: #fff; }
 .menu-item .price {
   color: var(--accent);
   font-weight: 700;
@@ -832,15 +844,17 @@ function renderMenu(filterText = '') {
               oninput="setSeasonalPrice('${item.id}', this.value)"><span class="seasonal-note">Seasonal rate</span>`
       : `<span class="price">${fmt(state.price)}</span>`;
     d.innerHTML = `
-      <input type="checkbox" id="c-${item.id}" ${state.checked ? 'checked' : ''} onchange="toggleItem('${item.id}')">
-      <label for="c-${item.id}">
+      <div class="item-details" style="cursor:pointer;" onclick="if(!selectionsState['${item.id}'].checked) addToCart('${item.id}')">
         <span class="type-mark ${item.veg ? 'veg' : 'nonveg'}"></span>${item.name}${item.best ? '<span class="best-tag">★ Bestseller</span>' : ''}${item.chef ? '<span class="best-tag chef-tag">★ Chef Special</span>' : ''}<br>
         ${priceBlock}${item.minQty ? ` <small style="color:#777;">(Min ${item.minQty})</small>` : ''}
-      </label>
-      <div class="qty-control">
-        <button type="button" onclick="adjustQty('${item.id}', -1)">−</button>
-        <span id="q-${item.id}">${state.qty}</span>
-        <button type="button" onclick="adjustQty('${item.id}', 1)">+</button>
+      </div>
+      <div class="action-area">
+        <button type="button" class="add-btn" onclick="addToCart('${item.id}')" style="display:${state.checked ? 'none' : 'block'}">ADD</button>
+        <div class="qty-control" style="display:${state.checked ? 'flex' : 'none'}">
+          <button type="button" onclick="adjustQty('${item.id}', -1)">−</button>
+          <span id="q-${item.id}">${state.qty}</span>
+          <button type="button" onclick="adjustQty('${item.id}', 1)">+</button>
+        </div>
       </div>`;
     list.appendChild(d);
   });
@@ -857,53 +871,64 @@ function setMenuType(type, btn) {
   renderMenu($('menu-search').value);
 }
 
+function addToCart(id) {
+  const item = menuData.find(x => x.id === id);
+  if (item.minQty && selectionsState[id].qty < item.minQty) {
+    selectionsState[id].qty = item.minQty;
+    const span = $('q-' + id);
+    if (span) span.textContent = item.minQty;
+  }
+  selectionsState[id].checked = true;
+  const row = $('row-' + id);
+  if (row) {
+    row.classList.add('active');
+    const addBtn = row.querySelector('.add-btn');
+    const qtyCtrl = row.querySelector('.qty-control');
+    if (addBtn) addBtn.style.display = 'none';
+    if (qtyCtrl) qtyCtrl.style.display = 'flex';
+  }
+  updateTotals();
+}
+
 function setSeasonalPrice(id, value) {
   const price = Math.max(0, Number(value) || 0);
   selectionsState[id].price = price;
-  if (price > 0) {
-    selectionsState[id].checked = true;
-    const chk = $('c-' + id);
-    if (chk) chk.checked = true;
-    const row = $('row-' + id);
-    if (row) row.classList.add('active');
+  if (price > 0 && !selectionsState[id].checked) {
+    addToCart(id);
   }
   updateTotals();
 }
 
 function toggleItem(id) {
-  const chk = $('c-' + id);
-  if (!chk) return;
-  selectionsState[id].checked = chk.checked;
-  const row = $('row-' + id);
-  if (row) row.classList.toggle('active', chk.checked);
-  updateTotals();
+  // Kept for backward compatibility but unused now
 }
 
 function adjustQty(id, delta) {
   const item = menuData.find(x => x.id === id);
   let currentQty = selectionsState[id].qty;
-  let q = Math.max(1, currentQty + delta);
-  selectionsState[id].qty = q;
-
-  const span = $('q-' + id);
-  if (span) span.textContent = q;
-
-  if (delta > 0) {
-    selectionsState[id].checked = true;
-    const chk = $('c-' + id);
-    if (chk) chk.checked = true;
-    const row = $('row-' + id);
-    if (row) row.classList.add('active');
-  }
+  let q = currentQty + delta;
 
   if (item.minQty && q < item.minQty && selectionsState[id].checked) {
-    if (delta < 0 && q === 1) {
-      selectionsState[id].checked = false;
-      const chk = $('c-' + id);
-      if (chk) chk.checked = false;
-      const row = $('row-' + id);
-      if (row) row.classList.remove('active');
+    if (delta < 0) q = 0; 
+  }
+
+  if (q < 1) {
+    selectionsState[id].checked = false;
+    selectionsState[id].qty = 1; 
+    const row = $('row-' + id);
+    if (row) {
+      row.classList.remove('active');
+      const addBtn = row.querySelector('.add-btn');
+      const qtyCtrl = row.querySelector('.qty-control');
+      if (addBtn) addBtn.style.display = 'block';
+      if (qtyCtrl) qtyCtrl.style.display = 'none';
+      const span = $('q-' + id);
+      if (span) span.textContent = '1';
     }
+  } else {
+    selectionsState[id].qty = q;
+    const span = $('q-' + id);
+    if (span) span.textContent = q;
   }
   updateTotals();
 }

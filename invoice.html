@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <title>Cooking 4 Foodies - Invoice Suite (JPEG Export)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,13 +22,13 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { overflow-x: hidden; width: 100%; }
 html { background: var(--bg-body); }
 body {
   font-family: 'Inter', sans-serif;
   background: var(--bg-body);
   color: var(--text-main);
   padding: 24px;
-  zoom: 1.15;
   word-spacing: -0.5px;
   letter-spacing: -0.1px;
 }
@@ -371,8 +371,11 @@ input:focus, textarea:focus, select:focus {
 .inv-footer-title { font-size: 20px; color: var(--primary); font-weight: 700; font-family: 'Cinzel', serif; letter-spacing: 0.5px; }
 .inv-footer-sub { font-size: 14px; color: #777; letter-spacing: 0.3px; font-weight: 500; margin-top: 8px; }
 
+@media(min-width:769px){
+  body { zoom: 1.15; }
+}
 @media(max-width:768px){
-  body { padding: 12px; zoom: 1; }
+  body { padding: 12px; }
   .app-container { grid-template-columns: 1fr; }
   .header-banner { flex-direction: column; text-align: center; gap: 8px; }
   .input-row { flex-direction: column; align-items: stretch !important; }

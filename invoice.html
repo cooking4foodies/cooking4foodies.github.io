@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cooking 4 Foodies - Invoice Suite (JPEG Export)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +22,6 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { overflow-x: hidden; width: 100%; }
 html { background: var(--bg-body); }
 body {
   font-family: 'Inter', sans-serif;
@@ -309,7 +308,7 @@ input:focus, textarea:focus, select:focus {
 .log-actions a { color: var(--accent); font-weight: 600; text-decoration: none; margin: 0 6px; }
 
 /* Printable Invoice Template */
-#invoice-wrapper { position: absolute; left: -9999px; top: -9999px; }
+#invoice-wrapper { position: fixed; top: 0; left: 0; z-index: -9999; visibility: hidden; pointer-events: none; }
 .invoice-template {
   width: 720px;
   min-height: 1280px; /* 9:16 ratio */
@@ -371,16 +370,17 @@ input:focus, textarea:focus, select:focus {
 .inv-footer-title { font-size: 20px; color: var(--primary); font-weight: 700; font-family: 'Cinzel', serif; letter-spacing: 0.5px; }
 .inv-footer-sub { font-size: 14px; color: #777; letter-spacing: 0.3px; font-weight: 500; margin-top: 8px; }
 
-@media(min-width:769px){
+@media(min-width:1025px){
   body { zoom: 1.15; }
 }
-@media(max-width:768px){
+@media(max-width:1024px){
   body { padding: 12px; }
   .app-container { grid-template-columns: 1fr; }
   .header-banner { flex-direction: column; text-align: center; gap: 8px; }
   .input-row { flex-direction: column; align-items: stretch !important; }
-  .custom-row { grid-template-columns: 1fr 60px 45px 32px; gap: 4px; }
-  .custom-row input { padding: 8px 4px; font-size: 11px; min-width:0; }
+  .custom-row { grid-template-columns: 1fr 70px 50px 32px; gap: 4px; }
+  .custom-row input { padding: 8px 4px; font-size: 16px !important; min-width:0; }
+  input, textarea, select { font-size: 16px !important; }
 }
 
 /* Veg / Non-Veg type filter tabs */

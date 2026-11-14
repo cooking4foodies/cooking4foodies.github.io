@@ -625,6 +625,39 @@ body.kb-open .mobile-bar { display: none; }
 @media(max-width:1024px){ .mobile-bar { display: flex; } .customer-found:empty { display: none; } .btn-primary.js-generate { display: none; } }
 @media(min-width:1025px){ .mobile-bar { display: none !important; } }
 
+
+/* ===== New-entry reset (shown only after an invoice has been generated) ===== */
+.btn-new {
+  display: none;
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px;
+  background: #fff;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+}
+.btn-new:active { background: #fdf3f3; }
+body.inv-done .btn-new { display: block; }
+.mobile-bar .mb-new {
+  display: none;
+  background: #fff;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  box-shadow: none;
+  padding: 0 14px;
+  margin-left: auto;
+}
+body.inv-done .mobile-bar .mb-new { display: inline-flex; align-items: center; }
+@media(max-width:1024px){
+  .btn-new { display: none !important; order: 6; }
+  .mobile-bar .mb-info { flex: 0 1 auto; }
+}
 </style>
 </head>
 <body>
@@ -731,6 +764,7 @@ body.kb-open .mobile-bar { display: none; }
     </div>
 
     <button class="btn-primary js-generate" onclick="generateInvoice()">Download High-Res JPEG Invoice</button>
+    <button type="button" class="btn-new" onclick="startNewEntry()">↻ Start New Entry</button>
     <div class="log-actions">
       <span id="log-count-text">0 orders recorded</span> · 
       <a href="#" onclick="downloadLogOnly(); return false;">Export Excel</a> · 
@@ -762,6 +796,7 @@ body.kb-open .mobile-bar { display: none; }
     <small id="mb-count">0 items</small>
     <strong id="mb-total">₹0</strong>
   </div>
+  <button type="button" class="mb-btn mb-new" onclick="startNewEntry()" aria-label="Start new entry">↻ New</button>
   <button type="button" class="mb-btn js-generate" onclick="generateInvoice()">Create Invoice</button>
 </div>
 
@@ -1374,6 +1409,7 @@ async function buildInvoice() {
     logs.push(record);
     localStorage.setItem(logKey, JSON.stringify(logs));
     updateLogCount();
+    document.body.classList.add('inv-done');
   }, 'image/jpeg', 1.0);
 }
 
@@ -1434,6 +1470,34 @@ function downloadLogOnly() {
   const wb = XLSX.utils.book_new(), ws = XLSX.utils.json_to_sheet(rows);
   XLSX.utils.book_append_sheet(wb, ws, 'Orders');
   XLSX.writeFile(wb, 'Cooking4Foodies_Order_Log.xlsx');
+}
+
+function startNewEntry() {
+  // clear customer + charges
+  ['in-name', 'in-phone', 'in-address', 'in-delivery-fee', 'in-packaging-fee', 'menu-search',
+   'custom-name', 'custom-price'].forEach(id => { const el = $(id); if (el) el.value = ''; });
+  $('in-discount').value = 0;
+  const cq = $('custom-qty'); if (cq) cq.value = 1;
+  const sel = $('in-delivery-type');
+  const def = Array.from(sel.options).findIndex(o => o.defaultSelected);
+  sel.selectedIndex = def >= 0 ? def : 0;
+  $('customer-found').textContent = '';
+
+  // clear selected dishes and custom items
+  menuData.forEach(item => { selectionsState[item.id] = { checked: false, qty: 1, price: item.price }; });
+  customItems = [];
+  renderCustom();
+
+  // back to the full menu
+  menuTypeFilter = 'all';
+  document.querySelectorAll('.menu-type-tabs button').forEach(b => b.classList.toggle('on', b.dataset.type === 'all'));
+  renderMenu('');
+  const ml = $('menu-list'); if (ml) ml.scrollTop = 0;
+
+  updateTotals();
+  document.body.classList.remove('inv-done', 'kb-open');
+  if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function resetOrderLog() {

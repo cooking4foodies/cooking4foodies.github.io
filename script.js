@@ -6,7 +6,6 @@ const itemPrices = {
     "Chicken Pakoda with Green Chutney (Boneless, 8 Pcs)": 299,
     "Masala Fish Fry (2 Pcs)": 249,
     "Machh Bhaja - Plain Fish Fry (2 Pcs)": 199,
-    "Egg Omelette (2 Eggs)": 99,
     "Dhokar Dalna (4 Pcs)": 249,
     "Phulkopi Alur Torkari - Serves 2": 249,
     "Alu Posto - Serves 2": 299,

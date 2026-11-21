@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kitchen Costs</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800&family=Bricolage+Grotesque:wght@600;800&display=swap">
+<style>
+:root{--bg:#f3f6f5;--card:#fff;--ink:#1b2421;--mute:#5d6b66;--line:#dbe3e0;--brand:#0f4c45;--brand-ink:#fff;--up:#c0392b;--down:#1d7a4d;--warn:#e0a100;--bar:#0f4c45;--bar2:#e0a100;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111a18;--card:#1a2623;--ink:#e8efec;--mute:#9bada6;--line:#2c3b37;--brand:#4cc2a8;--brand-ink:#08201b;--up:#ff7a69;--down:#5fd59a;--bar:#4cc2a8;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#111a18;--card:#1a2623;--ink:#e8efec;--mute:#9bada6;--line:#2c3b37;--brand:#4cc2a8;--brand-ink:#08201b;--up:#ff7a69;--down:#5fd59a;--bar:#4cc2a8;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 "Hanken Grotesk",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:84px}
+header{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:12px 16px 8px;z-index:5;display:flex;gap:10px;align-items:center;justify-content:space-between}
+h1{font-size:20px;margin:0;font-weight:800;letter-spacing:-.01em}
+input,select,button{font:inherit;color:inherit}
+input,select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);min-height:44px}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+main{padding:0 16px;max-width:640px;margin:0 auto}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 12px}
+h2{font-size:16px;margin:0 0 10px;font-weight:700}
+.big{font-size:34px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.mute{color:var(--mute);font-size:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.full{grid-column:1/-1}
+label{display:block;font-size:13px;color:var(--mute);margin:0 0 4px}
+.btn{background:var(--brand);color:var(--brand-ink);border:0;border-radius:10px;padding:12px 16px;font-weight:700;min-height:46px;cursor:pointer;width:100%}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line);align-items:flex-start}
+.row:first-of-type{border-top:0}
+.row b{font-weight:700}
+.x{background:none;border:0;color:var(--mute);font-size:20px;min-width:44px;min-height:44px;cursor:pointer;margin:-10px -10px -10px 0}
+.bar{height:10px;border-radius:6px;background:var(--line);overflow:hidden;margin:4px 0 10px}
+.bar i{display:block;height:100%;background:var(--bar)}
+.split{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:10px 0 6px}
+.split i{display:block}
+.up{color:var(--up);font-weight:700}.down{color:var(--down);font-weight:700}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom,0px);z-index:6}
+nav button{flex:1;background:none;border:0;padding:12px 4px;min-height:56px;font-weight:700;color:var(--mute);cursor:pointer;font-size:14px}
+nav button.on{color:var(--brand);box-shadow:inset 0 3px 0 var(--brand)}
+.empty{color:var(--mute);padding:6px 0}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+:root{--bg:#eef3f1;--field:#edf2f0;--shadow:0 1px 2px rgba(15,76,69,.08),0 10px 24px -10px rgba(15,76,69,.25)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1614;--field:#243632;--shadow:none}}
+:root[data-theme="dark"]{--bg:#0e1614;--field:#243632;--shadow:none}
+body{padding-bottom:104px}
+h1,h2,.big{font-family:"Bricolage Grotesque","Hanken Grotesk",system-ui,sans-serif}
+h1{font-size:24px;font-weight:800}
+h2{font-size:18px;font-weight:600}
+header{padding:14px 16px 10px}
+#month{border-radius:20px;font-weight:700;padding:6px 14px;min-height:40px}
+input,select{border:0;background:var(--field);border-radius:12px;min-height:48px}
+.card{border-radius:20px;padding:18px;box-shadow:var(--shadow)}
+.card.hero{background:#0f4c45;color:#fff;border-color:#0f4c45;--bar:#ffd166;--bar2:#8fdccb;padding:22px}
+.hero .mute{color:#b9dad2}
+.hero .big{color:#ffd166;font-size:48px}
+.hero .split{height:12px;background:rgba(255,255,255,.18)}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 12px}
+.btn{border-radius:14px;min-height:50px}
+.btn:active{transform:scale(.98)}
+.btn.ghost{background:var(--field);border:0}
+.row{padding:12px 0}
+.empty{text-align:center;padding:16px 8px}
+#bPrev{min-height:22px;color:var(--brand);font-weight:700}
+nav{left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));padding-bottom:0;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow)}
+nav button{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:12px;font-weight:600;padding:8px 2px;min-height:62px;border-radius:24px}
+nav button.on{box-shadow:none}
+nav svg{width:54px;height:30px;padding:3px 0;border-radius:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav button.on svg{background:color-mix(in srgb,var(--brand) 16%,transparent)}
+.toast{bottom:100px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Kitchen costs</h1>
+  <input type="month" id="month" aria-label="Month" style="width:auto">
+</header>
+<main>
+
+<section id="s-over" class="on">
+  <div class="card hero">
+    <div class="mute">Total spend this month</div>
+    <div class="big" id="total">₹0</div>
+    <div class="split" id="split"></div>
+    <div class="mute" id="splitLbl"></div>
+  </div>
+  <div class="quick"><button class="btn" data-go="buy">+ Purchase</button><button class="btn ghost" data-go="ovh">+ Overhead</button></div>
+  <div class="card">
+    <h2>Sales vs cost</h2>
+    <label for="sales">Month’s sales (₹)</label>
+    <input id="sales" type="number" inputmode="decimal" min="0" placeholder="Enter total sales">
+    <div id="margin" class="mute" style="margin-top:10px"></div>
+  </div>
+  <div class="card"><h2>Where the money goes</h2><div id="cats"></div></div>
+  <div class="card"><h2>Price changes</h2><div id="alerts"></div></div>
+</section>
+
+<section id="s-buy">
+  <div class="card">
+    <h2>Add raw material purchase</h2>
+    <div class="grid">
+      <div><label for="bDate">Date</label><input id="bDate" type="date"></div>
+      <div><label for="bItem">Item</label><input id="bItem" list="items" placeholder="e.g. Rohu fish" autocomplete="off"></div>
+      <div><label for="bQty">Quantity</label><input id="bQty" type="number" inputmode="decimal" min="0" step="any"></div>
+      <div><label for="bUnit">Unit</label><select id="bUnit"><option>kg</option><option>g</option><option>l</option><option>ml</option><option>pcs</option><option>dozen</option><option>pack</option></select></div>
+      <div><label for="bAmt">Total paid (₹)</label><input id="bAmt" type="number" inputmode="decimal" min="0" step="any"></div>
+      <div><label for="bSup">Supplier (optional)</label><input id="bSup"></div>
+      <div class="full" id="bPrev"></div>
+      <div class="full"><button class="btn" id="bAdd">Save purchase</button></div>
+    </div>
+    <datalist id="items"></datalist>
+  </div>
+  <div class="card"><h2>Purchases</h2><div id="bList"></div></div>
+</section>
+
+<section id="s-ovh">
+  <div class="card">
+    <h2>Add overhead</h2>
+    <div class="grid">
+      <div><label for="oDate">Date</label><input id="oDate" type="date"></div>
+      <div><label for="oCat">Category</label><select id="oCat"></select></div>
+      <div><label for="oAmt">Amount (₹)</label><input id="oAmt" type="number" inputmode="decimal" min="0" step="any"></div>
+      <div><label for="oNote">Note (optional)</label><input id="oNote"></div>
+      <div class="full"><button class="btn" id="oAdd">Save overhead</button></div>
+    </div>
+  </div>
+  <div class="card"><h2>Overheads</h2><div id="oList"></div></div>
+</section>
+
+<section id="s-rec">
+  <div class="card">
+    <h2>Add a dish</h2>
+    <div class="grid">
+      <div><label for="rName">Dish name</label><input id="rName" placeholder="e.g. Fish curry (1 plate)"></div>
+      <div><label for="rPrice">Selling price (₹)</label><input id="rPrice" type="number" inputmode="decimal" min="0" step="any"></div>
+      <div class="full"><button class="btn" id="rAdd">Save dish</button></div>
+    </div>
+    <p class="mute">Then add ingredients per plate. Costs use the latest price you logged for each item.</p>
+  </div>
+  <div id="rList"></div>
+</section>
+
+<section id="s-more">
+  <div class="card">
+    <h2>Save your data</h2>
+    <p class="mute">Everything is stored only in this browser on this phone. Export a backup regularly.</p>
+    <div class="grid">
+      <button class="btn ghost" id="exCsv">Download CSV</button>
+      <button class="btn ghost" id="exJson">Download backup</button>
+      <div class="full"><label for="imp">Restore from backup file</label><input id="imp" type="file" accept="application/json"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Overhead categories</h2>
+    <div class="grid"><input id="newCat" placeholder="New category"><button class="btn ghost" id="addCat">Add category</button></div>
+  </div>
+  <div class="card"><button class="btn ghost" id="wipe">Delete all data</button></div>
+</section>
+</main>
+
+<nav>
+  <button data-t="over" class="on">Overview</button>
+  <button data-t="buy">Purchases</button>
+  <button data-t="ovh">Overheads</button>
+  <button data-t="rec">Recipes</button>
+  <button data-t="more">More</button>
+</nav>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+var KEY='kitchen-costs-v1';
+var D={buys:[],ovh:[],sales:{},cats:['Gas / fuel','Rent','Electricity','Packaging','Delivery','Salary / helpers','Marketing','Repairs','Other']};
+try{var s=localStorage.getItem(KEY);if(s){var p=JSON.parse(s);if(p&&p.buys)D=p}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){toast('Could not save. Download a backup.')}}
+var $=function(i){return document.getElementById(i)};
+var inr=function(n){return '₹'+Math.round(n).toLocaleString('en-IN')};
+var uid=function(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)};
+var today=new Date().toISOString().slice(0,10);
+var month=today.slice(0,7);
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function toast(m){var t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on')},2200)}
+
+$('month').value=month;$('bDate').value=today;$('oDate').value=today;
+$('month').onchange=function(){month=this.value||month;render()};
+
+document.querySelectorAll('nav button').forEach(function(b){b.onclick=function(){
+  document.querySelectorAll('nav button').forEach(function(x){x.classList.toggle('on',x===b)});
+  document.querySelectorAll('section').forEach(function(s){s.classList.toggle('on',s.id==='s-'+b.dataset.t)});
+  window.scrollTo(0,0)}});
+
+$('bAdd').onclick=function(){
+  var item=$('bItem').value.trim(),q=parseFloat($('bQty').value),a=parseFloat($('bAmt').value);
+  if(!item||!(q>0)||!(a>=0)||isNaN(a)){toast('Enter item, quantity and amount');return}
+  D.buys.push({id:uid(),date:$('bDate').value||today,item:item,qty:q,unit:$('bUnit').value,amt:a,sup:$('bSup').value.trim()});
+  save();$('bItem').value='';$('bQty').value='';$('bAmt').value='';render();toast('Purchase saved')};
+$('oAdd').onclick=function(){
+  var a=parseFloat($('oAmt').value);
+  if(!(a>0)){toast('Enter an amount');return}
+  D.ovh.push({id:uid(),date:$('oDate').value||today,cat:$('oCat').value,amt:a,note:$('oNote').value.trim()});
+  save();$('oAmt').value='';$('oNote').value='';render();toast('Overhead saved')};
+$('sales').oninput=function(){var v=parseFloat(this.value);if(v>0)D.sales[month]=v;else delete D.sales[month];save();margin()};
+$('addCat').onclick=function(){var c=$('newCat').value.trim();if(c&&D.cats.indexOf(c)<0){D.cats.push(c);save();$('newCat').value='';render();toast('Category added')}};
+
+function del(list,id){if(confirm('Delete this entry?')){D[list]=D[list].filter(function(x){return x.id!==id});save();render()}}
+window.del=del;
+
+function inMonth(x){return x.date&&x.date.slice(0,7)===month}
+function rate(b){return b.amt/b.qty}
+
+function margin(){
+  var s=D.sales[month],t=tot(),el=$('margin');
+  if(!s){el.textContent='Add sales to see cost % and what is left.';return}
+  var pct=t/s*100;
+  el.innerHTML='Costs are <b>'+pct.toFixed(1)+'%</b> of sales. Left over: <b>'+inr(s-t)+'</b>.';
+}
+function tot(){return D.buys.filter(inMonth).reduce(function(a,b){return a+b.amt},0)+D.ovh.filter(inMonth).reduce(function(a,b){return a+b.amt},0)}
+
+function render(){
+  renderRec();
+  var B=D.buys.filter(inMonth),O=D.ovh.filter(inMonth);
+  var rawT=B.reduce(function(a,b){return a+b.amt},0),ovT=O.reduce(function(a,b){return a+b.amt},0),T=rawT+ovT;
+  $('total').textContent=inr(T);
+  $('split').innerHTML=T?'<i style="width:'+rawT/T*100+'%;background:var(--bar)"></i><i style="width:'+ovT/T*100+'%;background:var(--bar2)"></i>':'<i style="width:100%;background:var(--line)"></i>';
+  $('splitLbl').textContent=T?'Raw materials '+inr(rawT)+' ('+Math.round(rawT/T*100)+'%)  |  Overheads '+inr(ovT)+' ('+Math.round(ovT/T*100)+'%)':'No entries for this month yet.';
+  $('sales').value=D.sales[month]||'';margin();
+
+  var m={};B.forEach(function(b){var k=b.item;m[k]=(m[k]||0)+b.amt});
+  O.forEach(function(o){var k=o.cat;m[k]=(m[k]||0)+o.amt});
+  var arr=Object.keys(m).map(function(k){return [k,m[k]]}).sort(function(a,b){return b[1]-a[1]}).slice(0,8);
+  $('cats').innerHTML=arr.length?arr.map(function(r){return '<div class="row" style="display:block;border:0;padding:0"><div style="display:flex;justify-content:space-between"><span>'+esc(r[0])+'</span><b>'+inr(r[1])+'</b></div><div class="bar"><i style="width:'+r[1]/arr[0][1]*100+'%"></i></div></div>'}).join(''):'<div class="empty">Add a purchase or overhead to see this.</div>';
+
+  var groups={};D.buys.forEach(function(b){var k=b.item.toLowerCase()+'|'+b.unit;(groups[k]=groups[k]||[]).push(b)});
+  var al=[];
+  Object.keys(groups).forEach(function(k){var g=groups[k].sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:0});
+    if(g.length<2)return;var last=g[g.length-1],prev=g.slice(0,-1);
+    var avg=prev.reduce(function(a,b){return a+rate(b)},0)/prev.length,ch=(rate(last)-avg)/avg*100;
+    if(Math.abs(ch)>=5)al.push({n:last.item,u:last.unit,r:rate(last),avg:avg,ch:ch})});
+  al.sort(function(a,b){return Math.abs(b.ch)-Math.abs(a.ch)});
+  $('alerts').innerHTML=al.length?al.slice(0,8).map(function(a){return '<div class="row"><div><b>'+esc(a.n)+'</b><div class="mute">Now '+inr(a.r)+'/'+a.u+', earlier avg '+inr(a.avg)+'/'+a.u+'</div></div><span class="'+(a.ch>0?'up':'down')+'">'+(a.ch>0?'+':'')+a.ch.toFixed(0)+'%</span></div>'}).join(''):'<div class="empty">Log the same item twice to track its price. Changes of 5% or more show here.</div>';
+
+  var names={};D.buys.forEach(function(b){names[b.item]=1});
+  $('items').innerHTML=Object.keys(names).map(function(n){return '<option value="'+esc(n)+'">'}).join('');
+  $('oCat').innerHTML=D.cats.map(function(c){return '<option>'+esc(c)+'</option>'}).join('');
+
+  $('bList').innerHTML=B.length?B.slice().sort(function(a,b){return a.date<b.date?1:-1}).map(function(b){return '<div class="row"><div><b>'+esc(b.item)+'</b><div class="mute">'+fd(b.date)+' | '+b.qty+' '+b.unit+' at '+inr(rate(b))+'/'+b.unit+(b.sup?' | '+esc(b.sup):'')+'</div></div><div style="display:flex;align-items:center;gap:6px"><b>'+inr(b.amt)+'</b><button class="x" aria-label="Delete" onclick="del(\'buys\',\''+b.id+'\')">&times;</button></div></div>'}).join(''):'<div class="empty">No purchases this month.</div>';
+  $('oList').innerHTML=O.length?O.slice().sort(function(a,b){return a.date<b.date?1:-1}).map(function(o){return '<div class="row"><div><b>'+esc(o.cat)+'</b><div class="mute">'+fd(o.date)+(o.note?' | '+esc(o.note):'')+'</div></div><div style="display:flex;align-items:center;gap:6px"><b>'+inr(o.amt)+'</b><button class="x" aria-label="Delete" onclick="del(\'ovh\',\''+o.id+'\')">&times;</button></div></div>'}).join(''):'<div class="empty">No overheads this month.</div>';
+}
+
+function fd(d){var p=d.split('-');return +p[2]+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][p[1]-1]}
+(function(){
+  var ic={over:'<path d="M5 20v-8M12 20V5M19 20v-5"/>',buy:'<path d="M3 9h18l-2 11H5L3 9zM8 9l3-5M16 9l-3-5"/>',ovh:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3zM9 8h6M9 12h6"/>',rec:'<path d="M4 11h16v6a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-6zM2 11h20M8 7c0-2 2-2 2-4M14 7c0-2 2-2 2-4"/>',more:'<path d="M5 12h.01M12 12h.01M19 12h.01" stroke-width="3"/>'};
+  document.querySelectorAll('nav button').forEach(function(b){b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+ic[b.dataset.t]+'</svg><span>'+b.textContent+'</span>'});
+  document.querySelectorAll('[data-go]').forEach(function(b){b.onclick=function(){document.querySelector('nav button[data-t="'+b.dataset.go+'"]').click()}});
+  function pv(){var q=parseFloat($('bQty').value),a=parseFloat($('bAmt').value);$('bPrev').textContent=(q>0&&a>=0)?'That is '+inr1(a/q)+' per '+$('bUnit').value:''}
+  ['bQty','bAmt','bUnit'].forEach(function(i){$(i).addEventListener('input',pv)});
+})();
+var UO='<option>kg</option><option>g</option><option>l</option><option>ml</option><option>pcs</option><option>dozen</option><option>pack</option>';
+var inr1=function(n){return '₹'+n.toFixed(1)};
+function conv(a,b){if(a===b)return 1;var m={'kg>g':1000,'g>kg':.001,'l>ml':1000,'ml>l':.001,'dozen>pcs':12,'pcs>dozen':1/12};return m[a+'>'+b]||null}
+function lastBuy(n){var l=null;D.buys.forEach(function(b){if(b.item.toLowerCase()===n.toLowerCase()&&(!l||b.date>=l.date))l=b});return l}
+function ingCost(g){var b=lastBuy(g.item);if(!b)return null;var c=conv(g.unit,b.unit);return c==null?null:g.qty*c*rate(b)}
+function renderRec(){
+  D.recipes=D.recipes||[];
+  $('rList').innerHTML=D.recipes.length?D.recipes.map(function(r){
+    var cost=0,miss=0;
+    var lines=r.ing.map(function(g,i){var c=ingCost(g);if(c==null)miss++;else cost+=c;
+      return '<div class="row"><div>'+esc(g.item)+'<div class="mute">'+g.qty+' '+g.unit+'</div></div><div style="display:flex;align-items:center;gap:6px"><span>'+(c==null?'<span class="mute">no price</span>':inr1(c))+'</span><button class="x" aria-label="Remove ingredient" onclick="delIng(\''+r.id+'\','+i+')">&times;</button></div></div>'}).join('');
+    var mg=r.price-cost,pct=r.price>0?mg/r.price*100:0;
+    return '<div class="card"><div style="display:flex;justify-content:space-between;gap:10px"><h2 style="margin:0">'+esc(r.name)+'</h2><b>'+inr1(r.price)+'</b></div>'
+      +(r.ing.length?'<div style="margin:8px 0">Cost per plate <b>'+inr1(cost)+'</b><br>Margin <b class="'+(pct<30?'up':'down')+'">'+inr1(mg)+' ('+pct.toFixed(0)+'%)</b></div>':'<div class="empty">No ingredients yet.</div>')
+      +(miss?'<div class="mute">'+miss+' ingredient(s) have no matching purchase or unit, so they are not counted. Log a purchase to include them.</div>':'')
+      +lines
+      +'<div class="grid" style="margin-top:10px"><div class="full"><label for="ri_'+r.id+'">Add ingredient</label><input id="ri_'+r.id+'" list="items" placeholder="Item name, as in Purchases" autocomplete="off"></div><div><input id="rq_'+r.id+'" type="number" inputmode="decimal" min="0" step="any" placeholder="Qty per plate" aria-label="Quantity per plate"></div><div><select id="ru_'+r.id+'" aria-label="Unit">'+UO+'</select></div><div><button class="btn" onclick="addIng(\''+r.id+'\')">Add</button></div><div><button class="btn ghost" onclick="delRec(\''+r.id+'\')">Delete dish</button></div></div></div>'
+  }).join(''):'<div class="card empty">No dishes yet. Add one above.</div>';
+}
+$('rAdd').onclick=function(){var n=$('rName').value.trim(),p=parseFloat($('rPrice').value);if(!n||!(p>=0)||isNaN(p)){toast('Enter dish name and selling price');return}
+  D.recipes=D.recipes||[];D.recipes.push({id:uid(),name:n,price:p,ing:[]});save();$('rName').value='';$('rPrice').value='';render();toast('Dish saved')};
+function addIng(id){var it=$('ri_'+id).value.trim(),q=parseFloat($('rq_'+id).value);if(!it||!(q>0)){toast('Enter item and quantity');return}
+  D.recipes.forEach(function(r){if(r.id===id)r.ing.push({item:it,qty:q,unit:$('ru_'+id).value})});save();render()}
+function delIng(id,i){D.recipes.forEach(function(r){if(r.id===id)r.ing.splice(i,1)});save();render()}
+function delRec(id){if(confirm('Delete this dish?')){D.recipes=D.recipes.filter(function(r){return r.id!==id});save();render()}}
+window.addIng=addIng;window.delIng=delIng;window.delRec=delRec;
+function dl(name,text,type){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:type}));a.download=name;document.body.appendChild(a);a.click();a.remove()}
+$('exJson').onclick=function(){dl('kitchen-costs-backup.json',JSON.stringify(D),'application/json')};
+$('exCsv').onclick=function(){
+  var q=function(v){return '"'+String(v).replace(/"/g,'""')+'"'};
+  var r=['Type,Date,Item/Category,Qty,Unit,Amount,Supplier/Note'];
+  D.buys.forEach(function(b){r.push(['Purchase',b.date,q(b.item),b.qty,b.unit,b.amt,q(b.sup||'')].join(','))});
+  D.ovh.forEach(function(o){r.push(['Overhead',o.date,q(o.cat),'','',o.amt,q(o.note||'')].join(','))});
+  dl('kitchen-costs.csv',r.join('\n'),'text/csv')};
+$('imp').onchange=function(){var f=this.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){try{var p=JSON.parse(rd.result);if(!p.buys||!p.ovh)throw 0;D=p;save();render();toast('Backup restored')}catch(e){toast('That file is not a valid backup')}};rd.readAsText(f)};
+$('wipe').onclick=function(){if(confirm('Delete every purchase and overhead on this phone? This cannot be undone.')){D.buys=[];D.ovh=[];D.sales={};save();render()}};
+render();
+</script>
+</body>
+</html>
